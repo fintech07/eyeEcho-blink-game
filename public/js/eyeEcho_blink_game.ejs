@@ -329,6 +329,7 @@ class GameBoard {
         this.baseColors = [random_rgba(), random_rgba()];
         this.bg_color = [random_rgba(), random_rgba()];
         this.blinkIcon = new Image();
+        this.blinkIcon.setAttribute("crossOrigin", "Anonymous");
         this.blinkIcon.src = 'http://cdn.onlinewebfonts.com/svg/img_457301.png';
         this.drawMenu();
 
@@ -577,10 +578,10 @@ class GameBoard {
         this.erase();
         this.drawBackground(time);
         this.drawShapes();
-        //this.drawBlinkIcon();
         if (this.checkEndCondition()) {
             this.endGame();
         } else {
+            this.drawBlinkIcon();
             this.drawCountdown();
             window.requestAnimationFrame(this.draw);
         }
