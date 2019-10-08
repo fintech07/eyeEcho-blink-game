@@ -1,0 +1,114 @@
+{
+    "game": {
+        "start": {
+            "title": "Click to start",
+            "description": "The shape will drop whenever you blink"
+        },
+        "end": {
+            "title": "Game over",
+            "description": "Please click to restart game"
+        },
+        "uploading": {
+            "title": "Uploading image...",
+            "description": "Please wait a few moments while uploading image."
+        }
+
+    },
+    "theme": {
+        "grey": {
+            "desc": "select a color theme",
+            "value1": "#000000",
+            "value2": "#eeeeee"
+        },
+
+        "red": {
+            "desc": "Malibu Sunset",
+            "value1": "#ff5959",
+            "value2": "#a50707"
+        },
+
+        "orange": {
+            "desc": "Safari in the Savanah",
+            "value1": "#d64e0",
+            "value2": "#ffa126"
+        },
+
+        "yellow": {
+            "desc": "Citrus Pie",
+            "value1": "#df9300",
+            "value2": "#fee433"
+        },
+
+        "green": {
+            "desc": "Prairie Stroll",
+            "value1": "#099400",
+            "value2": "#75ff6d"
+        },
+
+        "surprise": {
+            "desc": "I’m feeling lucky",
+            "value1": "#000000",
+            "value2": "#ffffff"
+        },
+
+        "light-blue": {
+            "desc": "Ocean Spray",
+            "value1": "#00acaf",
+            "value2": "#73fdff"
+        },
+
+        "dark-blue": {
+            "desc": "Midnight Magic",
+            "value1": "#0e00a5",
+            "value2": "#20bdff"
+        },
+
+        "purple": {
+            "desc": "Funky Fridays",
+            "value1": "#44009e",
+            "value2": "#b966ff"
+        },
+
+        "pink": {
+            "desc": "Bubblegum Shake",
+            "value1": "#970075",
+            "value2": "#ff5ac3"
+        }
+    },
+    "page": {
+        "eyeEcho-game-landing-page-title": "YOUR EYES NEVER STOP MOVING",
+        "eyeEcho-game-landing-page-link": "PAINT WITH YOUR EYES",
+        "eyeEcho-game-start-painting-btn-text": "START PAINTING",
+        "eyeEcho-game-repaint-btn-text": "RE-PAINT",
+        
+        "eyeEcho-theme-picker-page-description-title": "WAIT, BUT HOW?",
+        "eyeEcho-theme-picker-page-description-content": "Eye Echo used your unique eye movements, like blinking and scanning, to manipulate shapes and colors on your screen in real-time. After 30 seconds, your masterpiece will be ready! Before getting started, pick a color theme for your artwork below:",
+        "eyeEcho-theme-picker-page-surprise-btn": "surprise me",
+        "eyeEcho-theme-picker-page-color-name-text": "Select Color Theme",
+        
+        "eyeEcho-result-info-page-count-desc-cap": "your Eye Echo caspantured",
+        "eyeEcho-result-info-page-count-desc-blink-in": "blinks in",
+        "eyeEcho-result-info-page-count-desc-seconds": "seconds",
+
+        "eyeEcho-result-info-page-desc-1-title": "WHILE YOU WERE PLAYING, WE'VE BEEN WORKING",
+        "eyeEcho-result-info-page-desc-1-sub-1": "Expanation how the user's number of blinks compares to that of their peers.",
+        "eyeEcho-result-info-page-desc-1-sub-2": "Interesting statistic that links age to average number of blinks per day.",
+        "eyeEcho-result-info-page-desc-1-sub-3": "Interesting fact about how their personalized collage was created.",
+        "eyeEcho-result-info-page-desc-2-title": "YOUR EYES NEVER STOP MOVING",
+        "eyeEcho-result-info-page-desc-2-sub-1": "Helpful tip here to educate user about premature undereye aging",
+        "eyeEcho-result-info-page-desc-2-sub-2": "Helpful tip here to educate user about premature undereye aging",
+        "eyeEcho-result-info-page-desc-2-sub-3": "Helpful tip here to educate user about premature undereye aging",
+        
+        "eyeEcho-shop-page-desc-title": "Biolumin - C Eye Serum",
+        "eyeEcho-shop-page-desc-content": "We make over 100, 000 eye movements per day. The skin around our eyes is the most delicate, and isn't equipped to withstand this perpetual motion. Give them a boost with our NEW <b>Biolumin - C Eye Serum</b>",
+        "eyeEcho-shop-page-shop-now-btn-text": "SHOP NOW",
+        "eyeEcho-shop-page-desc-overlay-text": "This formula works with skin's natural biology to address fine lines and wrinkles at their source rather than simply concealing them.",
+        
+        "eyeEcho-download-modal-options-title": "Share Options",
+        "eyeEcho-download-modal-instagram-text": "IG Stories",
+        "eyeEcho-download-modal-instagram-feed-text": "IG Feed",
+        "eyeEcho-download-modal-snapchat-text": "Snapchat",
+        "eyeEcho-download-modal-more-text": "More",
+        "eyeEcho-download-modal-save-to-camera-text": "Save to Camera Roll"
+    }
+}

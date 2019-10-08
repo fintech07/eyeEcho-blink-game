@@ -1,0 +1,674 @@
+
+// elements
+const eyeEchoResultImageEl = document.getElementById('eyeEcho_result_image_element');
+const eyeEchoResultBlinkCountEl = document.getElementById('eyeEcho_result_info_blink_count');
+const eyeEchoResultBlinkPeriodEl = document.getElementById('eyeEcho_result_info_blink_period');
+
+function setResultImageSrc(imgUrl) {
+    eyeEchoResultImageEl.src = imgUrl;
+}
+
+function setResultBlinkCount() {
+    eyeEchoResultBlinkCountEl.innerHTML = eyeEcho_result_info.count;
+    eyeEchoResultBlinkPeriodEl.innerHTML = eyeEcho_result_info.period;
+}
+
+function loadJSON(path, success, error) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                if (success)
+                    success(JSON.parse(xhr.responseText));
+            } else {
+                if (error)
+                    error(xhr);
+            }
+        }
+    };
+    xhr.open("GET", path, true);
+    xhr.send();
+}
+
+function eyeEcho_load_menu_data(callback) {
+    loadJSON(
+        './lang/' + eyeEcho_game_config.lang + '.json',
+        (data) => {
+            eyeEcho_game_config.text = data;
+            eyeEcho_game_config.isLoading = false;
+            callback();
+        },
+        (error) => {
+            console.log("menu loading error: ", error);
+        }
+    );
+}
+
+const o = Math.round;
+const f = Math.floor;
+const r = Math.random;
+
+const BIG_INT = 100000000;
+const SHAPE_SIZE_MIN = 10;
+const CHOR_MIN = 100;
+const ALPHA_MIN = 0.5;
+let dropingProgress = 0;
+let currentLanguage = 'en';
+
+const LANG = {
+    EN: 'en',
+    RU: 'ru',
+}
+
+const DIRECTION = {
+    LEFT: 'LEFT',
+    RIGHT: 'RIGHT',
+    DOWN: 'DOWN',
+    STOP: 'STOP',
+}
+
+const SHAPE_TYPE = {
+    CIRCLE: 'CIRCLE',
+    RECTANGLE: 'RECTANGLE',
+}
+
+const BREAK_POINT = {
+    DESKTOP: 1280, // 1280 * 800
+    iPAD_PRO: 1024, //1024 * 1366
+    iPAD: 768, // 768 * 1024
+    iPhone6: 414, // 414 * 736
+    iPhoneX: 375, // 375 * 812
+    iPhone5: 320, // 320 * 568
+}
+
+//set language
+function setLanguage(lang) {
+    eyeEcho_game_config.lang = lang
+}
+
+// check a is between b and c
+function isWithin(a, b, c) {
+    return a >= b && a <= c
+};
+
+// get randomized integer
+function getRandomInt(range = BIG_INT) {
+    return o(r() * range);
+}
+
+// get statistic option
+function getStc(a = 2, b = 1) {
+    return getRandomInt() % a < b ? true : false;
+}
+
+
+// convert hex to rgb
+function hexToR(h) {return parseInt((cutHex(h)).substring(0,2),16)}
+function hexToG(h) {return parseInt((cutHex(h)).substring(2,4),16)}
+function hexToB(h) {return parseInt((cutHex(h)).substring(4,6),16)}
+function cutHex(h) {return (h.charAt(0)=="#") ? h.substring(1,7):h}
+function hexToRgb(_hex) {
+    return [hexToR(_hex), hexToG(_hex), hexToB(_hex)];
+}
+
+// get random chromaticity value
+function getRandomChro(_a, _b) {
+    const _min = _a < _b ? _a : _b;
+    const _max = _a < _b ? _b : _a;
+    return f(r() * (_max - _min)) + _min;
+}
+
+// get rgba value
+function random_rgba() {
+    _range = [];
+    const theme = eyeEcho_game_config.theme;
+
+    if (!theme || theme == 'grey') {
+        _range.push([0, 0, 0])
+        _range.push([256, 256, 256])
+    } else {
+        _range.push(hexToRgb(eyeEcho_game_config.text.theme[theme].value1));
+        _range.push(hexToRgb(eyeEcho_game_config.text.theme[theme].value2));
+    }
+
+    return [getRandomChro(_range[0][0], _range[1][0]), getRandomChro(_range[0][1], _range[1][1]), getRandomChro(_range[0][2], _range[1][2]), r()];
+}
+
+// get rgba style
+function getRgbaColor(rgba) {
+    return `rgba(${o(rgba[0]) % 256}, ${o(rgba[1]) % 256}, ${o(rgba[2]) % 256}, ${rgba[3] < 1 ? rgba[3] < ALPHA_MIN ? ALPHA_MIN : rgba[3] : 1})`;
+}
+
+// convert degree to radians
+function toRadians(angle) {
+    return angle * (Math.PI / 180);
+}
+
+animate = ({
+    duration,
+    draw,
+    timing
+}) => {
+    let start = performance.now();
+    requestAnimationFrame(animateFrame = (time) => {
+        let timeFraction = (time - start) / duration;
+        dropingProgress = timeFraction;
+        if (timeFraction > 1) {
+            timeFraction = 1;
+        }
+        let progress = timing(timeFraction)
+        draw(progress);
+        if (timeFraction && timeFraction < 1) {
+            window.requestAnimationFrame(animateFrame);
+        }
+    });
+}
+
+makeEaseOut = (timing) => {
+    return (timeFraction) => {
+        return 1 - timing(1 - timeFraction);
+    }
+}
+
+bounce = (timeFraction) => {
+    for (let a = 0, b = 1, result; 1; a += b, b /= 2) {
+        if (timeFraction >= (7 - 4 * a) / 11) {
+            return -Math.pow((11 - 6 * a - 11 * timeFraction) / 4, 2) + Math.pow(b, 2)
+        }
+    }
+}
+
+let bounceEaseOut = makeEaseOut(bounce);
+
+// define roundRect function
+CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+    if (w < 2 * r) r = w / 2;
+    if (h < 2 * r) r = h / 2;
+    this.beginPath();
+    this.moveTo(x + r, y);
+    this.arcTo(x + w, y, x + w, y + h, r);
+    this.arcTo(x + w, y + h, x, y + h, r);
+    this.arcTo(x, y + h, x, y, r);
+    this.arcTo(x, y, x + w, y, r);
+    this.closePath();
+    return this;
+}
+
+// defind Shape class
+class Shape {
+    constructor(ctx, width, t_p, lr_p) {
+        this.ctx = ctx;
+        this.margin = lr_p;
+        this.type = getStc(5, 3) ? SHAPE_TYPE.RECTANGLE : SHAPE_TYPE.CIRCLE;
+
+        this.setDirection();
+
+        if (this.type == SHAPE_TYPE.CIRCLE) {
+            this.r = getRandomInt((t_p - SHAPE_SIZE_MIN / 2) / 3) + SHAPE_SIZE_MIN / 2;
+            this.width = this.r * 2;
+            this.height = this.r * 2;
+        } else {
+            this.width = getRandomInt((width - SHAPE_SIZE_MIN / 2)) + SHAPE_SIZE_MIN;
+            this.height = getRandomInt((t_p - SHAPE_SIZE_MIN)) + SHAPE_SIZE_MIN;
+        }
+        this.x = this.direction == DIRECTION.LEFT ? width + lr_p : -(this.width + lr_p);
+        this.y = getRandomInt(t_p - this.height);
+        this.color = random_rgba();
+        this.speed = .05;
+        this.isDroping = false;
+    }
+
+    setDirection(direction = getStc() ? DIRECTION.LEFT : DIRECTION.RIGHT) {
+        this.direction = direction;
+    }
+
+    move = () => {
+        if (this.isDroping) return;
+        switch (this.direction) {
+            case DIRECTION.LEFT:
+                this.x -= this.speed;
+                this.speed += 0.004;
+                break;
+            case DIRECTION.RIGHT:
+                this.x += this.speed;
+                this.speed += 0.004;
+                break;
+        }
+    }
+
+    bounceEffect = (duration = 1000) => {
+        animate({
+            duration: duration,
+            timing: bounceEaseOut,
+            draw: (progress) => {
+                if (this.isDroping) {
+                    this.y = (this.targetHeight - this.startHeight) * progress + this.startHeight;
+                }
+
+                if (dropingProgress >= 1) {
+                    this.isDroping = false;
+                    this.type = SHAPE_TYPE.RECTANGLE;
+                    this.direction = DIRECTION.STOP;
+                    this.y = this.targetHeight;
+                }
+            }
+        });
+    };
+
+    drop = (targetHeight) => {
+        if (this.isDroping) return;
+        this.isDroping = true;
+        this.setDirection(SHAPE_TYPE.DOWN);
+        this.targetHeight = targetHeight;
+        this.startHeight = this.y;
+        dropingProgress = 0;
+        this.bounceEffect(1000);
+    }
+
+    // define draw functions
+    drawRect = (x, y, width, height, color) => {
+        this.ctx.beginPath();
+        this.ctx.rect(x, y, width, height);
+        this.ctx.fillStyle = getRgbaColor(color);
+        this.ctx.fill();
+        this.ctx.closePath();
+    }
+
+    drawCircle = (x, y, r, color) => {
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, r, 0, Math.PI * 2);
+        this.ctx.fillStyle = getRgbaColor(color);
+        this.ctx.fill();
+        this.ctx.closePath();
+    }
+
+    draw = () => {
+        switch (this.type) {
+            case SHAPE_TYPE.RECTANGLE:
+                this.drawRect(this.x, this.y, this.width, this.height, this.color);
+                break;
+            case SHAPE_TYPE.CIRCLE:
+                if (this.isDroping) {
+                    this.ctx.fillStyle = getRgbaColor(this.color);
+                    this.ctx.roundRect(this.x, this.y, this.width, this.height, this.r * (1 - dropingProgress) * 5).fill();
+                    break;
+                }
+                this.drawCircle(this.x + this.r, this.y + this.r, this.r, this.color);
+                break;
+        }
+    }
+};
+
+
+class GameBoard {
+    constructor(canvas) {
+        this.setCanvas(canvas);
+    }
+
+    setCanvas = (canvas) => {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext("2d");
+        this.init();
+    }
+
+    init = (countdown = eyeEcho_game_config.countdown) => {
+        this.width = this.canvas.width;
+        this.height = this.canvas.height;
+        this.lr_p = 2;
+        this.t_p = this.height / 5;
+        this.countdown = countdown;
+        this.activeShape = null;
+        this.staticShapes = [];
+        this.touchedHeight = this.height;
+        this.isStarted = false;
+        this.isUploading = false;
+        this.countdownTimer = null;
+        this.backgroundTimer = null;
+        this.moveTimer = null;
+        this.setActiveShape();
+        this.baseColors = [random_rgba(), random_rgba()];
+        this.bg_color = [random_rgba(), random_rgba()];
+        this.blinkIcon = new Image();
+        this.blinkIcon.src = 'http://cdn.onlinewebfonts.com/svg/img_457301.png';
+        this.drawMenu();
+
+        //init global info values
+        eyeEcho_result_info.count = 0;
+        eyeEcho_result_info.period = 0;
+    }
+
+    setActiveShape = () => {
+        this.activeShape = new Shape(this.ctx, this.width, this.t_p, this.lr_p);
+    }
+
+    startGame = () => {
+        if (this.isStarted || this.isUploading)
+            return;
+
+        this.init();
+
+        this.isStarted = true;
+
+        this.countdownTimer = setInterval(() => {
+            this.countdown--;
+            eyeEcho_result_info.period++;
+        }, 1000);
+
+        this.moveTimer = setInterval(() => {
+            this.moveShape();
+        }, 1);
+
+        this.draw();
+    }
+
+    uploadImage = () => {
+        try {
+            const pngUrl = this.canvas.toDataURL("image/png", 1);
+            setResultImageSrc(pngUrl);
+            setResultBlinkCount();
+            this.isUploading = true;
+            this.drawMenu();
+
+            const url = 'https://imb-staging.herokuapp.com/eye-echo/upload';
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json;charset=UTF-8'
+                    },
+                    body: JSON.stringify({
+                        "image": pngUrl
+                    })
+                })
+                .then(resp => resp.json())
+                .then(data => {
+                    this.isUploading = false;
+                    if (data.status === 'error') {
+                        alert('error: ', data.message);
+                    } else {
+                        //alert(data.message + '\n' + eyeEcho_menu[currentLanguage].uploading.success + '\n' + data.image_url);
+                        eyeEchoPage('eyeEcho_results_page', 'eyeEcho_result_created_image');
+                    }
+                    this.drawMenu();
+                });
+        } catch (err) {
+            console.log(err);
+            this.isUploading = false;
+            this.drawMenu();
+        }
+    }
+
+    endGame = () => {
+        if (!this.isStarted) return;
+        clearInterval(this.countdownTimer);
+        clearInterval(this.moveTimer);
+        this.isStarted = false;
+        this.uploadImage();
+    }
+
+    addStaticShape = () => {
+        this.staticShapes.push(this.activeShape);
+    }
+
+    changeBacgroundColor = (time) => {
+        this.baseColors.forEach((color, i) => {
+            color.forEach((chor, j) => {
+                if (j > 2) {
+                    this.bg_color[i][j] = ALPHA_MIN;
+                } else {
+                    this.bg_color[i][j] = o(Math.sin(toRadians((time / 50 / (i + j + 1) + chor) % 180)) * 255);
+                    if (this.bg_color[i][j] < CHOR_MIN) this.bg_color[i][j] = CHOR_MIN;
+                }
+            });
+        });
+    }
+
+    // check the active shape is out of board and set top height
+    checkShape = () => {
+        const x = this.activeShape.x;
+        const width = this.activeShape.width;
+
+        this.staticShapes.forEach(shape => {
+            if (shape.y < this.touchedHeight) {
+                this.touchedHeight = shape.y;
+            }
+        });
+
+        if (x + width + this.lr_p < 0 ||
+            x - width - this.lr_p > this.width) {
+            this.setActiveShape();
+            return;
+        }
+
+        if (this.activeShape.direction == DIRECTION.STOP) {
+            this.addStaticShape();
+            this.setActiveShape();
+        }
+    }
+
+    // check if end condition
+    checkEndCondition = () => {
+        return this.countdown < 1 || this.touchedHeight < this.t_p
+    }
+
+    // get the target level where the active shape to reach
+    getTargetHeight = () => {
+        const x = this.activeShape.x;
+        const width = this.activeShape.width;
+        const height = this.activeShape.height;
+
+        let targetHeight = this.height;
+        this.staticShapes.forEach(shape => {
+            if (this.activeShape.type == SHAPE_TYPE.RECTANGLE) {
+                if (isWithin(shape.x, x, x + width) || isWithin(shape.x + shape.width, x, x + width) || isWithin(x, shape.x, shape.x + shape.width) || isWithin(x + width, shape.x, shape.x + shape.width)) {
+                    if (targetHeight > shape.y) {
+                        targetHeight = shape.y;
+                    }
+                }
+            }
+
+            if (this.activeShape.type == SHAPE_TYPE.CIRCLE) {
+                if (isWithin(shape.x, x, x + width) || isWithin(shape.x + shape.width, x, x + width) || isWithin(x, shape.x, shape.x + shape.width) || isWithin(x + width, shape.x, shape.x + shape.width)) {
+                    if (targetHeight > shape.y) {
+                        targetHeight = shape.y;
+                    }
+                }
+            }
+        })
+        targetHeight -= height;
+        return targetHeight;
+    }
+
+    // drop shape
+    dropShape = () => {
+        eyeEcho_result_info.count++;
+        if (!this.isStarted) return;
+        if (this.activeShape.isDroping) return;
+        this.activeShape.drop(this.getTargetHeight());
+    }
+
+    // move shape left or right
+    moveShape = () => {
+        this.activeShape.move();
+        this.checkShape();
+    }
+
+    // define draw functions
+    erase = () => {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+    }
+
+    // draw menu to show how to play game
+    drawMenu = () => {
+        if (this.isUploading) {
+            this.ctx.fillStyle = '#000000';
+            this.ctx.font = '6vw Arial';
+            this.ctx.textAlign = 'center';
+            this.ctx.fillText(eyeEcho_game_config.text.game.uploading.title, this.width / 2, this.height / 2);
+            this.ctx.font = '4vw Arial'
+            this.ctx.fillText(eyeEcho_game_config.text.game.uploading.description, this.width / 2, (this.height / 4) * 3);
+            return;
+        }
+
+        this.erase();
+        if (this.isStarted) {
+            this.ctx.fillStyle = '#000000';
+            this.ctx.font = '6vw Arial';
+            this.ctx.textAlign = 'center';
+            this.ctx.fillText(eyeEcho_game_config.text.game.end.title, this.width / 2, this.height / 2);
+            this.ctx.font = '4vw Arial'
+            this.ctx.fillText(eyeEcho_game_config.text.game.end.description, this.width / 2, (this.height / 4) * 3);
+        } else {
+            this.ctx.fillStyle = '#000000';
+            this.ctx.font = '6vw Arial';
+            this.ctx.textAlign = 'center';
+            this.ctx.fillText(eyeEcho_game_config.text.game.start.title, this.width / 2, this.height / 2);
+            this.ctx.font = '4vw Arial'
+            this.ctx.fillText(eyeEcho_game_config.text.game.start.description, this.width / 2, (this.height / 4) * 3);
+        }
+    }
+
+    // draw time remaining
+    drawCountdown = () => {
+        if (this.countdown < 1) return;
+
+        this.ctx.fillStyle = '#FFF';
+        this.ctx.font = '3vw Arial Black';
+
+        const txtHeight = this.ctx.measureText('M').width;
+        const txtWidth = this.ctx.measureText(this.countdown);
+
+        this.ctx.textAlign = 'left';
+        this.ctx.fillText(this.countdown, txtHeight / 2, txtHeight * 1.125);
+
+        this.ctx.font = '2vw Arial';
+        this.ctx.fillText(' sec', txtHeight / 2 + txtWidth.width, txtHeight);
+
+    }
+
+    // draw shapes
+    drawShapes = () => {
+        this.activeShape.draw();
+        this.staticShapes.forEach(function (shape) {
+            shape.draw();
+        })
+    }
+
+    // draw blink icon when the shape start to drop
+    drawBlinkIcon = () => {
+        if (this.activeShape.isDroping && dropingProgress < 0.3) {
+            this.ctx.drawImage(this.blinkIcon, this.width / 2 - this.width / 10, this.height / 2 - this.width / 10, this.width / 5, this.width / 5);
+        }
+    }
+
+    // draw gradient background.
+    drawBackground = (time) => {
+        if (time === undefined) return;
+        this.changeBacgroundColor(time);
+        let grd = this.ctx.createLinearGradient(0, 0, 0, this.height);
+        grd.addColorStop(0, getRgbaColor(this.bg_color[0]));
+        grd.addColorStop(1, getRgbaColor(this.bg_color[1]));
+        this.ctx.fillStyle = grd;
+        this.ctx.fillRect(0, 0, this.width, this.height);
+    }
+
+    // draw by time
+    draw = (time) => {
+        this.erase();
+        this.drawBackground(time);
+        this.drawShapes();
+        //this.drawBlinkIcon();
+        if (this.checkEndCondition()) {
+            this.endGame();
+        } else {
+            this.drawCountdown();
+            window.requestAnimationFrame(this.draw);
+        }
+    }
+};
+
+/**
+ *  get elements
+ */
+
+const eyeEcho_blink_game_container = document.getElementById('eyeEcho_blink_game_container');
+const eyeEcho_blink_game_canvas = document.getElementById("eyeEcho_blink_game_board");
+const eyeEcho_blink_game_ctx = eyeEcho_blink_game_canvas.getContext("2d");
+
+let gameboard = null;
+
+/**
+ * set class name to change eyeEcho_blink_game_canvas game board width dynamically by eyeEcho_blink_game_container's boundbox size
+ */
+
+function chageWidthClass() {
+    if (!gameboard) return;
+    let ctn_width = eyeEcho_blink_game_container.offsetWidth;
+
+    if (ctn_width >= BREAK_POINT.DESKTOP) {
+        eyeEcho_blink_game_canvas.className = 'eyeEcho_desktop';
+        eyeEcho_blink_game_canvas.width = 1280;
+        eyeEcho_blink_game_canvas.height = 800;
+    } else if (ctn_width >= BREAK_POINT.iPAD_PRO) {
+        eyeEcho_blink_game_canvas.className = 'eyeEcho_ipad-pro';
+        eyeEcho_blink_game_canvas.width = 1024;
+        eyeEcho_blink_game_canvas.height = 1366;
+    } else if (ctn_width >= BREAK_POINT.iPAD) {
+        eyeEcho_blink_game_canvas.className = 'eyeEcho_ipad';
+        eyeEcho_blink_game_canvas.width = 768;
+        eyeEcho_blink_game_canvas.height = 1024;
+    } else if (ctn_width >= BREAK_POINT.iPhone6) {
+        eyeEcho_blink_game_canvas.className = 'eyeEcho_iphone-6';
+        eyeEcho_blink_game_canvas.width = 414;
+        eyeEcho_blink_game_canvas.height = 736;
+    } else if (ctn_width >= BREAK_POINT.iPhoneX) {
+        eyeEcho_blink_game_canvas.className = 'eyeEcho_iphone-x';
+        eyeEcho_blink_game_canvas.width = 375;
+        eyeEcho_blink_game_canvas.height = 812;
+    } else {
+        eyeEcho_blink_game_canvas.className = 'eyeEcho_iphone-5';
+        eyeEcho_blink_game_canvas.width = 320;
+        eyeEcho_blink_game_canvas.height = 568;
+    }
+
+    gameboard.setCanvas(eyeEcho_blink_game_canvas);
+}
+
+function eyeEcho_translate() {
+    const allDom = document.getElementsByTagName("*");
+    for (let i = 0; i < allDom.length; i++) {
+        const elem = allDom[i];
+        const key = elem.getAttribute("eyeEcho-data-tag");
+        if (key != null) {
+            elem.innerHTML = eyeEcho_game_config.text.page[key];
+        }
+    }
+}
+
+function createGameBoard() {
+    
+    eyeEcho_translate();
+    eyeEchoHandleColorPicker('grey');
+    
+    gameboard = new GameBoard(eyeEcho_blink_game_canvas);
+    chageWidthClass();
+
+    window.addEventListener('resize', chageWidthClass);
+
+    eyeEcho_blink_game_canvas.addEventListener('click', gameboard.startGame);
+
+    document.addEventListener('mousedown', function (event) {
+        lastDownTarget = event.target;
+    }, false);
+
+    document.addEventListener('keydown', function (e) {
+        if (lastDownTarget == eyeEcho_blink_game_canvas) {
+            e.preventDefault();
+            if (e.keyCode === 40) {
+                gameboard.dropShape();
+            }
+        }
+    }, false);
+}
+
+eyeEcho_load_menu_data(createGameBoard);

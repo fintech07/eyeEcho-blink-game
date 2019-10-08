@@ -1,0 +1,31 @@
+// main: style.scss
+
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+    box-sizing: border-box;
+}
+
+p, h1, h2, h3, span, a,text, div {
+  font-family: $fontstack;
+  font-weight: 400;
+  line-height: 1.2em;
+  transition: all 0.5s;
+  color: $primary_color;
+}
+
+
+div.eyeEcho_page {
+  display: none;
+  position: absolute;
+  top:0;
+  left:0;
+  width: 100%;
+  overflow: hidden;
+  background-color: rgba(240, 240, 240, 0.1);
+}

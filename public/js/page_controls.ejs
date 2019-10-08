@@ -1,0 +1,67 @@
+/*
+* global elements and variables, functions
+*/
+
+let eyeEcho_game_config = {
+    isLoading: true,
+    lang: 'en',
+    countdown: 30,
+    text: {},
+    theme: 'grey',
+}
+
+let eyeEcho_result_info = {
+    count: 0,
+    period: 0,
+}
+
+let eyeEchoPage = (page_id, tab_id=null, btn_id=null) => {
+  let eyeEchoPages = document.querySelectorAll(".eyeEcho_page");
+  eyeEchoPages.forEach((page, index) => {
+    if (page.getAttribute("id") == page_id) {
+      page.style.display = "block";
+    } else if (page.getAttribute("id") == tab_id) {
+      page.style.display = "block";
+    } else {
+      page.style.display = "none";
+    }
+  })
+
+  if (btn_id) {
+    let eyeEchoTabBtns = document.querySelectorAll(".eyeEcho-result-tab-button");
+    eyeEchoTabBtns.forEach((btn, index) => {
+      btn.classList.remove('active');
+      if (btn.getAttribute("id") == btn_id) {
+        btn.classList.add('active');
+      }
+    });
+  }
+
+  if (page_id == "eyeEcho_camera_page") {
+    setTimeout(() => {
+      console.log("start brf4: ", brfv4Example)
+      brfv4Example.start();
+    }, 1000)
+  }
+
+  if (page_id == 'eyeEcho_game_page') {
+    chageWidthClass();
+  }
+}
+
+let eyeEchoHandleColorPicker = (color) => {
+  const eyeEchoColorNameEl = document.getElementById('eyeEcho-circle-container-color-name');
+  const eyeEchoStartPaintingBtnEl = document.getElementById('eyeEcho-theme_picker-start-btn');
+
+  eyeEchoColorNameEl.children[0].innerHTML = eyeEcho_game_config.text.theme[color].desc;
+  eyeEchoColorNameEl.children[0].setAttribute("class", "eyeEcho-color-" + color);
+
+  if (color != 'grey') {
+    eyeEchoStartPaintingBtnEl.disabled = false;
+    eyeEchoStartPaintingBtnEl.classList.remove("disabled");
+    eyeEchoStartPaintingBtnEl.classList.remove("eyeEcho-color-" + eyeEcho_game_config.theme);
+    eyeEchoStartPaintingBtnEl.classList.add("eyeEcho-color-" + color);
+  }
+
+  eyeEcho_game_config.theme = color;
+}

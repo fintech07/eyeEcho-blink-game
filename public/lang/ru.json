@@ -1,0 +1,93 @@
+{
+    "game": {
+        "start": {
+            "title": "Нажмите, чтобы начать",
+            "description": "Форма будет выпадать, когда вы моргаете"
+        },
+        "end": {
+            "title": "Игра окончена",
+            "description": "Пожалуйста, нажмите, чтобы перезапустить игру"
+        },
+        "uploading": {
+            "title": "Загрузка изображения ...",
+            "description": "Пожалуйста, подождите несколько минут, пока загружаете изображение.",
+            "success": "Пожалуйста, подтвердите изображение, что вы создали"
+        }
+    },
+    "theme": {
+        "grey": {
+            "desc": "выберите цветовую тему"
+        },
+        "red": {
+            "desc": "Малибу Сансет"
+        },
+
+        "orange": {
+            "desc": "Сафари в саванне"
+        },
+
+        "yellow": {
+            "desc": "Цитрусовый пирог"
+        },
+
+        "green": {
+            "desc": "Прерий Прогулка"
+        },
+
+        "surprise": {
+            "desc": "Я чувствую удачу"
+        },
+
+        "light-blue": {
+            "desc": "Ocean Spray"
+        },
+
+        "dark-blue": {
+            "desc": "Полуночная магия"
+        },
+
+        "purple": {
+            "desc": "Веселые пятницы"
+        },
+        
+        "pink": {
+            "desc": "Bubblegum Shake"
+        }
+    },
+    "page": {
+        "eyeEcho-game-landing-page-title": "ВАШИ ГЛАЗА НИКОГДА НЕ ОСТАНАВЛИВАЮТС",
+        "eyeEcho-game-landing-page-link": "КРАСКА ВАШИМИ ГЛАЗАМИ",
+        "eyeEcho-game-start-painting-btn-text": "НАЧАТЬ КРАСКУ",
+        "eyeEcho-game-repaint-btn-text": "перекрашивание",
+        
+        "eyeEcho-theme-picker-page-description-title": "ПОДОЖДИТЕ, НО КАК?",
+        "eyeEcho-theme-picker-page-description-content": "Eye Echo использовала ваши уникальные движения глаз, такие как мигание и сканирование, для управления формами и цветами на экране в режиме реального времени. Через 30 секунд ваш шедевр будет готов! Прежде чем начать, выберите цветовую тему для своих работ ниже:",
+        "eyeEcho-theme-picker-page-surprise-btn": "Удиви меня",
+        "eyeEcho-theme-picker-page-color-name-text": "Выберите цвет темы",
+        
+        "eyeEcho-result-info-page-count-desc-cap": "Ваше Глазное Эхо заброшено",
+        "eyeEcho-result-info-page-count-desc-blink-in": "мигает в",
+        "eyeEcho-result-info-page-count-desc-seconds": "секунд",
+
+        "eyeEcho-result-info-page-desc-1-title": "Пока вы играете, мы работаем",
+        "eyeEcho-result-info-page-desc-1-sub-1": "Объяснение, как количество миганий пользователя сравнивается с количеством его сверстников.",
+        "eyeEcho-result-info-page-desc-1-sub-2": "Интересная статистика, которая связывает возраст со средним количеством миганий в день.",
+        "eyeEcho-result-info-page-desc-1-sub-3": "Интересный факт о том, как создавался их персонализированный коллаж.",
+        "eyeEcho-result-info-page-desc-2-title": "ВАШИ ГЛАЗА НИКОГДА НЕ ОСТАНАВЛИВАЮТСЯ",
+        "eyeEcho-result-info-page-desc-2-sub-1": "Полезный совет, чтобы обучить пользователя преждевременному старению",
+        "eyeEcho-result-info-page-desc-2-sub-2": "Полезный совет, чтобы обучить пользователя преждевременному старению",
+        "eyeEcho-result-info-page-desc-2-sub-3": "Полезный совет, чтобы обучить пользователя преждевременному старению",
+        
+        "eyeEcho-shop-page-desc-title": "Biolumin - C Eye Serum",
+        "eyeEcho-shop-page-desc-content": "Мы делаем более 100 000 движений глаз в день. Кожа вокруг глаз - самая нежная и не способна противостоять этому постоянному движению. Дайте им импульс с нашим новым <b>Biolumin - C Eye Serum</b>",
+        "eyeEcho-shop-page-shop-now-btn-text": "КУПИТЬ СЕЙЧАС",
+        "eyeEcho-shop-page-desc-overlay-text": "Эта формула работает с естественной биологией кожи для устранения тонких линий и морщин у их источника, а не просто скрывает их.",
+        
+        "eyeEcho-download-modal-options-title": "Параметры обмена",
+        "eyeEcho-download-modal-instagram-text": "IG Stories",
+        "eyeEcho-download-modal-instagram-feed-text": "IG Feed",
+        "eyeEcho-download-modal-snapchat-text": "Snapchat",
+        "eyeEcho-download-modal-more-text": "Больше",
+        "eyeEcho-download-modal-save-to-camera-text": "Сохранить в ленту камеры"
+    }
+}

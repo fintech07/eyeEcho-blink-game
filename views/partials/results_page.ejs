@@ -1,0 +1,250 @@
+<!-- eyeEcho game landing page -->
+<div id="eyeEcho_game_landing_page" class="eyeEcho_page">
+    <img src="./img/jpg_png/landing.jpg" class="eyeEcho-game-background-image"/>
+    <div id="eyeEcho_game_landing_page_content" class="eyeEcho-font-color-white">
+        <div class="eyeEcho eyeEcho-landing-page-title">
+            <img id="eyeEcho_game_landing_page_logo_svg" src="./img/jpg_png/logo.png" alt="logo" /><br>
+            <label eyeEcho-data-tag="eyeEcho-game-landing-page-title"></label>
+        </div>
+        <div onclick="eyeEchoPage('eyeEcho_theme_picker_page')" class="eyeEcho eyeEcho-game-landing-page-link eyeEcho-aligin-center">
+            <label eyeEcho-data-tag="eyeEcho-game-landing-page-link"></label>
+        </div>
+    </div>
+</div>
+
+<!-- eyeEcho theme picker page -->
+<div id="eyeEcho_theme_picker_page" class="eyeEcho_page">
+    <div class="eyeEcho_theme_picker_body">
+        <div class="eyeEcho-theme_picker-description">
+            <div class="eyeEcho-theme_picker-description-title">
+                <label eyeEcho-data-tag="eyeEcho-theme-picker-page-description-title"></label>
+                <hr class="eyeEcho-horizontal-line eyeEcho-line-bold" />
+            </div>
+            <div class="eyeEcho-theme_picker-description-content">
+                <p eyeEcho-data-tag="eyeEcho-theme-picker-page-description-content"></p>
+            </div>
+        </div>
+        <div class="eyeEcho-theme_picker-theme-picker">
+            <div class='eyeEcho-circle-container'>
+                <span onclick="eyeEchoHandleColorPicker('red')" class="eyeEcho-theme_picker_color_item eyeEcho-color-red"></span>
+                <span onclick="eyeEchoHandleColorPicker('orange')" class="eyeEcho-theme_picker_color_item eyeEcho-color-orange"></span>
+                <span onclick="eyeEchoHandleColorPicker('yellow')" class="eyeEcho-theme_picker_color_item eyeEcho-color-yellow"></span>
+                <span onclick="eyeEchoHandleColorPicker('green')" class="eyeEcho-theme_picker_color_item eyeEcho-color-green"></span>
+                <span onclick="eyeEchoHandleColorPicker('surprise')" class="eyeEcho-theme_picker_color_item eyeEcho-color-surprise">
+                    <div class="eyeEcho-surprise-body">
+                        <div  class="eyeEcho-surprise-sub">
+                            <label eyeEcho-data-tag="eyeEcho-theme-picker-page-surprise-btn"></label>
+                        </div>
+                    </div>
+                </span>
+                <span onclick="eyeEchoHandleColorPicker('light-blue')" class="eyeEcho-theme_picker_color_item eyeEcho-color-light-blue"></span>
+                <span onclick="eyeEchoHandleColorPicker('dark-blue')" class="eyeEcho-theme_picker_color_item eyeEcho-color-dark-blue"></span>
+                <span onclick="eyeEchoHandleColorPicker('purple')" class="eyeEcho-theme_picker_color_item eyeEcho-color-purple"></span>
+                <span onclick="eyeEchoHandleColorPicker('pink')" class="eyeEcho-theme_picker_color_item eyeEcho-color-pink"></span>
+                <div id="eyeEcho-circle-container-color-name">
+                    <label eyeEcho-data-tag="eyeEcho-theme-picker-page-color-name-text"></label>
+                </div>
+            </div>
+        </div>
+        <button id="eyeEcho-theme_picker-start-btn" eyeEcho-data-tag="eyeEcho-game-start-painting-btn-text" onclick="eyeEchoPage('eyeEcho_game_page')" class="eyeEcho eyeEcho-game-landing-page-link eyeEcho-aligin-center disabled" disabled>
+            START PAINTING
+        </button>
+    </div>
+</div>
+
+<!-- eyeEcho game board -->
+<div id="eyeEcho_game_page" class="eyeEcho_page">
+    <div id="eyeEcho_blink_game_container">
+        <canvas id="eyeEcho_blink_game_board" class="eyeEcho_canvas"></canvas>
+    </div>
+</div>
+
+<!-- eyeEcho  result page to show the image what the user created and some results information -->
+<div id="eyeEcho_results_page" class="eyeEcho_page">
+    <!-- show the image what user created -->
+    <div id="eyeEcho_result_created_image" class="eyeEcho_page">
+        <!-- top menu on result image page -->
+        <div class="eyeEcho-result-image-top-menu">
+            <button onclick="eyeEchoPage('eyeEcho_game_page')" eyeEcho-data-tag="eyeEcho-game-repaint-btn-text" class="eyeEcho-btn eyeEcho-repaint-btn">
+                <!-- <img src="./img/eyeEcho-paint-icon.png" alt="Go to game board" width="30vw"> -->
+                RE-PAINT
+            </button>
+            <a href="#eyeEcho_downloadModal" class="eyeEcho-btn eyeEcho-vertical-center-link">
+                <img id="eyeEcho_download_icon" src="./img/jpg_png/save.png" alt="Go to download page" width="30vw">
+            </a>
+        </div>
+        <img id="eyeEcho_result_image_element" src="" alt="image what you created">
+        <div id="eyeEcho_result_image_info" class="eyeEcho-display-flex-space-between">
+            <label>#myeyeecho</label>
+            <div><img id="eyeEcho_logo_icon" src="./img/jpg_png/logo.png" alt="logo"/></div>
+        </div>
+    </div>
+    <!-- information page -->
+    <div id="eyeEcho_info_page" class="eyeEcho_page">
+        <div class="eyeEcho-result-image-top-menu">
+            <button onclick="eyeEchoPage('eyeEcho_game_page')" eyeEcho-data-tag="eyeEcho-game-repaint-btn-text" class="eyeEcho-btn eyeEcho-repaint-btn">
+                RE-PAINT
+            </button>
+        </div>
+        <!-- blinks count info sectoin -->
+        <div class="eyeEcho-result-info-count eyeEcho eyeEcho-aligin-center">
+            <p eyeEcho-data-tag="eyeEcho-result-info-page-count-desc-cap">your Eye Echo caspantured</p>
+            <p id="eyeEcho_result_info_blink_count">35</p>
+            <p eyeEcho-data-tag="eyeEcho-result-info-page-count-desc-blink-in">blinks in</p>
+            <p id="eyeEcho_result_info_blink_period">60</p>
+            <p eyeEcho-data-tag="eyeEcho-result-info-page-count-desc-seconds">seconds</p>
+        </div>
+        <!-- eyeEcho description section one -->
+        <div class="eyeEcho-result-info-description">
+            <div class="eyeEcho-description-title">
+                <label eyeEcho-data-tag="eyeEcho-result-info-page-desc-1-title"></label>
+                <hr class="eyeEcho-horizontal-line eyeEcho-line-bold">
+            </div>
+            <div class="eyeEcho-description-body">
+                <div class="eyeEcho_description-sub">
+                    <div class="eyeEcho-icon-number-in-round"><label>1</label></div>
+                    <div class="eyeEcho-description-sub-content">
+                        <p eyeEcho-data-tag="eyeEcho-result-info-page-desc-1-sub-1"></p>
+                    </div>
+                </div>
+                <div class="eyeEcho_description-sub">
+                    <div class="eyeEcho-icon-number-in-round">2</div>
+                    <div class="eyeEcho-description-sub-content">
+                        <p eyeEcho-data-tag="eyeEcho-result-info-page-desc-1-sub-2"></p>
+                    </div>
+                </div>
+                <div class="eyeEcho_description-sub">
+                    <div class="eyeEcho-icon-number-in-round">3</div>
+                    <div class="eyeEcho-description-sub-content">
+                        <p eyeEcho-data-tag="eyeEcho-result-info-page-desc-1-sub-3"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="eyeEcho-horizontal-line eyeEcho-line-separator">
+        <div class="eyeEcho-result-info-description">
+            <div class="eyeEcho-description-title">
+                <label eyeEcho-data-tag="eyeEcho-result-info-page-desc-2-title"></label>
+                <hr class="eyeEcho-horizontal-line eyeEcho-line-bold">
+            </div>
+
+            <div class="eyeEcho-description-body">
+                <div class="eyeEcho_description-sub">
+                    <div class="eyeEcho-icon-number-in-round">1</div>
+                    <div class="eyeEcho-description-sub-content">
+                        <p eyeEcho-data-tag="eyeEcho-result-info-page-desc-2-sub-1"></p>
+                    </div>
+                </div>
+                <div class="eyeEcho_description-sub">
+                    <div class="eyeEcho-icon-number-in-round">2</div>
+                    <div class="eyeEcho-description-sub-content">
+                        <p eyeEcho-data-tag="eyeEcho-result-info-page-desc-2-sub-2"></p>
+                    </div>
+                </div>
+                <div class="eyeEcho_description-sub">
+                    <div class="eyeEcho-icon-number-in-round">3</div>
+                    <div class="eyeEcho-description-sub-content">
+                        <p eyeEcho-data-tag="eyeEcho-result-info-page-desc-2-sub-3"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- shop page -->
+    <div id="eyeEcho_shop_page" class="eyeEcho_page">
+        <div class="eyeEcho-shop-product">
+            <img src="./img/jpg_png/biolumin-c.jpg" alt="product image"/>
+            <div class="eyeEcho_product-description">
+                <div class="eyeEcho-description-title">
+                <label eyeEcho-data-tag="eyeEcho-shop-page-desc-title"></label>
+                    <hr class="eyeEcho-horizontal-line eyeEcho-line-bold">
+                </div>
+                <div class="eyeEcho-product-description-content">
+                    <p eyeEcho-data-tag="eyeEcho-shop-page-desc-content"></p>
+                </div>
+            </div>
+            <div class="eyeEcho_shop-link">
+                <a href="#" target="_blank" class="eyeEcho-btn eyeEcho-shop-btn">
+                    <label eyeEcho-data-tag="eyeEcho-shop-page-shop-now-btn-text"></label>
+                </a>
+            </div>
+        </div>
+        <div class="eyeEcho-shop-product">
+            <img src="./img/jpg_png/ingredients.jpg" alt="product image"/>
+        </div>
+        <div class="eyeEcho-shop-product">
+            <img src="./img/jpg_png/model-product.jpg" alt="product image"/>
+            <div class="eyeEcho-product-description-content eyeEcho-product-overlay-description">
+                <p eyeEcho-data-tag="eyeEcho-shop-page-desc-overlay-text"></p>
+            </div>
+            <div class="eyeEcho_shop-link eyeEcho-product-overlay-button">
+                <a href="#" target="_blank" class="eyeEcho-btn eyeEcho-shop-btn">
+                    <label eyeEcho-data-tag="eyeEcho-shop-page-shop-now-btn-text"></label>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- bottom menu on result page -->
+    <div id="eyeEcho-result-bottom-menu">
+        <button id="eyeEcho_result_info_tab_button"
+            onclick="eyeEchoPage('eyeEcho_results_page', 'eyeEcho_info_page', 'eyeEcho_result_info_tab_button')"
+            class="eyeEcho-btn eyeEcho-result-tab-button">
+            <img src="./img/jpg_png/info.png" alt="Go to info page" width="25vw">
+        </button>
+        <button id="eyeEcho_result_image_tab_button"
+            onclick="eyeEchoPage('eyeEcho_results_page', 'eyeEcho_result_created_image', 'eyeEcho_result_image_tab_button')"
+            class="eyeEcho-btn eyeEcho-result-tab-button active">
+            <img src="./img/jpg_png/painting.png" alt="Go to result page" width="25vw">
+        </button>
+        <button id="eyeEcho_result_shop_tab_button"
+            onclick="eyeEchoPage('eyeEcho_results_page', 'eyeEcho_shop_page', 'eyeEcho_result_shop_tab_button')"
+            class="eyeEcho-btn eyeEcho-result-tab-button">
+            <img src="./img/jpg_png/shopping-bag.png" alt="Go to shop page" width="25vw">
+        </button>
+    </div>
+    <!-- download menu modal -->
+    <div id="eyeEcho_downloadModal" class="modalDialog">
+        <a href="#close" title="Close" class="close">
+            <img src="./img/jpg_png/modal-close-icon.png" alt="back" width="40vw">
+        </a>
+        <div class="eyeEcho_download_modal_body">
+            <div class="eyeEcho_download_modal_sub">
+                <div id="eyeEcho_madal_title" eyeEcho-data-tag="eyeEcho-download-modal-options-title"></div>
+                <div id="eyeEcho_share_icons">
+                    <div class="eyeEcho_modal_icon_item">
+                        <a href="#close" > 
+                            <img src="./img/jpg_png/instagram-icon.png" alt="ig stories" />
+                        </a>
+                        <div><label eyeEcho-data-tag="eyeEcho-download-modal-instagram-text"></label></div>
+                    </div>
+                    <div class="eyeEcho_modal_icon_item">
+                        <a href="#close" > 
+                            <img src="./img/jpg_png/instagram-icon.png" alt="ig feed" />
+                        </a>
+                        <div><label eyeEcho-data-tag="eyeEcho-download-modal-instagram-feed-text"></label></div>
+                    </div>
+                    <div class="eyeEcho_modal_icon_item">
+                        <a href="#close"> 
+                            <img src="./img/jpg_png/snapchat-icon.png" alt="snapchat" />
+                        </a>
+                        <div><label eyeEcho-data-tag="eyeEcho-download-modal-snapchat-text"></label></div>
+                    </div>
+                    <div class="eyeEcho_modal_icon_item">
+                        <a href="#close"> 
+                            <img src="./img/jpg_png/three-dots-icon.png" alt="more" />
+                        </a>
+                        <div><label eyeEcho-data-tag="eyeEcho-download-modal-more-text"></label></div>
+                    </div>
+                </div>
+            </div>
+            <hr class="eyeEcho-horizontal-line eyeEcho-line-separator">
+            <div class="eyeEcho_download_modal_sub">
+                <div id="eyeEcho_modal_save_camera_roll">
+                    <a href="#close"> 
+                    <label eyeEcho-data-tag="eyeEcho-download-modal-save-to-camera-text"></label>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

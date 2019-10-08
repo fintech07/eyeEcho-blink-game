@@ -1,0 +1,598 @@
+
+body {
+    margin: 0px;
+}
+
+// responsive breakpoints
+.eyeEcho_desktop {
+    width: 1280px !important;
+    height: 800px !important;
+}
+
+.eyeEcho_ipad-pro {
+    width: 1024px !important;
+    height: 100% !important;
+}
+
+.eyeEcho_ipad {
+    width: 768px !important;
+    height: 100% !important;
+}
+
+.eyeEcho_iphone-6 {
+    width: 414px !important;
+    height: 100% !important;
+}
+
+.eyeEcho_iphone-x {
+    width: 375px !important;
+    height: 100% !important;
+}
+
+.eyeEcho_iphone-5 {
+    width: 320px !important;
+    height: 100% !important;
+}
+
+// eyeEcho basic styles
+.eyeEcho {
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+.eyeEcho-aligin-center {
+    text-align: center;
+}
+
+.eyeEcho-btn {
+    text-decoration: none;
+
+    &:hover,
+    &:active {
+        transition: all 0.1s ease-in-out;
+        transform: scale(1.2);
+    }
+}
+
+.eyeEcho-color-grey {
+    background:  gray !important;
+    opacity: 0.4;
+}
+
+.eyeEcho-color-red {
+    background:  -webkit-linear-gradient(-45deg, #ff5959, #a50707) !important;
+}
+
+.eyeEcho-color-orange {
+    background:  linear-gradient(-45deg, #d64e00, #ffa126) !important;
+}
+
+.eyeEcho-color-yellow {
+    background:  linear-gradient(-45deg, #df9300, #fee433) !important;
+}
+
+.eyeEcho-color-green {
+    background:  linear-gradient(-45deg, #099400, #75ff6d) !important;
+}
+
+.eyeEcho-color-surprise {
+    background:  linear-gradient(135deg, #ff0000, #ff00ff, #0000ff, #00ffff, #00ff00, #ffff00, #ff0000) !important;
+
+    div {
+        position: relative;
+        width: 100%;
+        height: 100%;
+
+        .eyeEcho-surprise-sub {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            top: 50%;
+            left: 50%;
+            background: white;
+            width: 95%;
+            height: 95%;
+            border-radius: 50%;
+        }
+    }
+
+    label {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        top: 50%;
+        left: 50%;
+        text-align: center;
+
+        background:  linear-gradient(135deg, #ff0000, #ff00ff, #0000ff, #00ffff, #00ff00, #ffff00, #ff0000);
+        -webkit-background-clip: text  !important;
+        -webkit-text-fill-color: transparent !important;
+    }
+}
+
+.eyeEcho-color-light-blue {
+    background:  linear-gradient(-45deg, #00acaf, #73fdff) !important;
+}
+
+.eyeEcho-color-dark-blue {
+    background:  linear-gradient(-45deg, #0e00a5, #20bdff) !important;
+}
+
+.eyeEcho-color-purple {
+    background:  linear-gradient(-45deg, #44009e, #b966ff) !important;
+}
+
+.eyeEcho-color-pink {
+    background:  linear-gradient(-45deg, #970075, #ff5ac3) !important;
+}
+
+.eyeEcho-repaint-btn {
+    background: linear-gradient(90deg, rgba(124, 230, 218, 1) 23%, rgba(210, 232, 73, 0.8743872549019608) 69%, rgba(156, 234, 71, 0.9051995798319328) 78%, rgba(249, 255, 0, 1) 100%);
+    color: white;
+    margin-top: 3vh;
+    padding: 1vw 3vw 1vw 3vw;
+    height: fit-content;
+    border-radius: 10vw;
+    font-size: smaller;
+}
+
+.eyeEcho-horizontal-line {
+    border-bottom: 1px solid;
+
+    &.eyeEcho-line-bold {
+        border-width: medium;
+    }
+
+    &.eyeEcho-line-separator {
+        border-color: black;
+        opacity: 0.1;
+    }
+}
+
+// eyeEcho onboarding page style
+.eyeEcho_theme_picker_body {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 7vh 5vw 7vh 5vw;
+    overflow: auto;
+    
+    div,
+    p {
+        color: $info_color;
+    }
+
+    button {
+        color: white;
+    }
+}
+
+.eyeEcho-circle-container {
+    @include on-circle($item-count: 9, $circle-size: 80vw, $item-size: 18vw, $start-angle: -70);
+    margin: 9vw auto;
+    border: dotted 1px rgba(60, 60, 60, 0.1);
+
+    span {
+        display: block;
+        max-width: 100%;
+        border-radius: 50%;
+        transition: .15s;
+
+        &:hover,
+        &:active {
+            border: solid 3px white;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
+        }
+    }
+
+    label {
+        font-size: 3vw;
+        line-height: 1.2;
+    }
+
+    #eyeEcho-circle-container-color-name {
+        position: absolute;
+        transform: translate(-25%, 50%);
+        text-align: center;
+        width: 50%;
+
+        label {
+            font-size: 4vw;
+            line-height: 1.2;
+            -webkit-background-clip: text  !important;
+            -webkit-text-fill-color: transparent !important;
+        }
+    }
+}
+
+.eyeEcho-theme_picker-description-title {
+
+    font-size: 6vw;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 1.5;
+
+    hr {
+        width: 40vw;
+        margin: 2vh auto 0;
+        border: 0;
+        height: 4px;
+        background:  linear-gradient(90deg, #c77ce6 0%, #5e4df7 24%, #5e4df7 60%, #69bef5 100%);
+    }
+}
+
+.eyeEcho-theme_picker-description-content {
+    padding: 3vh 0vw 0vw;
+
+    p {
+        text-align: center;
+        line-height: 2;
+        font-size: 4vw;
+        letter-spacing: 0.2vw;
+    }
+}
+
+// eyeEcho landing game page styles
+.eyeEcho-game-landing-page-link {
+    margin: 0px auto;
+    width: 80vw;
+    color: $info_color;
+    font-size: 4vw;
+    letter-spacing: 1.2px;
+    font-weight: bold;
+    background: white;
+    padding: 2vh 10vw;
+    border-radius: 10vh;
+    border: 1px solid white;
+
+    &.disabled {
+        background: #ccc;
+        color: white;
+    }
+
+    &.active {
+        background: linear-gradient(90deg, #c77ce6 0%, #5e4df7 24%, #5e4df7 60%, #69bef5 100%);
+        color: white;
+    }
+}
+
+// eyeEcho game landing page layout style
+#eyeEcho_game_landing_page_content {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0 7vw 7vh 7vw;
+    font-weight: bold;
+}
+
+.eyeEcho-landing-page-title {
+    padding-top: 10vh;
+    font-size: 11vw;
+
+    img {
+        width: 20vw;
+        padding-bottom: 2vh;
+    }
+}
+
+.eyeEcho-game-background-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -999;
+}
+
+// eyeEcho result page style
+.eyeEcho-result-image-top-menu {
+    background: white;
+
+    height: 8vh;
+    width: -webkit-fill-available;
+
+    display: flex;
+    justify-content: space-between;
+    padding: 0 4vw;
+}
+
+#eyeEcho-result-bottom-menu {
+    background: white;
+
+    height: 8vh;
+    width: -webkit-fill-available;
+
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10vw;
+
+    position: fixed;
+    bottom: 0;
+}
+
+#eyeEcho_result_image_info {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    position: fixed;
+    bottom: 8vh;
+    padding: 0 2vw 1vh;
+
+    label {
+        color: white;
+        align-self: center;
+    }
+
+    img {
+        width: 10vw;
+    }
+}
+
+.eyeEcho-result-tab-button {
+    opacity: .3;
+
+    &.active {
+        opacity: 1.0;
+    }
+}
+
+#eyeEcho_info_page,
+#eyeEcho_shop_page {
+    overflow: auto;
+    padding-bottom: 10vh;
+}
+
+.eyeEcho-result-info-count {
+    background: linear-gradient(90deg, rgba(124, 230, 218, 1) 23%, rgba(210, 232, 73, 0.8743872549019608) 69%, rgba(156, 234, 71, 0.9051995798319328) 78%, rgba(249, 255, 0, 1) 100%);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    padding: 10vh 0 10vh;
+    font-size: 6vw;
+
+    p {
+        color: white;
+    }
+}
+
+#eyeEcho_result_info_blink_count {
+    font-weight: bold;
+    font-size: 36vw;
+}
+
+#eyeEcho_result_info_blink_period {
+    font-weight: lighter;
+    font-size: 36vw;
+}
+
+
+
+#eyeEcho_result_image_element {
+    width: fit-content;
+    height: 84vh;
+}
+
+.eyeEcho-result-info-description {
+    padding: 7vh 7vw 7vh 7vw;
+
+    div,
+    hr,
+    p {
+        color: $info_color;
+    }
+}
+
+.eyeEcho-description-title {
+    font-size: 6vw;
+    font-weight: bold;
+    padding-left: 3vw;
+
+    hr {
+        width: 60vw;
+        padding-top: 2vh;
+    }
+}
+
+.eyeEcho-description-body {
+    padding-top: 4vh;
+}
+
+.eyeEcho_description-sub {
+    font-size: 4vw;
+    display: flex;
+    flex-direction: row;
+    padding: 2vh 0 2vh;
+}
+
+.eyeEcho-icon-number-in-round {
+    box-sizing: content-box;
+    margin: 1.5vh 4vw 0vh 0;
+    font-size: 4vw;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 4vw;
+    height: 4vw;
+    padding: 2vw;
+    background: #fff;
+    border: 1px solid;
+    text-align: center;
+}
+
+.eyeEcho-description-sub-content {
+    p {
+        font-family: Arial, Helvetica, sans-serif;
+        line-height: 2;
+    }
+}
+
+#eyeEcho_shop_page {
+    img {
+        width: 100vw;
+    }
+
+    div,
+    p {
+        font-family: Arial, Helvetica, sans-serif;
+        color: $info_color;
+    }
+}
+
+.eyeEcho-shop-product {
+    position: relative;
+}
+
+.eyeEcho_product-description {
+    padding: 5vh 8vw 5vh 8vw;
+}
+
+.eyeEcho-product-description-content {
+    padding-top: 3vh;
+
+    p {
+        color: $info_color;
+        font-size: 3.5vw;
+        line-height: 1.8;
+        padding-right: 12vw;
+        letter-spacing: 1.2px;
+    }
+}
+
+.eyeEcho-product-overlay-description {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vw;
+    padding: 0px;
+
+    p {
+        text-align: center;
+        color: white !important;
+        font-size: 4.5vw;
+        font-weight: bold;
+        line-height: 1.5;
+        letter-spacing: 3px;
+        padding: 0px;
+    }
+}
+
+.eyeEcho_shop-link {
+    text-align: center;
+    padding: 2vh 0 8vh 0;
+}
+
+.eyeEcho-product-overlay-button {
+    padding: 0px;
+    transform: translate(0%, -50%);
+}
+
+.eyeEcho-shop-btn {
+    color: white;
+    background: #f99712;
+    padding: 2vh 30vw;
+    border-radius: 10vh;
+    border: 1px solid white;
+}
+
+// eyeEcho blink game board style
+#eyeEcho_blink_game_container {
+    background: #eee;
+    display: block;
+    margin: 0 auto;
+    padding: 0px;
+    height: 100%;
+}
+
+// download menu style
+.eyeEcho-vertical-center-link {
+    position: relative;
+}
+
+#eyeEcho_download_icon {
+    transform: translate(0, 50%);
+}
+
+.modalDialog {
+    position: fixed;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 5vw;
+    top: 0;
+    right: 0;
+    bottom: -25vh;
+    left: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 99999;
+    opacity: 0;
+    transition: all 300ms ease-in;
+    pointer-events: none;
+
+    div,
+    a {
+        color: black;
+        text-decoration: none;
+    }
+}
+
+.modalDialog:target {
+    opacity: 1;
+    transform: translate(0, -25vh);
+    pointer-events: auto;
+}
+
+.close {
+    position: fixed;
+    bottom: 25vh;
+    right: 3vw;
+}
+
+.eyeEcho_download_modal_body {
+    background: white;
+
+    position: fixed;
+    bottom: 0px;
+
+    width: 100vw;
+    height: 25vh;
+}
+
+.eyeEcho_download_modal_sub {
+    padding: 1vh 4vw 0 4vw;
+
+    div {
+        padding: 1vh 0 1vh;
+    }
+}
+
+#eyeEcho_madal_title {
+    font-size: 4vw;
+    font-weight: bold;
+}
+
+#eyeEcho_modal_save_camera_roll {
+    font-size: 4vw;
+    color: $info_color;
+}
+
+#eyeEcho_share_icons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.eyeEcho_modal_icon_item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    text-align: center;
+
+    font-size: 4vw;
+
+    img {
+        width: 6vw;
+    }
+
+}

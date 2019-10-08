@@ -1,0 +1,20 @@
+@import "variables";
+@import "mixins";
+
+#eyeEcho_body{
+  display: block;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  transition: opacity 2s;
+
+  @import "global";
+  @import "landing_page";
+  @import "onboarding_page";
+  @import "camera_page";
+  @import "results_page";
+
+}
+
+@import "banner";
