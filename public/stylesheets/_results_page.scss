@@ -1,38 +1,43 @@
-
 body {
     margin: 0px;
 }
 
+canvas {
+    width: 100% !important;
+    height: 100% !important;
+    background: #b0b0b3;
+}
+
 // responsive breakpoints
-.eyeEcho_desktop {
-    width: 1280px !important;
-    height: 800px !important;
-}
+// .eyeEcho_desktop {
+//     width: 1280px !important;
+//     height: 800px !important;
+// }
 
-.eyeEcho_ipad-pro {
-    width: 1024px !important;
-    height: 100% !important;
-}
+// .eyeEcho_ipad-pro {
+//     width: 1024px !important;
+//     height: 100% !important;
+// }
 
-.eyeEcho_ipad {
-    width: 768px !important;
-    height: 100% !important;
-}
+// .eyeEcho_ipad {
+//     width: 768px !important;
+//     height: 100% !important;
+// }
 
-.eyeEcho_iphone-6 {
-    width: 414px !important;
-    height: 100% !important;
-}
+// .eyeEcho_iphone-6 {
+//     width: 414px !important;
+//     height: 100% !important;
+// }
 
-.eyeEcho_iphone-x {
-    width: 375px !important;
-    height: 100% !important;
-}
+// .eyeEcho_iphone-x {
+//     width: 375px !important;
+//     height: 100% !important;
+// }
 
-.eyeEcho_iphone-5 {
-    width: 320px !important;
-    height: 100% !important;
-}
+// .eyeEcho_iphone-5 {
+//     width: 320px !important;
+//     height: 100% !important;
+// }
 
 // eyeEcho basic styles
 .eyeEcho {
@@ -55,28 +60,28 @@ body {
 }
 
 .eyeEcho-color-grey {
-    background:  gray !important;
+    background: gray !important;
     opacity: 0.4;
 }
 
 .eyeEcho-color-red {
-    background:  -webkit-linear-gradient(-45deg, #ff5959, #a50707) !important;
+    background: -webkit-linear-gradient(-45deg, #ff5959, #a50707) !important;
 }
 
 .eyeEcho-color-orange {
-    background:  linear-gradient(-45deg, #d64e00, #ffa126) !important;
+    background: linear-gradient(-45deg, #d64e00, #ffa126) !important;
 }
 
 .eyeEcho-color-yellow {
-    background:  linear-gradient(-45deg, #df9300, #fee433) !important;
+    background: linear-gradient(-45deg, #df9300, #fee433) !important;
 }
 
 .eyeEcho-color-green {
-    background:  linear-gradient(-45deg, #099400, #75ff6d) !important;
+    background: linear-gradient(-45deg, #099400, #75ff6d) !important;
 }
 
 .eyeEcho-color-surprise {
-    background:  linear-gradient(135deg, #ff0000, #ff00ff, #0000ff, #00ffff, #00ff00, #ffff00, #ff0000) !important;
+    background: linear-gradient(135deg, #ff0000, #ff00ff, #0000ff, #00aaaa, #00aa00, #bbbb00, #ff0000) !important;
 
     div {
         position: relative;
@@ -102,26 +107,26 @@ body {
         left: 50%;
         text-align: center;
 
-        background:  linear-gradient(135deg, #ff0000, #ff00ff, #0000ff, #00ffff, #00ff00, #ffff00, #ff0000);
-        -webkit-background-clip: text  !important;
+        background: linear-gradient(135deg, #ff0000, #ff00ff, #0000ff, #00aaaa, #00aa00, #bbbb00, #ff0000);
+        -webkit-background-clip: text !important;
         -webkit-text-fill-color: transparent !important;
     }
 }
 
 .eyeEcho-color-light-blue {
-    background:  linear-gradient(-45deg, #00acaf, #73fdff) !important;
+    background: linear-gradient(-45deg, #00acaf, #73fdff) !important;
 }
 
 .eyeEcho-color-dark-blue {
-    background:  linear-gradient(-45deg, #0e00a5, #20bdff) !important;
+    background: linear-gradient(-45deg, #0e00a5, #20bdff) !important;
 }
 
 .eyeEcho-color-purple {
-    background:  linear-gradient(-45deg, #44009e, #b966ff) !important;
+    background: linear-gradient(-45deg, #44009e, #b966ff) !important;
 }
 
 .eyeEcho-color-pink {
-    background:  linear-gradient(-45deg, #970075, #ff5ac3) !important;
+    background: linear-gradient(-45deg, #970075, #ff5ac3) !important;
 }
 
 .eyeEcho-repaint-btn {
@@ -155,8 +160,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
     padding: 7vh 5vw 7vh 5vw;
-    overflow: auto;
-    
+
     div,
     p {
         color: $info_color;
@@ -165,12 +169,69 @@ body {
     button {
         color: white;
     }
+
+    .eyeEcho-theme_picker-description-title {
+
+        font-size: 6vw;
+        font-weight: bold;
+        text-align: center;
+        letter-spacing: 1.5;
+    
+        hr {
+            width: 40vw;
+            margin: 2vh auto 0;
+            border: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #c77ce6 0%, #5e4df7 24%, #5e4df7 60%, #69bef5 100%);
+        }
+    }
+    
+    .eyeEcho-theme_picker-description-content {
+        padding: 3vh 0vw 0vw;
+    
+        p {
+            text-align: center;
+            line-height: 2;
+            font-size: 4vw;
+            letter-spacing: 0.2vw;
+        }
+    }
+
+    @media screen and (min-width: 320px) and (max-height: 570px),
+    screen and (min-width: 360px) and (max-height: 680px),
+    screen and (min-width: 410px) and (max-height: 736px) {
+        .eyeEcho-theme_picker-description-title {
+            font-size: 5vw;
+        }
+
+        .eyeEcho-theme_picker-description-content {
+            p {
+                font-size: 3vw; 
+            }
+        }
+
+    }
+
+    @media screen and (min-width: 768px) and (max-height: 1024px),
+    screen and (min-width: 1024px) and (max-height: 1366px) {
+        .eyeEcho-theme_picker-description-title {
+            font-size: 5vw;
+        }
+
+        .eyeEcho-theme_picker-description-content {
+            p { 
+                font-size: 3vw; 
+            }
+        }
+
+    }
+
 }
 
 .eyeEcho-circle-container {
     @include on-circle($item-count: 9, $circle-size: 80vw, $item-size: 18vw, $start-angle: -70);
     margin: 9vw auto;
-    border: dotted 1px rgba(60, 60, 60, 0.1);
+    //border: dotted 1px rgba(60, 60, 60, 0.1);
 
     span {
         display: block;
@@ -181,7 +242,7 @@ body {
         &:hover,
         &:active {
             border: solid 3px white;
-            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
         }
     }
 
@@ -199,36 +260,15 @@ body {
         label {
             font-size: 4vw;
             line-height: 1.2;
-            -webkit-background-clip: text  !important;
+            -webkit-background-clip: text !important;
             -webkit-text-fill-color: transparent !important;
         }
     }
-}
 
-.eyeEcho-theme_picker-description-title {
-
-    font-size: 6vw;
-    font-weight: bold;
-    text-align: center;
-    letter-spacing: 1.5;
-
-    hr {
-        width: 40vw;
-        margin: 2vh auto 0;
-        border: 0;
-        height: 4px;
-        background:  linear-gradient(90deg, #c77ce6 0%, #5e4df7 24%, #5e4df7 60%, #69bef5 100%);
-    }
-}
-
-.eyeEcho-theme_picker-description-content {
-    padding: 3vh 0vw 0vw;
-
-    p {
-        text-align: center;
-        line-height: 2;
-        font-size: 4vw;
-        letter-spacing: 0.2vw;
+    @media screen and (min-width: 768px) and (max-height: 1024px),
+    screen and (min-width: 1024px) and (max-height: 1366px) {
+        margin: 0vh auto 3vh;
+        @include on-circle($item-count: 9, $circle-size: 60vw, $item-size: 14vw, $start-angle: -70);
     }
 }
 
@@ -271,8 +311,13 @@ body {
     font-size: 11vw;
 
     img {
-        width: 20vw;
-        padding-bottom: 2vh;
+        width: 14vw;
+        padding-bottom: 1vh;
+    }
+
+    label {
+        font-size: 11vw;
+        font-weight: bold;
     }
 }
 
@@ -356,22 +401,52 @@ body {
     p {
         color: white;
     }
-}
 
-#eyeEcho_result_info_blink_count {
-    font-weight: bold;
-    font-size: 36vw;
-}
+    #eyeEcho_result_info_blink_count {
+        font-weight: bold;
+        font-size: 36vw;
+    }
 
-#eyeEcho_result_info_blink_period {
-    font-weight: lighter;
-    font-size: 36vw;
-}
+    #eyeEcho_result_info_blink_period {
+        font-weight: lighter;
+        font-size: 36vw;
+    }
 
+    @media screen and (min-width: 320px) and (max-height: 570px),
+    screen and (min-width: 360px) and (max-height: 680px),
+    screen and (min-width: 410px) and (max-height: 736px) {
+        padding: 6vh 0 6vh;
+
+        #eyeEcho_result_info_blink_count {
+            font-weight: bold;
+            font-size: 30vw;
+        }
+
+        #eyeEcho_result_info_blink_period {
+            font-weight: lighter;
+            font-size: 30vw;
+        }
+    }
+
+    @media screen and (min-width: 768px) and (max-height: 1024px),
+    screen and (min-width: 1024px) and (max-height: 1366px) {
+        padding: 6vh 0 6vh;
+
+        #eyeEcho_result_info_blink_count {
+            font-weight: bold;
+            font-size: 25vw;
+        }
+
+        #eyeEcho_result_info_blink_period {
+            font-weight: lighter;
+            font-size: 25vw;
+        }
+    }
+}
 
 
 #eyeEcho_result_image_element {
-    width: fit-content;
+    width: 100%;
     height: 84vh;
 }
 
@@ -408,17 +483,24 @@ body {
 }
 
 .eyeEcho-icon-number-in-round {
-    box-sizing: content-box;
+    position: relative;
     margin: 1.5vh 4vw 0vh 0;
     font-size: 4vw;
     font-weight: bold;
     border-radius: 50%;
     width: 4vw;
     height: 4vw;
-    padding: 2vw;
+    padding: 4vw;
     background: #fff;
     border: 1px solid;
     text-align: center;
+
+    label {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
 }
 
 .eyeEcho-description-sub-content {

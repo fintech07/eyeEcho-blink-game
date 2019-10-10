@@ -49,8 +49,8 @@ const f = Math.floor;
 const r = Math.random;
 
 const BIG_INT = 100000000;
-const SHAPE_SIZE_MIN = 10;
-const CHOR_MIN = 100;
+const SHAPE_SIZE_MIN = 100;
+const CHOR_MIN = 80;
 const ALPHA_MIN = 0.5;
 let dropingProgress = 0;
 let currentLanguage = 'en';
@@ -101,12 +101,22 @@ function getStc(a = 2, b = 1) {
     return getRandomInt() % a < b ? true : false;
 }
 
+// interval few times
+function setIntervalX(callback, delay = 1000, repetitions = 0) {
+    let x = 0;
+    let intervalId = setInterval(() => {
+        callback();
+        if (++x === repetitions) {
+            clearInterval(intervalId);
+        }
+    }, delay);
+}
 
 // convert hex to rgb
-function hexToR(h) {return parseInt((cutHex(h)).substring(0,2),16)}
-function hexToG(h) {return parseInt((cutHex(h)).substring(2,4),16)}
-function hexToB(h) {return parseInt((cutHex(h)).substring(4,6),16)}
-function cutHex(h) {return (h.charAt(0)=="#") ? h.substring(1,7):h}
+function hexToR(h) { return parseInt((cutHex(h)).substring(0, 2), 16) }
+function hexToG(h) { return parseInt((cutHex(h)).substring(2, 4), 16) }
+function hexToB(h) { return parseInt((cutHex(h)).substring(4, 6), 16) }
+function cutHex(h) { return (h.charAt(0) == "#") ? h.substring(1, 7) : h }
 function hexToRgb(_hex) {
     return [hexToR(_hex), hexToG(_hex), hexToB(_hex)];
 }
@@ -119,19 +129,18 @@ function getRandomChro(_a, _b) {
 }
 
 // get rgba value
-function random_rgba() {
-    _range = [];
-    const theme = eyeEcho_game_config.theme;
-
+function random_rgba(theme = 'grey') {
+    
     if (!theme || theme == 'grey') {
-        _range.push([0, 0, 0])
-        _range.push([256, 256, 256])
-    } else {
-        _range.push(hexToRgb(eyeEcho_game_config.text.theme[theme].value1));
-        _range.push(hexToRgb(eyeEcho_game_config.text.theme[theme].value2));
+        const idx = Math.floor(Math.random() * 100000) % 8;
+        theme = eyeEcho_theme_color_list[idx];
     }
 
-    return [getRandomChro(_range[0][0], _range[1][0]), getRandomChro(_range[0][1], _range[1][1]), getRandomChro(_range[0][2], _range[1][2]), r()];
+    _range = [];
+    _range.push(hexToRgb(eyeEcho_game_config.text.theme[theme].value1));
+    _range.push(hexToRgb(eyeEcho_game_config.text.theme[theme].value2));
+
+    return [getRandomChro(_range[0][0], _range[1][0]), getRandomChro(_range[0][1], _range[1][1]), getRandomChro(_range[0][2], _range[1][2]), 1];
 }
 
 // get rgba style
@@ -204,11 +213,11 @@ class Shape {
         this.setDirection();
 
         if (this.type == SHAPE_TYPE.CIRCLE) {
-            this.r = getRandomInt((t_p - SHAPE_SIZE_MIN / 2) / 3) + SHAPE_SIZE_MIN / 2;
+            this.r = getRandomInt((t_p - SHAPE_SIZE_MIN / 3) / 2) + SHAPE_SIZE_MIN / 2;
             this.width = this.r * 2;
             this.height = this.r * 2;
         } else {
-            this.width = getRandomInt((width - SHAPE_SIZE_MIN / 2)) + SHAPE_SIZE_MIN;
+            this.width = getRandomInt((width * 1.2 - SHAPE_SIZE_MIN / 2)) + SHAPE_SIZE_MIN;
             this.height = getRandomInt((t_p - SHAPE_SIZE_MIN)) + SHAPE_SIZE_MIN;
         }
         this.x = this.direction == DIRECTION.LEFT ? width + lr_p : -(this.width + lr_p);
@@ -308,13 +317,15 @@ class GameBoard {
     setCanvas = (canvas) => {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
+        this.theme = eyeEcho_game_config.theme;
+        this.bg_color = [random_rgba(this.theme), random_rgba(this.theme)];
         this.init();
     }
 
     init = (countdown = eyeEcho_game_config.countdown) => {
         this.width = this.canvas.width;
         this.height = this.canvas.height;
-        this.lr_p = 2;
+        this.lr_p = 0;
         this.t_p = this.height / 5;
         this.countdown = countdown;
         this.activeShape = null;
@@ -322,12 +333,11 @@ class GameBoard {
         this.touchedHeight = this.height;
         this.isStarted = false;
         this.isUploading = false;
+        this.isReady = 3;
         this.countdownTimer = null;
         this.backgroundTimer = null;
         this.moveTimer = null;
         this.setActiveShape();
-        this.baseColors = [random_rgba(), random_rgba()];
-        this.bg_color = [random_rgba(), random_rgba()];
         this.blinkIcon = new Image();
         this.blinkIcon.setAttribute("crossOrigin", "Anonymous");
         this.blinkIcon.src = 'http://cdn.onlinewebfonts.com/svg/img_457301.png';
@@ -342,10 +352,21 @@ class GameBoard {
         this.activeShape = new Shape(this.ctx, this.width, this.t_p, this.lr_p);
     }
 
+
+    readyToStart = () => {
+        setIntervalX(() => {
+            this.drawReadyToStart();
+            this.isReady--;
+        }, 1000, 4);
+    }
+
     startGame = () => {
         if (this.isStarted || this.isUploading)
             return;
 
+        if (this.isReady > 0) {
+            return;
+        }
         this.init();
 
         this.isStarted = true;
@@ -372,15 +393,15 @@ class GameBoard {
 
             const url = 'https://imb-staging.herokuapp.com/eye-echo/upload';
             fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json;charset=UTF-8'
-                    },
-                    body: JSON.stringify({
-                        "image": pngUrl
-                    })
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json;charset=UTF-8'
+                },
+                body: JSON.stringify({
+                    "image": pngUrl
                 })
+            })
                 .then(resp => resp.json())
                 .then(data => {
                     this.isUploading = false;
@@ -409,19 +430,6 @@ class GameBoard {
 
     addStaticShape = () => {
         this.staticShapes.push(this.activeShape);
-    }
-
-    changeBacgroundColor = (time) => {
-        this.baseColors.forEach((color, i) => {
-            color.forEach((chor, j) => {
-                if (j > 2) {
-                    this.bg_color[i][j] = ALPHA_MIN;
-                } else {
-                    this.bg_color[i][j] = o(Math.sin(toRadians((time / 50 / (i + j + 1) + chor) % 180)) * 255);
-                    if (this.bg_color[i][j] < CHOR_MIN) this.bg_color[i][j] = CHOR_MIN;
-                }
-            });
-        });
     }
 
     // check the active shape is out of board and set top height
@@ -496,7 +504,52 @@ class GameBoard {
 
     // define draw functions
     erase = () => {
+        this.ctx.restore();
+        this.ctx.save();
         this.ctx.clearRect(0, 0, this.width, this.height);
+    }
+
+    // draw ready to start
+    drawReadyToStart = () => {
+        if (this.isReady < 1) {
+            animate({
+                duration: 1000,
+                draw: (progress) => {
+                    if (progress >= 1) {
+                        this.startGame();
+                        return;
+                    }
+                    if (progress < 0) return;
+                    const _r = 1000 * progress + this.width / 5;
+                    this.erase();
+                    this.ctx.beginPath();
+                    this.ctx.arc(this.width / 2, this.height / 2, Math.abs(_r), 0, Math.PI * 2);
+                    this.ctx.clip();
+                    this.drawBackground();
+                    this.ctx.fillStyle = "rgba(255, 255, 255, " + (0.6 - progress > 0 ? 0.6 - progress : 0.0) + ")";
+                    this.ctx.font = 'bold 20vw Arial';
+                    this.ctx.textAlign = 'center';
+                    this.ctx.textBaseline = 'middle';
+                    this.ctx.fillText(1, this.width / 2, this.height / 2);
+                },
+                timing: (timeFraction) => {
+                    return timeFraction;
+                }
+            });
+        } else {
+            this.erase();
+            const txtHeight = this.ctx.measureText('M').width;
+            const txtWidth = this.ctx.measureText(this.countdown);
+            this.ctx.beginPath();
+            this.ctx.arc(this.width / 2, this.height / 2, this.width / 5, 0, Math.PI * 2);
+            this.ctx.clip();
+            this.drawBackground();
+            this.ctx.fillStyle = '#FFFFFF';
+            this.ctx.font = 'bold 20vw Arial';
+            this.ctx.textAlign = 'center';
+            this.ctx.textBaseline = 'middle';
+            this.ctx.fillText(this.isReady, this.width / 2, this.height / 2);
+        }
     }
 
     // draw menu to show how to play game
@@ -510,23 +563,6 @@ class GameBoard {
             this.ctx.fillText(eyeEcho_game_config.text.game.uploading.description, this.width / 2, (this.height / 4) * 3);
             return;
         }
-
-        this.erase();
-        if (this.isStarted) {
-            this.ctx.fillStyle = '#000000';
-            this.ctx.font = '6vw Arial';
-            this.ctx.textAlign = 'center';
-            this.ctx.fillText(eyeEcho_game_config.text.game.end.title, this.width / 2, this.height / 2);
-            this.ctx.font = '4vw Arial'
-            this.ctx.fillText(eyeEcho_game_config.text.game.end.description, this.width / 2, (this.height / 4) * 3);
-        } else {
-            this.ctx.fillStyle = '#000000';
-            this.ctx.font = '6vw Arial';
-            this.ctx.textAlign = 'center';
-            this.ctx.fillText(eyeEcho_game_config.text.game.start.title, this.width / 2, this.height / 2);
-            this.ctx.font = '4vw Arial'
-            this.ctx.fillText(eyeEcho_game_config.text.game.start.description, this.width / 2, (this.height / 4) * 3);
-        }
     }
 
     // draw time remaining
@@ -534,17 +570,23 @@ class GameBoard {
         if (this.countdown < 1) return;
 
         this.ctx.fillStyle = '#FFF';
-        this.ctx.font = '3vw Arial Black';
+        this.ctx.textAlign = 'left';
+        this.ctx.textBaseline = 'middle';
+        this.ctx.font = '10vw Arial Black';
 
         const txtHeight = this.ctx.measureText('M').width;
-        const txtWidth = this.ctx.measureText(this.countdown);
+        const countdownTextWidth = this.ctx.measureText(this.countdown);
+        
+        this.ctx.fillText(this.countdown, txtHeight / 2, txtHeight);
+        this.ctx.font = '8vw Arial';
+        this.ctx.fillText(' sec', txtHeight / 2 + countdownTextWidth.width, txtHeight);
 
-        this.ctx.textAlign = 'left';
-        this.ctx.fillText(this.countdown, txtHeight / 2, txtHeight * 1.125);
-
-        this.ctx.font = '2vw Arial';
-        this.ctx.fillText(' sec', txtHeight / 2 + txtWidth.width, txtHeight);
-
+        this.ctx.textAlign = 'right';
+        this.ctx.font = '8vw Arial';
+        const blinksTextWidth = this.ctx.measureText(' blinks');
+        this.ctx.fillText(' blinks', this.width - txtHeight / 2, txtHeight);
+        this.ctx.font = '10vw Arial Black';
+        this.ctx.fillText(eyeEcho_result_info.count, this.width - txtHeight / 2 - blinksTextWidth.width, txtHeight);
     }
 
     // draw shapes
@@ -563,10 +605,8 @@ class GameBoard {
     }
 
     // draw gradient background.
-    drawBackground = (time) => {
-        if (time === undefined) return;
-        this.changeBacgroundColor(time);
-        let grd = this.ctx.createLinearGradient(0, 0, 0, this.height);
+    drawBackground = () => {
+        let grd = this.ctx.createLinearGradient(180, 0, 0, this.height);
         grd.addColorStop(0, getRgbaColor(this.bg_color[0]));
         grd.addColorStop(1, getRgbaColor(this.bg_color[1]));
         this.ctx.fillStyle = grd;
@@ -576,12 +616,12 @@ class GameBoard {
     // draw by time
     draw = (time) => {
         this.erase();
-        this.drawBackground(time);
+        this.drawBackground();
         this.drawShapes();
+        this.drawBlinkIcon();
         if (this.checkEndCondition()) {
             this.endGame();
         } else {
-            this.drawBlinkIcon();
             this.drawCountdown();
             window.requestAnimationFrame(this.draw);
         }
@@ -596,13 +636,11 @@ const eyeEcho_blink_game_container = document.getElementById('eyeEcho_blink_game
 const eyeEcho_blink_game_canvas = document.getElementById("eyeEcho_blink_game_board");
 const eyeEcho_blink_game_ctx = eyeEcho_blink_game_canvas.getContext("2d");
 
-let gameboard = null;
-
 /**
  * set class name to change eyeEcho_blink_game_canvas game board width dynamically by eyeEcho_blink_game_container's boundbox size
  */
 
-function chageWidthClass() {
+chageWidthClass = () => {
     if (!gameboard) return;
     let ctn_width = eyeEcho_blink_game_container.offsetWidth;
 
@@ -631,7 +669,8 @@ function chageWidthClass() {
         eyeEcho_blink_game_canvas.width = 320;
         eyeEcho_blink_game_canvas.height = 568;
     }
-
+    eyeEcho_blink_game_canvas.width = ctn_width;
+    eyeEcho_blink_game_canvas.height = eyeEcho_blink_game_container.offsetHeight;
     gameboard.setCanvas(eyeEcho_blink_game_canvas);
 }
 
@@ -646,17 +685,17 @@ function eyeEcho_translate() {
     }
 }
 
-function createGameBoard() {
-    
+createGameBoard = () => {
+
     eyeEcho_translate();
-    eyeEchoHandleColorPicker('grey');
-    
+
     gameboard = new GameBoard(eyeEcho_blink_game_canvas);
+
     chageWidthClass();
 
-    window.addEventListener('resize', chageWidthClass);
+    //window.addEventListener('resize', chageWidthClass);
 
-    eyeEcho_blink_game_canvas.addEventListener('click', gameboard.startGame);
+    //eyeEcho_blink_game_canvas.addEventListener('click', gameboard.startGame);
 
     document.addEventListener('mousedown', function (event) {
         lastDownTarget = event.target;

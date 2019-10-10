@@ -2,20 +2,24 @@
 * global elements and variables, functions
 */
 
+let createGameBoard, chageWidthClass, gameboard = null;
+
+const eyeEcho_theme_color_list = ['red', 'orange', 'yellow', 'green', 'light-blue', 'dark-blue', 'purple', 'pink'];
+
 let eyeEcho_game_config = {
-    isLoading: true,
-    lang: 'en',
-    countdown: 30,
-    text: {},
-    theme: 'grey',
+  isLoading: true,
+  lang: 'en',
+  countdown: 30,
+  text: {},
+  theme: 'grey',
 }
 
 let eyeEcho_result_info = {
-    count: 0,
-    period: 0,
+  count: 0,
+  period: 0,
 }
 
-let eyeEchoPage = (page_id, tab_id=null, btn_id=null) => {
+let eyeEchoPage = (page_id, tab_id = null, btn_id = null) => {
   let eyeEchoPages = document.querySelectorAll(".eyeEcho_page");
   eyeEchoPages.forEach((page, index) => {
     if (page.getAttribute("id") == page_id) {
@@ -47,6 +51,11 @@ let eyeEchoPage = (page_id, tab_id=null, btn_id=null) => {
   if (page_id == 'eyeEcho_game_page') {
     brfv4Example.start();
     chageWidthClass();
+    gameboard.readyToStart();
+  }
+
+  if (page_id == 'eyeEcho_theme_picker_page') {
+    eyeEchoHandleColorPicker('grey');
   }
 }
 
@@ -54,8 +63,20 @@ let eyeEchoHandleColorPicker = (color) => {
   const eyeEchoColorNameEl = document.getElementById('eyeEcho-circle-container-color-name');
   const eyeEchoStartPaintingBtnEl = document.getElementById('eyeEcho-theme_picker-start-btn');
 
+  if (color === 'surprise') {
+    const idx = Math.floor(Math.random() * 100000) % 8;
+    color = eyeEcho_theme_color_list[idx];
+  }
+
   eyeEchoColorNameEl.children[0].innerHTML = eyeEcho_game_config.text.theme[color].desc;
   eyeEchoColorNameEl.children[0].setAttribute("class", "eyeEcho-color-" + color);
+
+  const themeElems = document.querySelectorAll(".eyeEcho-theme");
+  themeElems.forEach(elem => {
+    elem.classList.remove("eyeEcho-color-" + eyeEcho_game_config.theme);
+    elem.classList.add("eyeEcho-color-" + color);
+  });
+
 
   if (color != 'grey') {
     eyeEchoStartPaintingBtnEl.disabled = false;
