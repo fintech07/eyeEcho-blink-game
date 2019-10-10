@@ -1,4 +1,3 @@
-
 // elements
 const eyeEchoResultImageEl = document.getElementById('eyeEcho_result_image_element');
 const eyeEchoResultBlinkCountEl = document.getElementById('eyeEcho_result_info_blink_count');
@@ -49,27 +48,19 @@ const f = Math.floor;
 const r = Math.random;
 
 const BIG_INT = 100000000;
-const SHAPE_SIZE_MIN = 100;
-const CHOR_MIN = 80;
-const ALPHA_MIN = 0.5;
-let dropingProgress = 0;
-let currentLanguage = 'en';
+const SHAPE_SIZE_MIN = 50;
+const CHOR_MIN = 100;
+const ALPHA_MIN = 0.6;
 
 const LANG = {
     EN: 'en',
     RU: 'ru',
 }
 
-const DIRECTION = {
-    LEFT: 'LEFT',
-    RIGHT: 'RIGHT',
-    DOWN: 'DOWN',
-    STOP: 'STOP',
-}
-
 const SHAPE_TYPE = {
     CIRCLE: 'CIRCLE',
     RECTANGLE: 'RECTANGLE',
+    TRIANGLE: 'TRIANGLE',
 }
 
 const BREAK_POINT = {
@@ -112,11 +103,24 @@ function setIntervalX(callback, delay = 1000, repetitions = 0) {
     }, delay);
 }
 
+
 // convert hex to rgb
-function hexToR(h) { return parseInt((cutHex(h)).substring(0, 2), 16) }
-function hexToG(h) { return parseInt((cutHex(h)).substring(2, 4), 16) }
-function hexToB(h) { return parseInt((cutHex(h)).substring(4, 6), 16) }
-function cutHex(h) { return (h.charAt(0) == "#") ? h.substring(1, 7) : h }
+function hexToR(h) {
+    return parseInt((cutHex(h)).substring(0, 2), 16)
+}
+
+function hexToG(h) {
+    return parseInt((cutHex(h)).substring(2, 4), 16)
+}
+
+function hexToB(h) {
+    return parseInt((cutHex(h)).substring(4, 6), 16)
+}
+
+function cutHex(h) {
+    return (h.charAt(0) == "#") ? h.substring(1, 7) : h
+}
+
 function hexToRgb(_hex) {
     return [hexToR(_hex), hexToG(_hex), hexToB(_hex)];
 }
@@ -130,7 +134,7 @@ function getRandomChro(_a, _b) {
 
 // get rgba value
 function random_rgba(theme = 'grey') {
-    
+
     if (!theme || theme == 'grey') {
         const idx = Math.floor(Math.random() * 100000) % 8;
         theme = eyeEcho_theme_color_list[idx];
@@ -145,12 +149,18 @@ function random_rgba(theme = 'grey') {
 
 // get rgba style
 function getRgbaColor(rgba) {
-    return `rgba(${o(rgba[0]) % 256}, ${o(rgba[1]) % 256}, ${o(rgba[2]) % 256}, ${rgba[3] < 1 ? rgba[3] < ALPHA_MIN ? ALPHA_MIN : rgba[3] : 1})`;
+    return `rgba(${o(rgba[0]) % 256}, ${o(rgba[1]) % 256}, ${o(rgba[2]) % 256}, ${rgba[3] < 1 ? rgba[3] < ALPHA_MIN ? 1 : rgba[3] : 1})`;
 }
 
 // convert degree to radians
 function toRadians(angle) {
     return angle * (Math.PI / 180);
+}
+
+// unify vector
+function unifyVector(_vec) {
+    const _l = Math.sqrt(_vec.x * _vec.x + _vec.y * _vec.y);
+    return {x: _vec.x / _l, y: _vec.y / _l};
 }
 
 animate = ({
@@ -173,111 +183,127 @@ animate = ({
     });
 }
 
-makeEaseOut = (timing) => {
-    return (timeFraction) => {
-        return 1 - timing(1 - timeFraction);
-    }
-}
-
-bounce = (timeFraction) => {
-    for (let a = 0, b = 1, result; 1; a += b, b /= 2) {
-        if (timeFraction >= (7 - 4 * a) / 11) {
-            return -Math.pow((11 - 6 * a - 11 * timeFraction) / 4, 2) + Math.pow(b, 2)
-        }
-    }
-}
-
-let bounceEaseOut = makeEaseOut(bounce);
-
-// define roundRect function
-CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
-    if (w < 2 * r) r = w / 2;
-    if (h < 2 * r) r = h / 2;
-    this.beginPath();
-    this.moveTo(x + r, y);
-    this.arcTo(x + w, y, x + w, y + h, r);
-    this.arcTo(x + w, y + h, x, y + h, r);
-    this.arcTo(x, y + h, x, y, r);
-    this.arcTo(x, y, x + w, y, r);
-    this.closePath();
-    return this;
-}
-
 // defind Shape class
 class Shape {
-    constructor(ctx, width, t_p, lr_p) {
+    constructor(ctx, width, height) {
+        this.box = {width: width, height: height};
         this.ctx = ctx;
-        this.margin = lr_p;
-        this.type = getStc(5, 3) ? SHAPE_TYPE.RECTANGLE : SHAPE_TYPE.CIRCLE;
+        this.setType();
+        if (this.type == SHAPE_TYPE.CIRCLE) {
+            this.r = getRandomInt(width / 3 - SHAPE_SIZE_MIN) + SHAPE_SIZE_MIN;
+            this.width = this.r * 2;
+            this.height = this.r * 2;
+        } else if (this.type == SHAPE_TYPE.RECTANGLE) {
+            this.width = getRandomInt((width - SHAPE_SIZE_MIN)) + SHAPE_SIZE_MIN;
+            this.height = getRandomInt((height / 2 - SHAPE_SIZE_MIN)) + SHAPE_SIZE_MIN;
+        } else {
+            this.r = getRandomInt(width / 2 - SHAPE_SIZE_MIN) + SHAPE_SIZE_MIN;
+            this.width = this.r * 2;
+            this.height = this.r * 2;
+            this.start_angle = r();
+        }
 
         this.setDirection();
 
-        if (this.type == SHAPE_TYPE.CIRCLE) {
-            this.r = getRandomInt((t_p - SHAPE_SIZE_MIN / 3) / 2) + SHAPE_SIZE_MIN / 2;
-            this.width = this.r * 2;
-            this.height = this.r * 2;
-        } else {
-            this.width = getRandomInt((width * 1.2 - SHAPE_SIZE_MIN / 2)) + SHAPE_SIZE_MIN;
-            this.height = getRandomInt((t_p - SHAPE_SIZE_MIN)) + SHAPE_SIZE_MIN;
-        }
-        this.x = this.direction == DIRECTION.LEFT ? width + lr_p : -(this.width + lr_p);
-        this.y = getRandomInt(t_p - this.height);
         this.color = random_rgba();
-        this.speed = width / 1000;
-        this.isDroping = false;
+        this.speed = width / 500;
     }
 
-    setDirection(direction = getStc() ? DIRECTION.LEFT : DIRECTION.RIGHT) {
-        this.direction = direction;
+    setType() {
+        switch(getRandomInt() % 3) {
+            case 0:
+                this.type = SHAPE_TYPE.RECTANGLE;
+                break;
+            case 1:
+                this.type = SHAPE_TYPE.CIRCLE;
+                break;
+            case 2:
+                this.type = SHAPE_TYPE.TRIANGLE;
+                break;
+        }
+    }
+
+    setDirection() {
+        let _start_p = {
+                x: 0,
+                y: 0
+            },
+            _end_p = {
+                x: 0,
+                y: 0
+            };
+        const _o = [this.width / 2, this.height / 2];
+        const box = {
+            width: this.box.width,
+            height: this.box.height,
+        };
+
+        let direction = getRandomInt() % 4;
+        
+        switch (direction) {
+            case 0: // right
+                _start_p.x = -_o[0] / 2;
+                _start_p.y = r() * box.height;
+                _end_p.x = box.width + _o[0] / 2;
+                _end_p.y = r() * box.height;
+                break;
+            case 1: // down
+                _start_p.x = r() * box.width;
+                _start_p.y = -_o[1] / 2;
+                _end_p.x = r() * box.width;
+                _end_p.y = box.height + _o[1];
+                break;
+            case 2: // left
+                _start_p.x = box.width + _o[0] / 2;
+                _start_p.y = r() * box.height;
+                _end_p.x = -_o[0];
+                _end_p.y = r() * box.height;
+                break;
+            case 3: // up
+                _start_p.x = r() * box.width;
+                _start_p.y = box.height + _o[1] / 2;
+                _end_p.x = r() * box.width;
+                _end_p.y = -_o[1];
+                break;
+            default:
+                 _end_p.x = -_o[0];
+                _end_p.y = r() * box.height;
+                _start_p.x = box.width + _o[0] / 2;
+                _start_p.y = r() * box.height;
+                break;
+        }
+
+
+        this.start_p = _start_p;
+        this.end_p = _end_p;
+
+        this.x = this.start_p.x;
+        this.y = this.start_p.y;
+
+        const _a = {
+            x: _end_p.x - _start_p.x,
+            y: _end_p.y - _start_p.y
+        };
+
+        this.direction = _a;
     }
 
     move = () => {
-        if (this.isDroping) return;
-        switch (this.direction) {
-            case DIRECTION.LEFT:
-                this.x -= this.speed;
-                this.speed += 0.004;
-                break;
-            case DIRECTION.RIGHT:
-                this.x += this.speed;
-                this.speed += 0.004;
-                break;
+        if (this.direction.x == 0) {
+            this.y += this.direction.y > 0 ? this.speed : -this.speed;
+        } else if (this.direction.y == 0) {
+            this.x += this.direction.x > 0 ? this.speed : -this.speed;
+        } else {
+            const direction = unifyVector(this.direction);
+            this.x += this.speed * direction.x;
+            this.y += this.speed * direction.y;
         }
-    }
-
-    bounceEffect = (duration = 1000) => {
-        animate({
-            duration: duration,
-            timing: bounceEaseOut,
-            draw: (progress) => {
-                if (this.isDroping) {
-                    this.y = (this.targetHeight - this.startHeight) * progress + this.startHeight;
-                }
-
-                if (dropingProgress >= 1) {
-                    this.isDroping = false;
-                    this.type = SHAPE_TYPE.RECTANGLE;
-                    this.direction = DIRECTION.STOP;
-                    this.y = this.targetHeight;
-                }
-            }
-        });
-    };
-
-    drop = (targetHeight) => {
-        if (this.isDroping) return;
-        this.isDroping = true;
-        this.setDirection(SHAPE_TYPE.DOWN);
-        this.targetHeight = targetHeight;
-        this.startHeight = this.y;
-        dropingProgress = 0;
-        this.bounceEffect(1000);
     }
 
     // define draw functions
     drawRect = (x, y, width, height, color) => {
         this.ctx.beginPath();
-        this.ctx.rect(x, y, width, height);
+        this.ctx.rect(x - width / 2, y - height / 2, width, height);
         this.ctx.fillStyle = getRgbaColor(color);
         this.ctx.fill();
         this.ctx.closePath();
@@ -291,18 +317,27 @@ class Shape {
         this.ctx.closePath();
     }
 
+    drawTriangle = (x, y, r, st_a, color) => {
+        const ang_step = 120 / 180 * Math.PI;
+        this.ctx.beginPath();
+        this.ctx.moveTo(x + r * Math.cos(st_a), y + r * Math.sin(st_a));
+        this.ctx.lineTo(x + r * Math.cos(st_a + ang_step), y + r * Math.sin(st_a + ang_step));
+        this.ctx.lineTo(x + r * Math.cos(st_a + 2 * ang_step), y + r * Math.sin(st_a + 2 * ang_step));
+        this.ctx.fillStyle = getRgbaColor(color);
+        this.ctx.fill();
+        this.ctx.closePath();
+    }
+
     draw = () => {
         switch (this.type) {
             case SHAPE_TYPE.RECTANGLE:
                 this.drawRect(this.x, this.y, this.width, this.height, this.color);
                 break;
             case SHAPE_TYPE.CIRCLE:
-                if (this.isDroping) {
-                    this.ctx.fillStyle = getRgbaColor(this.color);
-                    this.ctx.roundRect(this.x, this.y, this.width, this.height, this.r * (1 - dropingProgress) * 5).fill();
-                    break;
-                }
-                this.drawCircle(this.x + this.r, this.y + this.r, this.r, this.color);
+                this.drawCircle(this.x, this.y, this.r, this.color);
+                break;
+            case SHAPE_TYPE.TRIANGLE:
+                this.drawTriangle(this.x, this.y, this.r, this.start_angle, this.color);
                 break;
         }
     }
@@ -338,6 +373,7 @@ class GameBoard {
         this.backgroundTimer = null;
         this.moveTimer = null;
         this.setActiveShape();
+        this.isEnableEye = false;
         this.blinkIcon = new Image();
         this.blinkIcon.setAttribute("crossOrigin", "Anonymous");
         this.blinkIcon.src = 'http://cdn.onlinewebfonts.com/svg/img_457301.png';
@@ -349,9 +385,8 @@ class GameBoard {
     }
 
     setActiveShape = () => {
-        this.activeShape = new Shape(this.ctx, this.width, this.t_p, this.lr_p);
+        this.activeShape = new Shape(this.ctx, this.width, this.height);
     }
-
 
     readyToStart = () => {
         this.drawReadyToStart();
@@ -365,9 +400,6 @@ class GameBoard {
         if (this.isStarted || this.isUploading)
             return;
 
-        if (this.isReady > 0) {
-            return;
-        }
         this.init();
 
         this.isStarted = true;
@@ -394,22 +426,22 @@ class GameBoard {
 
             const url = 'https://imb-staging.herokuapp.com/eye-echo/upload';
             fetch(url, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json;charset=UTF-8'
-                },
-                body: JSON.stringify({
-                    "image": pngUrl
+                    method: 'POST',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json;charset=UTF-8'
+                    },
+                    body: JSON.stringify({
+                        "image": pngUrl
+                    })
                 })
-            })
                 .then(resp => resp.json())
                 .then(data => {
                     this.isUploading = false;
                     if (data.status === 'error') {
                         alert('error: ', data.message);
                     } else {
-                        //alert(data.message + '\n' + eyeEcho_menu[currentLanguage].uploading.success + '\n' + data.image_url);
+                        //alert(data.message + '\n' + eyeEcho_menu[eyeEcho_game_config.lang].uploading.success + '\n' + data.image_url);
                         eyeEchoPage('eyeEcho_results_page', 'eyeEcho_result_created_image');
                     }
                     this.drawMenu();
@@ -436,65 +468,35 @@ class GameBoard {
     // check the active shape is out of board and set top height
     checkShape = () => {
         const x = this.activeShape.x;
+        const y = this.activeShape.y;
         const width = this.activeShape.width;
+        const height = this.activeShape.height;
 
-        this.staticShapes.forEach(shape => {
-            if (shape.y < this.touchedHeight) {
-                this.touchedHeight = shape.y;
-            }
-        });
 
-        if (x + width + this.lr_p < 0 ||
-            x - width - this.lr_p > this.width) {
+        if (x + width < 0 ||
+            x - width > this.width || y + height < 0 || y - height > this.height) {
             this.setActiveShape();
             return;
-        }
-
-        if (this.activeShape.direction == DIRECTION.STOP) {
-            this.addStaticShape();
-            this.setActiveShape();
         }
     }
 
     // check if end condition
     checkEndCondition = () => {
-        return this.countdown < 1 || this.touchedHeight < this.t_p
-    }
-
-    // get the target level where the active shape to reach
-    getTargetHeight = () => {
-        const x = this.activeShape.x;
-        const width = this.activeShape.width;
-        const height = this.activeShape.height;
-
-        let targetHeight = this.height;
-        this.staticShapes.forEach(shape => {
-            if (this.activeShape.type == SHAPE_TYPE.RECTANGLE) {
-                if (isWithin(shape.x, x, x + width) || isWithin(shape.x + shape.width, x, x + width) || isWithin(x, shape.x, shape.x + shape.width) || isWithin(x + width, shape.x, shape.x + shape.width)) {
-                    if (targetHeight > shape.y) {
-                        targetHeight = shape.y;
-                    }
-                }
-            }
-
-            if (this.activeShape.type == SHAPE_TYPE.CIRCLE) {
-                if (isWithin(shape.x, x, x + width) || isWithin(shape.x + shape.width, x, x + width) || isWithin(x, shape.x, shape.x + shape.width) || isWithin(x + width, shape.x, shape.x + shape.width)) {
-                    if (targetHeight > shape.y) {
-                        targetHeight = shape.y;
-                    }
-                }
-            }
-        })
-        targetHeight -= height;
-        return targetHeight;
+        return this.countdown < 1;
     }
 
     // drop shape
     dropShape = () => {
         eyeEcho_result_info.count++;
         if (!this.isStarted) return;
-        if (this.activeShape.isDroping) return;
-        this.activeShape.drop(this.getTargetHeight());
+        this.isEnableEye = true;
+        
+        setTimeout(() => {
+            this.isEnableEye = false;
+        }, 400);
+
+        this.addStaticShape();
+        this.setActiveShape();
     }
 
     // move shape left or right
@@ -510,7 +512,7 @@ class GameBoard {
         this.ctx.clearRect(0, 0, this.width, this.height);
     }
 
-    // draw ready to start
+// draw ready to start
     drawReadyToStart = () => {
         if (this.isReady < 1) {
             animate({
@@ -609,6 +611,7 @@ class GameBoard {
         this.ctx.fillText(' blinks', this.width - txtHeight / 2, txtHeight);
         this.ctx.font = '10vw Arial Black';
         this.ctx.fillText(eyeEcho_result_info.count, this.width - txtHeight / 2 - blinksTextWidth.width, txtHeight);
+
     }
 
     // draw shapes
@@ -621,7 +624,7 @@ class GameBoard {
 
     // draw blink icon when the shape start to drop
     drawBlinkIcon = () => {
-        if (this.activeShape.isDroping && dropingProgress < 0.3) {
+        if (this.isEnableEye) {
             this.ctx.drawImage(this.blinkIcon, this.width / 2 - this.width / 10, this.height / 2 - this.width / 10, this.width / 5, this.width / 5);
         }
     }
@@ -664,35 +667,9 @@ const eyeEcho_blink_game_ctx = eyeEcho_blink_game_canvas.getContext("2d");
 
 chageWidthClass = () => {
     if (!gameboard) return;
-    let ctn_width = eyeEcho_blink_game_container.offsetWidth;
-
-    if (ctn_width >= BREAK_POINT.DESKTOP) {
-        eyeEcho_blink_game_canvas.className = 'eyeEcho_desktop';
-        eyeEcho_blink_game_canvas.width = 1280;
-        eyeEcho_blink_game_canvas.height = 800;
-    } else if (ctn_width >= BREAK_POINT.iPAD_PRO) {
-        eyeEcho_blink_game_canvas.className = 'eyeEcho_ipad-pro';
-        eyeEcho_blink_game_canvas.width = 1024;
-        eyeEcho_blink_game_canvas.height = 1366;
-    } else if (ctn_width >= BREAK_POINT.iPAD) {
-        eyeEcho_blink_game_canvas.className = 'eyeEcho_ipad';
-        eyeEcho_blink_game_canvas.width = 768;
-        eyeEcho_blink_game_canvas.height = 1024;
-    } else if (ctn_width >= BREAK_POINT.iPhone6) {
-        eyeEcho_blink_game_canvas.className = 'eyeEcho_iphone-6';
-        eyeEcho_blink_game_canvas.width = 414;
-        eyeEcho_blink_game_canvas.height = 736;
-    } else if (ctn_width >= BREAK_POINT.iPhoneX) {
-        eyeEcho_blink_game_canvas.className = 'eyeEcho_iphone-x';
-        eyeEcho_blink_game_canvas.width = 375;
-        eyeEcho_blink_game_canvas.height = 812;
-    } else {
-        eyeEcho_blink_game_canvas.className = 'eyeEcho_iphone-5';
-        eyeEcho_blink_game_canvas.width = 320;
-        eyeEcho_blink_game_canvas.height = 568;
-    }
-    eyeEcho_blink_game_canvas.width = ctn_width;
+    eyeEcho_blink_game_canvas.width = eyeEcho_blink_game_container.offsetWidth;
     eyeEcho_blink_game_canvas.height = eyeEcho_blink_game_container.offsetHeight;
+
     gameboard.setCanvas(eyeEcho_blink_game_canvas);
 }
 
