@@ -49,13 +49,16 @@ let eyeEchoPage = (page_id, tab_id = null, btn_id = null) => {
   }
 
   if (page_id == 'eyeEcho_game_page') {
-    brfv4Example.start();
     chageWidthClass();
     gameboard.readyToStart();
   }
 
   if (page_id == 'eyeEcho_theme_picker_page') {
     eyeEchoHandleColorPicker('grey');
+    setTimeout(() => {
+      console.log("start brf4: ", brfv4Example)
+      brfv4Example.start();
+    }, 1000)
   }
 }
 

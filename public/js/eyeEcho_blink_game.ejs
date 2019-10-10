@@ -51,7 +51,7 @@ const r = Math.random;
 const BIG_INT = 100000000;
 const SHAPE_SIZE_MIN = 100;
 const CHOR_MIN = 80;
-const ALPHA_MIN = 0.5;
+const ALPHA_MIN = 0.7;
 let dropingProgress = 0;
 let currentLanguage = 'en';
 
@@ -140,7 +140,7 @@ function random_rgba(theme = 'grey') {
     _range.push(hexToRgb(eyeEcho_game_config.text.theme[theme].value1));
     _range.push(hexToRgb(eyeEcho_game_config.text.theme[theme].value2));
 
-    return [getRandomChro(_range[0][0], _range[1][0]), getRandomChro(_range[0][1], _range[1][1]), getRandomChro(_range[0][2], _range[1][2]), 1];
+    return [getRandomChro(_range[0][0], _range[1][0]), getRandomChro(_range[0][1], _range[1][1]), getRandomChro(_range[0][2], _range[1][2]), r()];
 }
 
 // get rgba style
@@ -333,7 +333,7 @@ class GameBoard {
         this.touchedHeight = this.height;
         this.isStarted = false;
         this.isUploading = false;
-        this.isReady = 3;
+        this.isReady = 4;
         this.countdownTimer = null;
         this.backgroundTimer = null;
         this.moveTimer = null;
@@ -354,9 +354,10 @@ class GameBoard {
 
 
     readyToStart = () => {
+        this.drawReadyToStart();
         setIntervalX(() => {
-            this.drawReadyToStart();
             this.isReady--;
+            this.drawReadyToStart();
         }, 1000, 4);
     }
 
@@ -527,10 +528,31 @@ class GameBoard {
                     this.ctx.clip();
                     this.drawBackground();
                     this.ctx.fillStyle = "rgba(255, 255, 255, " + (0.6 - progress > 0 ? 0.6 - progress : 0.0) + ")";
-                    this.ctx.font = 'bold 20vw Arial';
+                    this.ctx.font = 'bold ' + (20 + 20 * progress) + 'vw Arial';
                     this.ctx.textAlign = 'center';
                     this.ctx.textBaseline = 'middle';
                     this.ctx.fillText(1, this.width / 2, this.height / 2);
+                },
+                timing: (timeFraction) => {
+                    return timeFraction;
+                }
+            });
+        } else if (this.isReady > 3){
+            animate({
+                duration: 1000,
+                draw: (progress) => {
+                    if (progress < 0) return;
+                    this.erase();
+                    this.ctx.beginPath();
+                    this.ctx.arc(this.width / 2, this.height / 2, this.width / 5, 0, Math.PI * 2);
+                    this.ctx.clip();
+                    this.ctx.globalAlpha = progress;
+                    this.drawBackground();
+                    this.ctx.fillStyle = "rgba(255, 255, 255, " + progress + ")";
+                    this.ctx.font = 'bold 20vw Arial';
+                    this.ctx.textAlign = 'center';
+                    this.ctx.textBaseline = 'middle';
+                    this.ctx.fillText(3, this.width / 2, this.height / 2);
                 },
                 timing: (timeFraction) => {
                     return timeFraction;
@@ -606,7 +628,7 @@ class GameBoard {
 
     // draw gradient background.
     drawBackground = () => {
-        let grd = this.ctx.createLinearGradient(180, 0, 0, this.height);
+        let grd = this.ctx.createLinearGradient(90, 0, 0, this.width);
         grd.addColorStop(0, getRgbaColor(this.bg_color[0]));
         grd.addColorStop(1, getRgbaColor(this.bg_color[1]));
         this.ctx.fillStyle = grd;
