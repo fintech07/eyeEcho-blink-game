@@ -223,7 +223,7 @@ class Shape {
         this.x = this.direction == DIRECTION.LEFT ? width + lr_p : -(this.width + lr_p);
         this.y = getRandomInt(t_p - this.height);
         this.color = random_rgba();
-        this.speed = .05;
+        this.speed = width / 1000;
         this.isDroping = false;
     }
 
