@@ -613,10 +613,10 @@ class GameBoard {
 
     // draw shapes
     drawShapes = () => {
-        this.activeShape.draw();
         this.staticShapes.forEach(function (shape) {
             shape.draw();
         })
+        this.activeShape.draw();
     }
 
     // draw blink icon when the shape start to drop
