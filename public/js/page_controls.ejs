@@ -64,29 +64,35 @@ let eyeEchoPage = (page_id, tab_id = null, btn_id = null) => {
 
 let eyeEchoHandleColorPicker = (color) => {
   const eyeEchoColorNameEl = document.getElementById('eyeEcho-circle-container-color-name');
+  const eyeEchoThemePickerHrEl = document.getElementById('eyeEcho_theme_picker_hr');
   const eyeEchoStartPaintingBtnEl = document.getElementById('eyeEcho-theme_picker-start-btn');
 
   eyeEchoColorNameEl.children[0].innerHTML = eyeEcho_game_config.text.theme[color].desc;
   eyeEchoColorNameEl.children[0].setAttribute("class", "eyeEcho-color-" + color);
 
-  const themeElems = document.querySelectorAll(".eyeEcho-theme");
-  themeElems.forEach(elem => {
-    elem.classList.remove("eyeEcho-color-" + eyeEcho_game_config.theme);
-    elem.classList.add("eyeEcho-color-" + color);
-  });
-
-
   if (color != 'grey') {
-    eyeEchoStartPaintingBtnEl.disabled = false;
-    eyeEchoStartPaintingBtnEl.classList.remove("disabled");
-    eyeEchoStartPaintingBtnEl.classList.remove("eyeEcho-color-surprise");
-    eyeEchoStartPaintingBtnEl.classList.remove("eyeEcho-color-" + eyeEcho_game_config.theme);
-    eyeEchoStartPaintingBtnEl.classList.add("eyeEcho-color-" + color);
+    const themePickerElems = document.querySelectorAll(".eyeEcho-theme-picker");
+    
+    themePickerElems.forEach(elem => {
+      elem.disabled = false;
+      elem.classList.remove("disabled");
+      elem.classList.remove("eyeEcho-color-surprise");
+      elem.classList.remove("eyeEcho-color-" + eyeEcho_game_config.theme);
+      elem.classList.add("eyeEcho-color-" + color);
+    });
   }
 
   if (color === 'surprise') {
     const idx = Math.floor(Math.random() * 100000) % 8;
     color = eyeEcho_theme_color_list[idx];
   }
+  
+  const themeElems = document.querySelectorAll(".eyeEcho-theme");
+  themeElems.forEach(elem => {
+    elem.classList.remove("eyeEcho-color-surprise");
+    elem.classList.remove("eyeEcho-color-" + eyeEcho_game_config.theme);
+    elem.classList.add("eyeEcho-color-" + color);
+  });
+  
   eyeEcho_game_config.theme = color;
 }
