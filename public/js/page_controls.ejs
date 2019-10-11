@@ -73,8 +73,10 @@ let eyeEchoHandleColorPicker = (color) => {
     const themePickerElems = document.querySelectorAll(".eyeEcho-theme-picker");
 
     themePickerElems.forEach(elem => {
-      elem.disabled = false;
-      elem.classList.remove("disabled");
+      if (color != 'grey') {
+        elem.disabled = false;
+        elem.classList.remove("disabled");
+      }
       elem.classList.remove("eyeEcho-color-surprise");
       elem.classList.remove("eyeEcho-color-" + eyeEcho_game_config.theme);
       elem.classList.add("eyeEcho-color-" + color);

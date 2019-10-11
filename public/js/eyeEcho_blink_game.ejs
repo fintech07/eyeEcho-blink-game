@@ -594,20 +594,20 @@ class GameBoard {
         this.ctx.fillStyle = '#FFF';
         this.ctx.textAlign = 'left';
         this.ctx.textBaseline = 'middle';
-        this.ctx.font = '10vw Arial Black';
+        this.ctx.font = '8vw Arial Black';
 
         const txtHeight = this.ctx.measureText('M').width;
         const countdownTextWidth = this.ctx.measureText(this.countdown);
         
         this.ctx.fillText(this.countdown, txtHeight / 2, txtHeight);
-        this.ctx.font = '8vw Arial';
+        this.ctx.font = '4vw Arial';
         this.ctx.fillText(' sec', txtHeight / 2 + countdownTextWidth.width, txtHeight);
 
         this.ctx.textAlign = 'right';
-        this.ctx.font = '8vw Arial';
+        this.ctx.font = '4vw Arial';
         const blinksTextWidth = this.ctx.measureText(' blinks');
         this.ctx.fillText(' blinks', this.width - txtHeight / 2, txtHeight);
-        this.ctx.font = '10vw Arial Black';
+        this.ctx.font = '8vw Arial Black';
         this.ctx.fillText(eyeEcho_result_info.count, this.width - txtHeight / 2 - blinksTextWidth.width, txtHeight);
     }
 
