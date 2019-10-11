@@ -66,72 +66,108 @@ canvas {
 }
 
 .eyeEcho-color-red {
-    background: -webkit-linear-gradient(-45deg, #ff5959, #a50707) !important;
+    background: -webkit-linear-gradient(180deg, #d723a5, #e62323, #e62323, #ed700e) !important;
+
+    &-circle {
+        background: -webkit-linear-gradient(135deg, #ff5959, #a50707) !important;
+    }
 }
 
 .eyeEcho-color-orange {
-    background: linear-gradient(-45deg, #d64e00, #ffa126) !important;
+    background: -webkit-linear-gradient(180deg, #e62323, #ed700e, #ed700e, #f8d014) !important;
+
+    &-circle {
+        background: -webkit-linear-gradient(135deg, #d64e00, #ffa126) !important;
+    }
 }
 
 .eyeEcho-color-yellow {
-    background: linear-gradient(-45deg, #df9300, #fee433) !important;
+    background: -webkit-linear-gradient(180deg, #ed700e, #f8d014, #f8d014, #30d126) !important;
+
+    &-circle {
+        background: -webkit-linear-gradient(135deg, #df9300, #fee433) !important;
+    }
 }
 
 .eyeEcho-color-green {
-    background: linear-gradient(-45deg, #099400, #75ff6d) !important;
+    background: -webkit-linear-gradient(180deg, #f8d014, #30d126, #30d126, #2ed5d7) !important;
+
+    &-circle {
+        background: -webkit-linear-gradient(135deg, #099400, #75ff6d) !important;
+    }
 }
 
 .eyeEcho-color-surprise {
-    background: linear-gradient(135deg, #ff0000, #ff00ff, #0000ff, #00aaaa, #00aa00, #bbbb00, #ff0000) !important;
+    background: -webkit-linear-gradient(160deg, #e62323 -15%, #ed700e, #f8d014, #30d126, #2ed5d7, #1640d6, #7920e4, #d723a5) !important;
 
-    div {
-        position: relative;
-        width: 100%;
-        height: 100%;
+    &-circle {
+        background: -webkit-linear-gradient(160deg, #e62323 -15%, #ed700e, #f8d014, #30d126, #2ed5d7, #1640d6, #7920e4, #d723a5) !important;
 
-        .eyeEcho-surprise-sub {
+        div {
+            position: relative;
+            width: 100%;
+            height: 100%;
+
+            .eyeEcho-surprise-sub {
+                position: absolute;
+                transform: translate(-50%, -50%);
+                top: 50%;
+                left: 50%;
+                background: white;
+                width: 95%;
+                height: 95%;
+                border-radius: 50%;
+            }
+        }
+
+        label {
             position: absolute;
             transform: translate(-50%, -50%);
-            top: 50%;
+            top: 55%;
             left: 50%;
-            background: white;
-            width: 95%;
-            height: 95%;
-            border-radius: 50%;
+            text-align: center;
+
+            background: -webkit-linear-gradient(135deg, #e62323, #ed700e, #f8d014, #30d126, #2ed5d7, #1640d6, #7920e4, #d723a5);
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
         }
-    }
-
-    label {
-        position: absolute;
-        transform: translate(-50%, -50%);
-        top: 50%;
-        left: 50%;
-        text-align: center;
-
-        background: linear-gradient(135deg, #ff0000, #ff00ff, #0000ff, #00aaaa, #00aa00, #bbbb00, #ff0000);
-        -webkit-background-clip: text !important;
-        -webkit-text-fill-color: transparent !important;
     }
 }
 
 .eyeEcho-color-light-blue {
-    background: linear-gradient(-45deg, #00acaf, #73fdff) !important;
+    background: -webkit-linear-gradient(180deg, #30d126, #2ed5d7, #2ed5d7, #1640d6) !important;
+
+    &-circle {
+        background: -webkit-linear-gradient(135deg, #00acaf, #73fdff) !important;
+    }
 }
 
 .eyeEcho-color-dark-blue {
-    background: linear-gradient(-45deg, #0e00a5, #20bdff) !important;
+    background: -webkit-linear-gradient(180deg, #2ed5d7, #1640d6, #1640d6, #7920e4) !important;
+
+    &-circle {
+        background: -webkit-linear-gradient(135deg, #0e00a5, #20bdff) !important;
+    }
 }
 
 .eyeEcho-color-purple {
-    background: linear-gradient(-45deg, #44009e, #b966ff) !important;
+    background: -webkit-linear-gradient(180deg, #1640d6, #7920e4, #7920e4, #d723a5) !important;
+
+    &-circle {
+        background: -webkit-linear-gradient(135deg, #44009e, #b966ff) !important;
+    }
 }
 
 .eyeEcho-color-pink {
-    background: linear-gradient(-45deg, #970075, #ff5ac3) !important;
+    background: -webkit-linear-gradient(180deg, #7920e4, #d723a5, #d723a5, #e62323) !important;
+
+    &-circle {
+        background: -webkit-linear-gradient(-45deg, #970075, #ff5ac3) !important;
+    }
 }
 
 .eyeEcho-repaint-btn {
-    background: linear-gradient(90deg, rgba(124, 230, 218, 1) 23%, rgba(210, 232, 73, 0.8743872549019608) 69%, rgba(156, 234, 71, 0.9051995798319328) 78%, rgba(249, 255, 0, 1) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(124, 230, 218, 1) 23%, rgba(210, 232, 73, 0.8743872549019608) 69%, rgba(156, 234, 71, 0.9051995798319328) 78%, rgba(249, 255, 0, 1) 100%);
     color: white;
     margin-top: 3vh;
     padding: 1vw 3vw 1vw 3vw;
@@ -203,6 +239,7 @@ canvas {
     screen and (min-width: 360px) and (max-height: 680px),
     screen and (min-width: 410px) and (max-height: 736px) {
         padding: 5vh 5vw 5vh 5vw;
+
         .eyeEcho-theme_picker-description-title {
             font-size: 5vw;
         }
@@ -218,19 +255,20 @@ canvas {
     @media screen and (min-width: 768px) and (max-height: 1024px),
     screen and (min-width: 1024px) and (max-height: 1366px) {
         padding: 5vh 5vw 5vh 5vw;
+
         .eyeEcho-theme_picker-description-title {
             font-size: 5vw;
         }
 
         .eyeEcho-theme_picker-description-content {
             padding: 1vh 3vw 0vw;
+
             p {
                 font-size: 2.5vw;
             }
         }
 
     }
-
 }
 
 .eyeEcho-circle-container {
@@ -256,6 +294,17 @@ canvas {
         line-height: 1.2;
     }
 
+    @media screen and (min-width: 768px) and (max-height: 1024px),
+    screen and (min-width: 1024px) and (max-height: 1366px) {
+        margin: 0vh auto 3vh;
+        @include on-circle($item-count: 9, $circle-size: 55vw, $item-size: 14vw, $start-angle: -70);
+        
+        label {
+            font-size: 2.5vw;
+            line-height: 1.2;
+        }
+    }
+
     #eyeEcho-circle-container-color-name {
         position: absolute;
         transform: translate(-25%, 50%);
@@ -263,17 +312,11 @@ canvas {
         width: 50%;
 
         label {
-            font-size: 4vw;
+            font-size: 3.5vw;
             line-height: 1.2;
             -webkit-background-clip: text !important;
             -webkit-text-fill-color: transparent !important;
         }
-    }
-
-    @media screen and (min-width: 768px) and (max-height: 1024px),
-    screen and (min-width: 1024px) and (max-height: 1366px) {
-        margin: 0vh auto 3vh;
-        @include on-circle($item-count: 9, $circle-size: 55vw, $item-size: 14vw, $start-angle: -70);
     }
 }
 
@@ -534,6 +577,7 @@ canvas {
 
 .eyeEcho-shop-product {
     position: relative;
+
     img {
         vertical-align: middle;
     }
@@ -700,6 +744,7 @@ canvas {
     @media screen and (min-width: 768px) and (max-height: 1024px),
     screen and (min-width: 1024px) and (max-height: 1366px) {
         font-size: 4vw;
+
         div {
             padding: 0 0 1vh;
         }

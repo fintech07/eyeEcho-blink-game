@@ -66,11 +66,6 @@ let eyeEchoHandleColorPicker = (color) => {
   const eyeEchoColorNameEl = document.getElementById('eyeEcho-circle-container-color-name');
   const eyeEchoStartPaintingBtnEl = document.getElementById('eyeEcho-theme_picker-start-btn');
 
-  if (color === 'surprise') {
-    const idx = Math.floor(Math.random() * 100000) % 8;
-    color = eyeEcho_theme_color_list[idx];
-  }
-
   eyeEchoColorNameEl.children[0].innerHTML = eyeEcho_game_config.text.theme[color].desc;
   eyeEchoColorNameEl.children[0].setAttribute("class", "eyeEcho-color-" + color);
 
@@ -84,9 +79,14 @@ let eyeEchoHandleColorPicker = (color) => {
   if (color != 'grey') {
     eyeEchoStartPaintingBtnEl.disabled = false;
     eyeEchoStartPaintingBtnEl.classList.remove("disabled");
+    eyeEchoStartPaintingBtnEl.classList.remove("eyeEcho-color-surprise");
     eyeEchoStartPaintingBtnEl.classList.remove("eyeEcho-color-" + eyeEcho_game_config.theme);
     eyeEchoStartPaintingBtnEl.classList.add("eyeEcho-color-" + color);
   }
 
+  if (color === 'surprise') {
+    const idx = Math.floor(Math.random() * 100000) % 8;
+    color = eyeEcho_theme_color_list[idx];
+  }
   eyeEcho_game_config.theme = color;
 }
