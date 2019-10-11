@@ -694,7 +694,8 @@ canvas {
 .close {
     position: fixed;
     bottom: 25vh;
-    right: 3vw;
+    width: 100vw;
+    height: 100%;
 }
 
 .eyeEcho_download_modal_body {
