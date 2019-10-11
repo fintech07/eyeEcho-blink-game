@@ -160,7 +160,10 @@ function toRadians(angle) {
 // unify vector
 function unifyVector(_vec) {
     const _l = Math.sqrt(_vec.x * _vec.x + _vec.y * _vec.y);
-    return {x: _vec.x / _l, y: _vec.y / _l};
+    return {
+        x: _vec.x / _l,
+        y: _vec.y / _l
+    };
 }
 
 animate = ({
@@ -186,7 +189,10 @@ animate = ({
 // defind Shape class
 class Shape {
     constructor(ctx, width, height) {
-        this.box = {width: width, height: height};
+        this.box = {
+            width: width,
+            height: height
+        };
         this.ctx = ctx;
         this.setType();
         if (this.type == SHAPE_TYPE.CIRCLE) {
@@ -210,7 +216,7 @@ class Shape {
     }
 
     setType() {
-        switch(getRandomInt() % 3) {
+        switch (getRandomInt() % 3) {
             case 0:
                 this.type = SHAPE_TYPE.RECTANGLE;
                 break;
@@ -239,7 +245,7 @@ class Shape {
         };
 
         let direction = getRandomInt() % 4;
-        
+
         switch (direction) {
             case 0: // right
                 _start_p.x = -_o[0] / 2;
@@ -266,7 +272,7 @@ class Shape {
                 _end_p.y = -_o[1];
                 break;
             default:
-                 _end_p.x = -_o[0];
+                _end_p.x = -_o[0];
                 _end_p.y = r() * box.height;
                 _start_p.x = box.width + _o[0] / 2;
                 _start_p.y = r() * box.height;
@@ -418,10 +424,11 @@ class GameBoard {
 
     uploadImage = () => {
         try {
+            this.isUploading = true;
+            this.isEnableEye = false;
             const pngUrl = this.canvas.toDataURL("image/png", 1);
             setResultImageSrc(pngUrl);
             setResultBlinkCount();
-            this.isUploading = true;
             this.drawMenu();
 
             const url = 'https://imb-staging.herokuapp.com/eye-echo/upload';
@@ -487,13 +494,14 @@ class GameBoard {
 
     // drop shape
     dropShape = () => {
+        if (this.isUploading) return;
         eyeEcho_result_info.count++;
         if (!this.isStarted) return;
         this.isEnableEye = true;
 
         setTimeout(() => {
             this.isEnableEye = false;
-        }, 400);
+        }, 300);
 
         this.addStaticShape();
         this.setActiveShape();
@@ -512,7 +520,7 @@ class GameBoard {
         this.ctx.clearRect(0, 0, this.width, this.height);
     }
 
-// draw ready to start
+    // draw ready to start
     drawReadyToStart = () => {
         if (this.isReady < 1) {
             animate({
@@ -539,7 +547,7 @@ class GameBoard {
                     return timeFraction;
                 }
             });
-        } else if (this.isReady > 3){
+        } else if (this.isReady > 3) {
             animate({
                 duration: 1000,
                 draw: (progress) => {
@@ -600,7 +608,7 @@ class GameBoard {
 
         const txtHeight = this.ctx.measureText('M').width;
         const countdownTextWidth = this.ctx.measureText(this.countdown);
-        
+
         this.ctx.fillText(this.countdown, txtHeight / 2, txtHeight);
         this.ctx.font = '8vw Arial';
         this.ctx.fillText(' sec', txtHeight / 2 + countdownTextWidth.width, txtHeight);
@@ -624,7 +632,7 @@ class GameBoard {
 
     // draw blink icon when the shape start to drop
     drawBlinkIcon = () => {
-        if (this.isEnableEye) {
+        if (this.isEnableEye && !this.isUploading) {
             this.ctx.drawImage(this.blinkIcon, this.width / 2 - this.width / 10, this.height / 2 - this.width / 10, this.width / 5, this.width / 5);
         }
     }
@@ -643,11 +651,11 @@ class GameBoard {
         this.erase();
         this.drawBackground();
         this.drawShapes();
-        this.drawBlinkIcon();
         if (this.checkEndCondition()) {
             this.endGame();
         } else {
             this.drawCountdown();
+            this.drawBlinkIcon();
             window.requestAnimationFrame(this.draw);
         }
     }
