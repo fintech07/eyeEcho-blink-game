@@ -27,7 +27,7 @@
         @for $i from 1 through $item-count {
             &:nth-of-type(#{$i}) {
                 transform:
-                    rotate($rot * 1deg) translate(($circle-size - $item-size) / 2) rotate($rot * -1deg);
+                    rotate($rot * 1deg) translate($circle-size / 2) rotate($rot * -1deg);
             }
 
             $rot: $rot+$angle;
