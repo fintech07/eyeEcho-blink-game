@@ -5,7 +5,7 @@ body {
 canvas {
     width: 100% !important;
     height: 100% !important;
-    background: #b0b0b3;
+    background: white;
 }
 
 // responsive breakpoints
@@ -41,12 +41,13 @@ canvas {
 
 // eyeEcho basic styles
 .eyeEcho {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: $fontstack;
     color: white;
 }
 
 .eyeEcho-aligin-center {
     text-align: center;
+    vertical-align: middle;
 }
 
 .eyeEcho-btn {
@@ -187,12 +188,13 @@ canvas {
     }
 
     .eyeEcho-theme_picker-description-content {
-        padding: 3vh 0vw 0vw;
+        padding: 3vh 3vw 0vw;
 
         p {
             text-align: center;
             line-height: 2;
-            font-size: 4vw;
+            font-size: 3.5vw;
+            font-weight: bold;
             letter-spacing: 0.2vw;
         }
     }
@@ -214,6 +216,7 @@ canvas {
 
     @media screen and (min-width: 768px) and (max-height: 1024px),
     screen and (min-width: 1024px) and (max-height: 1366px) {
+        padding: 1vh 3vw 0vw;
         .eyeEcho-theme_picker-description-title {
             font-size: 5vw;
         }
@@ -284,6 +287,10 @@ canvas {
     padding: 2vh 10vw;
     border-radius: 10vh;
     border: 1px solid white;
+
+    label {
+        vertical-align: middle;
+    }
 
     &.disabled {
         background: #ccc;
@@ -525,6 +532,9 @@ canvas {
 
 .eyeEcho-shop-product {
     position: relative;
+    img {
+        vertical-align: middle;
+    }
 }
 
 .eyeEcho_product-description {
