@@ -627,7 +627,6 @@ class GameBoard {
         this.staticShapes.forEach(function (shape) {
             shape.draw();
         })
-        this.activeShape.draw();
     }
 
     // draw blink icon when the shape start to drop
@@ -654,6 +653,7 @@ class GameBoard {
         if (this.checkEndCondition()) {
             this.endGame();
         } else {
+             this.activeShape.draw();
             this.drawCountdown();
             this.drawBlinkIcon();
             window.requestAnimationFrame(this.draw);

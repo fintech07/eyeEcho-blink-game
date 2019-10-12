@@ -94,5 +94,12 @@ let eyeEchoHandleColorPicker = (color) => {
     elem.classList.add("eyeEcho-color-" + color);
   });
 
+  const themeBtnElems = document.querySelectorAll(".eyeEcho-theme-apply");
+  themeBtnElems.forEach(elem => {
+    elem.classList.remove("eyeEcho-color-surprise-apply");
+    elem.classList.remove("eyeEcho-color-" + eyeEcho_game_config.theme + '-apply');
+    elem.classList.add("eyeEcho-color-" + color  + '-apply');
+  });
+
   eyeEcho_game_config.theme = color;
 }
