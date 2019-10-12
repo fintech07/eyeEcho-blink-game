@@ -18,61 +18,71 @@
         "grey": {
             "desc": "select a color theme",
             "value1": "#000000",
-            "value2": "#eeeeee"
+            "value2": "#888888",
+            "value3": "#eeeeee"
         },
 
         "red": {
             "desc": "Malibu Sunset",
-            "value1": "#ff5959",
-            "value2": "#a50707"
+            "value1": "#d723a5",
+            "value2": "#e62323",
+            "value3": "#ed700e"
         },
 
         "orange": {
             "desc": "Safari in the Savanah",
-            "value1": "#d64e0",
-            "value2": "#ffa126"
+            "value1": "#e62323",
+            "value2": "#ed700e",
+            "value3": "#f8d014"
         },
 
         "yellow": {
             "desc": "Citrus Pie",
-            "value1": "#df9300",
-            "value2": "#fee433"
+            "value1": "#ed700e",
+            "value2": "#f8d014",
+            "value3": "#30d126"
         },
 
         "green": {
             "desc": "Prairie Stroll",
-            "value1": "#099400",
-            "value2": "#75ff6d"
+            "value1": "#f8d014",
+            "value2": "#30d126",
+            "value3": "#2ed5d7"
         },
 
         "surprise": {
             "desc": "I’m feeling lucky",
             "value1": "#000000",
-            "value2": "#ffffff"
+            "value2": "#888888",
+            "value3": "#ffffff"
         },
 
         "light-blue": {
             "desc": "Ocean Spray",
-            "value1": "#00acaf",
-            "value2": "#73fdff"
+            "value1": "#30d126",
+            "value2": "#2ed5d7",
+            "value3": "#1640d6"
         },
 
         "dark-blue": {
             "desc": "Midnight Magic",
-            "value1": "#0e00a5",
-            "value2": "#20bdff"
+            "value1": "#2ed5d7",
+            "value2": "#1640d6",
+            "value3": "#7920e4"
         },
 
         "purple": {
             "desc": "Funky Fridays",
-            "value1": "#44009e",
-            "value2": "#b966ff"
+            "value1": "#1640d6",
+            "value2": "#7920e4",
+            "value3": "#d723a5"
         },
 
         "pink": {
             "desc": "Bubblegum Shake",
-            "value1": "#970075",
-            "value2": "#ff5ac3"
+            "value1": "#7920e4",
+            "value2": "#d723a5",
+            "value3": "#e62323"
         }
     },
     "page": {

@@ -122,7 +122,27 @@ function cutHex(h) {
 }
 
 function hexToRgb(_hex) {
-    return [hexToR(_hex), hexToG(_hex), hexToB(_hex)];
+    return [hexToR(_hex), hexToG(_hex), hexToB(_hex), 1.0];
+}
+
+function ColorLuminance(hex, lum) {
+
+	// validate hex string
+	hex = String(hex).replace(/[^0-9a-f]/gi, '');
+	if (hex.length < 6) {
+		hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+	}
+	lum = lum || 0;
+
+	// convert to decimal and change luminosity
+	var rgb = "#", c, i;
+	for (i = 0; i < 3; i++) {
+		c = parseInt(hex.substr(i*2,2), 16);
+		c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+		rgb += ("00"+c).substr(c.length);
+	}
+
+	return rgb;
 }
 
 // get random chromaticity value
@@ -145,6 +165,12 @@ function random_rgba(theme = 'grey') {
     _range.push(hexToRgb(eyeEcho_game_config.text.theme[theme].value2));
 
     return [getRandomChro(_range[0][0], _range[1][0]), getRandomChro(_range[0][1], _range[1][1]), getRandomChro(_range[0][2], _range[1][2]), r()];
+}
+
+function getThemeRgba(theme='grey') {
+    theme = eyeEcho_game_config.theme;
+    const color_idx = getRandomInt() % 3 + 1;
+    return eyeEcho_game_config.text.theme[theme]['value' + color_idx];
 }
 
 // get rgba style
@@ -210,8 +236,8 @@ class Shape {
         }
 
         this.setDirection();
-
-        this.color = random_rgba();
+        this.color = [ColorLuminance(getThemeRgba(), 0.5 + r()), ColorLuminance(getThemeRgba(), 0.5 + r())];
+        this.grd_angle = getRandomInt() % 180;
         this.speed = width / 200;
     }
 
@@ -307,29 +333,39 @@ class Shape {
     }
 
     // define draw functions
-    drawRect = (x, y, width, height, color) => {
+    drawRect = (x, y, width, height, color, grd_angle) => {
+        const grd_len = width > height ? width : height;
         this.ctx.beginPath();
         this.ctx.rect(x - width / 2, y - height / 2, width, height);
-        this.ctx.fillStyle = getRgbaColor(color);
+        let grd = this.ctx.createLinearGradient(x - width / 2, y - height / 2, x + width / 2, y + height / 2);
+        grd.addColorStop(0, color[0]);
+        grd.addColorStop(1, color[1]);
+        this.ctx.fillStyle = grd;
         this.ctx.fill();
         this.ctx.closePath();
     }
 
-    drawCircle = (x, y, r, color) => {
+    drawCircle = (x, y, r, color, grd_angle) => {
         this.ctx.beginPath();
         this.ctx.arc(x, y, r, 0, Math.PI * 2);
-        this.ctx.fillStyle = getRgbaColor(color);
+        let grd = this.ctx.createLinearGradient(x - r, y - r, x + r, y + r);
+        grd.addColorStop(0, color[0]);
+        grd.addColorStop(1, color[1]);
+        this.ctx.fillStyle = grd;
         this.ctx.fill();
         this.ctx.closePath();
     }
 
-    drawTriangle = (x, y, r, st_a, color) => {
+    drawTriangle = (x, y, r, st_a, color, grd_angle) => {
         const ang_step = 120 / 180 * Math.PI;
         this.ctx.beginPath();
         this.ctx.moveTo(x + r * Math.cos(st_a), y + r * Math.sin(st_a));
         this.ctx.lineTo(x + r * Math.cos(st_a + ang_step), y + r * Math.sin(st_a + ang_step));
         this.ctx.lineTo(x + r * Math.cos(st_a + 2 * ang_step), y + r * Math.sin(st_a + 2 * ang_step));
-        this.ctx.fillStyle = getRgbaColor(color);
+        let grd = this.ctx.createLinearGradient(x - r , y - r, x + r, y + r);
+        grd.addColorStop(0, color[0]);
+        grd.addColorStop(1, color[1]);
+        this.ctx.fillStyle = grd;
         this.ctx.fill();
         this.ctx.closePath();
     }
@@ -337,13 +373,13 @@ class Shape {
     draw = () => {
         switch (this.type) {
             case SHAPE_TYPE.RECTANGLE:
-                this.drawRect(this.x, this.y, this.width, this.height, this.color);
+                this.drawRect(this.x, this.y, this.width, this.height, this.color, this.grd_angle);
                 break;
             case SHAPE_TYPE.CIRCLE:
-                this.drawCircle(this.x, this.y, this.r, this.color);
+                this.drawCircle(this.x, this.y, this.r, this.color, this.grd_angle);
                 break;
             case SHAPE_TYPE.TRIANGLE:
-                this.drawTriangle(this.x, this.y, this.r, this.start_angle, this.color);
+                this.drawTriangle(this.x, this.y, this.r, this.start_angle, this.color, this.grd_angle);
                 break;
         }
     }
@@ -359,7 +395,7 @@ class GameBoard {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
         this.theme = eyeEcho_game_config.theme;
-        this.bg_color = [random_rgba(this.theme), random_rgba(this.theme)];
+        this.bg_color = eyeEcho_game_config.text.theme[this.theme];
         this.init();
     }
 
@@ -536,7 +572,7 @@ class GameBoard {
                     this.ctx.beginPath();
                     this.ctx.arc(this.width / 2, this.height / 2, Math.abs(_r), 0, Math.PI * 2);
                     this.ctx.clip();
-                    this.drawBackground();
+                    this.drawBackground(_r, _r);
                     this.ctx.fillStyle = "rgba(255, 255, 255, " + (0.6 - progress > 0 ? 0.6 - progress : 0.0) + ")";
                     this.ctx.font = 'bold ' + (20 + 20 * progress) + 'vw Arial';
                     this.ctx.textAlign = 'center';
@@ -557,7 +593,7 @@ class GameBoard {
                     this.ctx.arc(this.width / 2, this.height / 2, this.width / 5, 0, Math.PI * 2);
                     this.ctx.clip();
                     this.ctx.globalAlpha = progress;
-                    this.drawBackground();
+                    this.drawBackground(this.width / 5, this.width / 5);
                     this.ctx.fillStyle = "rgba(255, 255, 255, " + progress + ")";
                     this.ctx.font = 'bold 20vw Arial';
                     this.ctx.textAlign = 'center';
@@ -575,7 +611,7 @@ class GameBoard {
             this.ctx.beginPath();
             this.ctx.arc(this.width / 2, this.height / 2, this.width / 5, 0, Math.PI * 2);
             this.ctx.clip();
-            this.drawBackground();
+            this.drawBackground(this.width / 5, this.width / 5);
             this.ctx.fillStyle = '#FFFFFF';
             this.ctx.font = 'bold 20vw Arial';
             this.ctx.textAlign = 'center';
@@ -637,23 +673,34 @@ class GameBoard {
     }
 
     // draw gradient background.
-    drawBackground = () => {
-        let grd = this.ctx.createLinearGradient(90, 0, 0, this.width);
-        grd.addColorStop(0, getRgbaColor(this.bg_color[0]));
-        grd.addColorStop(1, getRgbaColor(this.bg_color[1]));
+    drawBackground = (offset_x= this.width / 2, offset_y= this.height / 2) => {
+        
+        if (offset_x == 0 || offset_x > this.width / 2 ) { 
+            offset_x = this.width / 2, offset_y = this.height / 2;
+        }
+
+        let grd = this.ctx.createLinearGradient(
+            this.width / 2 - offset_x,
+            this.height / 2 - offset_y,
+            this.width / 2 + offset_x,
+            this.height / 2 + offset_y);
+        grd.addColorStop(0, this.bg_color.value1);
+        grd.addColorStop(0.5, this.bg_color.value2);
+        //grd.addColorStop(0.7, this.bg_color.value2);
+        grd.addColorStop(1, this.bg_color.value3);
         this.ctx.fillStyle = grd;
-        this.ctx.fillRect(0, 0, this.width, this.height);
+        this.ctx.fillRect(this.width / 2 - offset_x, this.height / 2 - offset_y, this.width / 2 + offset_x, this.height / 2 + offset_y);
     }
 
     // draw by time
     draw = (time) => {
         this.erase();
-        this.drawBackground();
+        this.drawBackground(this.width / 2, this.height / 2);
         this.drawShapes();
         if (this.checkEndCondition()) {
             this.endGame();
         } else {
-             this.activeShape.draw();
+            this.activeShape.draw();
             this.drawCountdown();
             this.drawBlinkIcon();
             window.requestAnimationFrame(this.draw);
