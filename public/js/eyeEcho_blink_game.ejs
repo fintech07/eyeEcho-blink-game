@@ -52,9 +52,9 @@ const SHAPE_SIZE_MIN = 50;
 const CHOR_MIN = 100;
 const ALPHA_MIN = 0.6;
 
-const LANG = {
-    EN: 'en',
-    RU: 'ru',
+const GRADIENT_TYPE = {
+    LINEAR: 'LINEAR',
+    RADIAL: 'RADIAL',
 }
 
 const SHAPE_TYPE = {
@@ -236,8 +236,10 @@ class Shape {
         }
 
         this.setDirection();
-        this.color = [ColorLuminance(getThemeRgba(), 0.5 + r()), ColorLuminance(getThemeRgba(), 0.5 + r())];
-        this.grd_angle = getRandomInt() % 180;
+        this.grd_type = getRandomInt() % 5 == 0 ? GRADIENT_TYPE.RADIAL : GRADIENT_TYPE.LINEAR ;
+        this.grd_r = r() * 0.4 + 0.4;
+        this.grd_color_cnt = getRandomInt() % 3;
+        this.color = [ColorLuminance(getThemeRgba(), 1.5 * r()), ColorLuminance(getThemeRgba(), 1.5 * r()), ColorLuminance(getThemeRgba(), 1.5 * r())];
         this.speed = width / 200;
     }
 
@@ -333,38 +335,69 @@ class Shape {
     }
 
     // define draw functions
-    drawRect = (x, y, width, height, color, grd_angle) => {
+    drawRect = (x, y, width, height, color, grd_type, grd_r = 0) => {
         const grd_len = width > height ? width : height;
         this.ctx.beginPath();
         this.ctx.rect(x - width / 2, y - height / 2, width, height);
         let grd = this.ctx.createLinearGradient(x - width / 2, y - height / 2, x + width / 2, y + height / 2);
-        grd.addColorStop(0, color[0]);
-        grd.addColorStop(1, color[1]);
+        if (grd_type == GRADIENT_TYPE.RADIAL) {
+            grd = this.ctx.createRadialGradient(x, y, 0, x, y, grd_len);
+        }
+        grd.addColorStop(0.2, color[0]);
+
+        if (this.grd_color_cnt == 1) {
+            grd.addColorStop(1, color[1]);
+        } else if (this.grd_color_cnt > 1) {
+            grd.addColorStop(grd_r, color[1]);
+            grd.addColorStop(1, color[2]);
+        }
+
         this.ctx.fillStyle = grd;
         this.ctx.fill();
         this.ctx.closePath();
     }
 
-    drawCircle = (x, y, r, color, grd_angle) => {
+    drawCircle = (x, y, _r, color, grd_type, grd_r) => {
         this.ctx.beginPath();
-        this.ctx.arc(x, y, r, 0, Math.PI * 2);
-        let grd = this.ctx.createLinearGradient(x - r, y - r, x + r, y + r);
-        grd.addColorStop(0, color[0]);
-        grd.addColorStop(1, color[1]);
+        this.ctx.arc(x, y, _r, 0, Math.PI * 2);
+        let grd = this.ctx.createLinearGradient(x - _r, y - _r, x + _r, y + _r);
+        if (grd_type == GRADIENT_TYPE.RADIAL) {
+            grd = this.ctx.createRadialGradient(x, y, 0, x, y, _r);
+        }
+        grd.addColorStop(0.2, color[0]);
+
+        if (this.grd_color_cnt == 1) {
+            grd.addColorStop(1, color[1]);
+        } else if (this.grd_color_cnt > 1) {
+            grd.addColorStop(grd_r, color[1]);
+            grd.addColorStop(1, color[2]);
+        }
+
         this.ctx.fillStyle = grd;
         this.ctx.fill();
         this.ctx.closePath();
     }
 
-    drawTriangle = (x, y, r, st_a, color, grd_angle) => {
+    drawTriangle = (x, y, _r, st_a, color, grd_type, grd_r) => {
         const ang_step = 120 / 180 * Math.PI;
         this.ctx.beginPath();
-        this.ctx.moveTo(x + r * Math.cos(st_a), y + r * Math.sin(st_a));
-        this.ctx.lineTo(x + r * Math.cos(st_a + ang_step), y + r * Math.sin(st_a + ang_step));
-        this.ctx.lineTo(x + r * Math.cos(st_a + 2 * ang_step), y + r * Math.sin(st_a + 2 * ang_step));
-        let grd = this.ctx.createLinearGradient(x - r , y - r, x + r, y + r);
-        grd.addColorStop(0, color[0]);
-        grd.addColorStop(1, color[1]);
+        this.ctx.moveTo(x + _r * Math.cos(st_a), y + _r * Math.sin(st_a));
+        this.ctx.lineTo(x + _r * Math.cos(st_a + ang_step), y + _r * Math.sin(st_a + ang_step));
+        this.ctx.lineTo(x + _r * Math.cos(st_a + 2 * ang_step), y + _r * Math.sin(st_a + 2 * ang_step));
+        let grd = this.ctx.createLinearGradient(x + _r , y + _r, x + _r, y + _r);
+        if (grd_type == GRADIENT_TYPE.RADIAL) {
+            grd = this.ctx.createRadialGradient(x, y, 0, x, y, _r);
+        }
+
+        grd.addColorStop(0.2, color[0]);
+
+        if (this.grd_color_cnt == 1) {
+            grd.addColorStop(1, color[1]);
+        } else if (this.grd_color_cnt > 1) {
+            grd.addColorStop(grd_r, color[1]);
+            grd.addColorStop(1, color[2]);
+        }
+
         this.ctx.fillStyle = grd;
         this.ctx.fill();
         this.ctx.closePath();
@@ -373,13 +406,13 @@ class Shape {
     draw = () => {
         switch (this.type) {
             case SHAPE_TYPE.RECTANGLE:
-                this.drawRect(this.x, this.y, this.width, this.height, this.color, this.grd_angle);
+                this.drawRect(this.x, this.y, this.width, this.height, this.color, this.grd_type, this.grd_r);
                 break;
             case SHAPE_TYPE.CIRCLE:
-                this.drawCircle(this.x, this.y, this.r, this.color, this.grd_angle);
+                this.drawCircle(this.x, this.y, this.r, this.color, this.grd_type, this.grd_r);
                 break;
             case SHAPE_TYPE.TRIANGLE:
-                this.drawTriangle(this.x, this.y, this.r, this.start_angle, this.color, this.grd_angle);
+                this.drawTriangle(this.x, this.y, this.r, this.start_angle, this.color, this.grd_type, this.grd_r);
                 break;
         }
     }
