@@ -127,22 +127,23 @@ function hexToRgb(_hex) {
 
 function ColorLuminance(hex, lum) {
 
-	// validate hex string
-	hex = String(hex).replace(/[^0-9a-f]/gi, '');
-	if (hex.length < 6) {
-		hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-	}
-	lum = lum || 0;
+    // validate hex string
+    hex = String(hex).replace(/[^0-9a-f]/gi, '');
+    if (hex.length < 6) {
+        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    }
+    lum = lum || 0;
 
-	// convert to decimal and change luminosity
-	var rgb = "#", c, i;
-	for (i = 0; i < 3; i++) {
-		c = parseInt(hex.substr(i*2,2), 16);
-		c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
-		rgb += ("00"+c).substr(c.length);
-	}
+    // convert to decimal and change luminosity
+    var rgb = "#",
+        c, i;
+    for (i = 0; i < 3; i++) {
+        c = parseInt(hex.substr(i * 2, 2), 16);
+        c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+        rgb += ("00" + c).substr(c.length);
+    }
 
-	return rgb;
+    return rgb;
 }
 
 // get random chromaticity value
@@ -167,7 +168,7 @@ function random_rgba(theme = 'grey') {
     return [getRandomChro(_range[0][0], _range[1][0]), getRandomChro(_range[0][1], _range[1][1]), getRandomChro(_range[0][2], _range[1][2]), r()];
 }
 
-function getThemeRgba(theme='grey') {
+function getThemeRgba(theme = 'grey') {
     theme = eyeEcho_game_config.theme;
     const color_idx = getRandomInt() % 3 + 1;
     return eyeEcho_game_config.text.theme[theme]['value' + color_idx];
@@ -236,7 +237,7 @@ class Shape {
         }
 
         this.setDirection();
-        this.grd_type = getRandomInt() % 5 == 0 ? GRADIENT_TYPE.RADIAL : GRADIENT_TYPE.LINEAR ;
+        this.grd_type = getRandomInt() % 5 == 0 ? GRADIENT_TYPE.RADIAL : GRADIENT_TYPE.LINEAR;
         this.grd_r = r() * 0.4 + 0.4;
         this.grd_color_cnt = getRandomInt() % 3;
         this.color = [ColorLuminance(getThemeRgba(), 1.5 * r()), ColorLuminance(getThemeRgba(), 1.5 * r()), ColorLuminance(getThemeRgba(), 1.5 * r())];
@@ -307,10 +308,8 @@ class Shape {
                 break;
         }
 
-
         this.start_p = _start_p;
         this.end_p = _end_p;
-
         this.x = this.start_p.x;
         this.y = this.start_p.y;
 
@@ -384,11 +383,11 @@ class Shape {
         this.ctx.moveTo(x + _r * Math.cos(st_a), y + _r * Math.sin(st_a));
         this.ctx.lineTo(x + _r * Math.cos(st_a + ang_step), y + _r * Math.sin(st_a + ang_step));
         this.ctx.lineTo(x + _r * Math.cos(st_a + 2 * ang_step), y + _r * Math.sin(st_a + 2 * ang_step));
-        let grd = this.ctx.createLinearGradient(x + _r , y + _r, x + _r, y + _r);
+
+        let grd = this.ctx.createLinearGradient(x - _r, y - _r, x + _r, y + _r);
         if (grd_type == GRADIENT_TYPE.RADIAL) {
             grd = this.ctx.createRadialGradient(x, y, 0, x, y, _r);
         }
-
         grd.addColorStop(0.2, color[0]);
 
         if (this.grd_color_cnt == 1) {
@@ -548,11 +547,8 @@ class GameBoard {
         const width = this.activeShape.width;
         const height = this.activeShape.height;
 
-
-        if (x + width < 0 ||
-            x - width > this.width || y + height < 0 || y - height > this.height) {
+        if (x + width / 2 < 0 || x - width / 2 > this.width || y + height / 2 < 0 || y - height / 2 > this.height) {
             this.setActiveShape();
-            return;
         }
     }
 
@@ -563,7 +559,6 @@ class GameBoard {
 
     // drop shape
     dropShape = () => {
-        if (this.isUploading) return;
         eyeEcho_result_info.count++;
         if (!this.isStarted) return;
         this.isEnableEye = true;
@@ -706,9 +701,9 @@ class GameBoard {
     }
 
     // draw gradient background.
-    drawBackground = (offset_x= this.width / 2, offset_y= this.height / 2) => {
-        
-        if (offset_x == 0 || offset_x > this.width / 2 ) { 
+    drawBackground = (offset_x = this.width / 2, offset_y = this.height / 2) => {
+
+        if (offset_x == 0 || offset_x > this.width / 2) {
             offset_x = this.width / 2, offset_y = this.height / 2;
         }
 
