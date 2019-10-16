@@ -47,7 +47,7 @@ canvas {
 }
 
 .eyeEcho-color-orange {
-    background: -webkit-linear-gradient(0deg, #e62323 -20%, #ed700e 20%, #ed700e 80%, #f8d014 120%) !important;
+    background: -webkit-linear-gradient(0deg, #e62323 0%, #ed700e 20%, #ed700e 80%, #f8d014 100%) !important;
 
     &-circle {
         background: -webkit-linear-gradient(135deg, #d64e00, #ffa126) !important;
@@ -71,7 +71,7 @@ canvas {
 }
 
 .eyeEcho-color-green {
-    background: -webkit-linear-gradient(0deg, #f8d014 -20%, #30d126 20%, #30d126 80%, #2ed5d7 120%) !important;
+    background: -webkit-linear-gradient(0deg, #f8d014 0%, #30d126 25%, #30d126 75%, #2ed5d7 100%) !important;
 
     &-circle {
         background: -webkit-linear-gradient(135deg, #099400, #75ff6d) !important;
@@ -234,7 +234,7 @@ canvas {
         p {
             text-align: center;
             line-height: 2;
-            font-size: 3.5vw;
+            font-size: 3.3vw;
             font-weight: bold;
             letter-spacing: 0.2vw;
         }
@@ -312,13 +312,14 @@ canvas {
 
     #eyeEcho-circle-container-color-name {
         position: absolute;
-        transform: translate(-25%, 50%);
+        transform: translate(-25%, 40%);
         text-align: center;
         width: 50%;
 
         label {
             font-size: 3.5vw;
             line-height: 1.2;
+            letter-spacing: 1.2px;
             -webkit-background-clip: text !important;
             -webkit-text-fill-color: transparent !important;
         }
@@ -331,10 +332,10 @@ canvas {
     width: 80vw;
     color: $info_color;
     font-size: 4vw;
-    letter-spacing: 1.2px;
+    letter-spacing: 1.5px;
     font-weight: bold;
     background: white;
-    padding: 2vh 10vw;
+    padding: 1.5vh 10vw;
     border-radius: 10vh;
     border: 1px solid white;
 
@@ -351,6 +352,11 @@ canvas {
         background: linear-gradient(90deg, #c77ce6 0%, #5e4df7 24%, #5e4df7 60%, #69bef5 100%);
         color: white;
     }
+}
+
+#eyeEcho-theme_picker-start-btn {
+    font-size: 3.6vw;
+    padding: 2vh 10vw;
 }
 
 // eyeEcho game landing page layout style
@@ -375,6 +381,19 @@ canvas {
     label {
         font-size: 11vw;
         font-weight: bold;
+    }
+
+    @media screen and (min-width: 1280px) and (min-height: 1366px) {
+        font-size: 6rem;
+        img {
+            width: 7rem;
+            padding-bottom: 1vh;
+        }
+
+        label {
+            font-size: 6rem;
+            font-weight: bold;
+        }
     }
 }
 
