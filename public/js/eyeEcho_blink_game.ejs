@@ -605,7 +605,8 @@ class GameBoard {
                     this.ctx.font = 'bold ' + (20 + 20 * progress) + 'vw Arial';
                     this.ctx.textAlign = 'center';
                     this.ctx.textBaseline = 'middle';
-                    this.ctx.fillText(1, this.width / 2, this.height / 2);
+                    const txtHeight = this.ctx.measureText('3').width;
+                    this.ctx.fillText(1, this.width / 2, this.height / 2 + txtHeight / 6);
                 },
                 timing: (timeFraction) => {
                     return timeFraction;
@@ -619,6 +620,7 @@ class GameBoard {
                     this.erase();
                     this.ctx.beginPath();
                     this.ctx.arc(this.width / 2, this.height / 2, this.width / 5, 0, Math.PI * 2);
+                    this.ctx.closePath();
                     this.ctx.clip();
                     this.ctx.globalAlpha = progress;
                     this.drawBackground(this.width / 5, this.width / 5);
@@ -626,7 +628,8 @@ class GameBoard {
                     this.ctx.font = 'bold 20vw Arial';
                     this.ctx.textAlign = 'center';
                     this.ctx.textBaseline = 'middle';
-                    this.ctx.fillText(3, this.width / 2, this.height / 2);
+                    const txtHeight = this.ctx.measureText('3').width;
+                    this.ctx.fillText(3, this.width / 2, this.height / 2 + txtHeight / 6);
                 },
                 timing: (timeFraction) => {
                     return timeFraction;
@@ -634,8 +637,6 @@ class GameBoard {
             });
         } else {
             this.erase();
-            const txtHeight = this.ctx.measureText('M').width;
-            const txtWidth = this.ctx.measureText(this.countdown);
             this.ctx.beginPath();
             this.ctx.arc(this.width / 2, this.height / 2, this.width / 5, 0, Math.PI * 2);
             this.ctx.clip();
@@ -644,7 +645,8 @@ class GameBoard {
             this.ctx.font = 'bold 20vw Arial';
             this.ctx.textAlign = 'center';
             this.ctx.textBaseline = 'middle';
-            this.ctx.fillText(this.isReady, this.width / 2, this.height / 2);
+            const txtHeight = this.ctx.measureText('3').width;
+            this.ctx.fillText(this.isReady, this.width / 2, this.height / 2 + txtHeight / 6);
         }
     }
 
