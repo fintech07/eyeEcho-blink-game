@@ -76,7 +76,7 @@ const SHAPE_TYPE = {
     LARGE_RECTANGLE: { 
         name: 'LARGE_RECTANGLE',
         x: SHAPE_SIZE_MIN,
-        y: SHAPE_SIZE_MIN / 2
+        y: SHAPE_SIZE_MIN / 3
     },
     TRIANGLE: { 
         name: 'TRIANGLE',
@@ -380,7 +380,7 @@ class Shape {
 
         if (_t < 3) {
             this.grd_type = GRADIENT_TYPE.SOLID;
-        } else if (_t < 5) {
+        } else if (_t < 6) {
             this.grd_type = GRADIENT_TYPE.LINEAR;
         } else {
             this.grd_type = GRADIENT_TYPE.RADIAL;
@@ -392,11 +392,40 @@ class Shape {
 
     setColor = () => {
         const themeColors = getThemeColors();
+        const adj_main = r() * 0.4 - 0.1;
+        const adj_sec = r() * 0.3 - 0.1;
         this.color = [
-            themeColors.value1,
-            themeColors.value3,
-            themeColors.value2,
+            ColorLuminance(themeColors.value2, r() * adj_main),
+            ColorLuminance(themeColors.value3, r() * 0.3 - 0.1),
+            ColorLuminance(themeColors.value1, r() * 0.3 - 0.1)
         ];
+
+        let _t = getRandomInt() % 9;
+        if (_t < 5 || ( (this.width > this.box.width / 2) && this.grd_type.name == GRADIENT_TYPE.SOLID.name)) {
+            this.color[0] = ColorLuminance(themeColors.value2, adj_main);
+        } else if (_t < 7) {
+            this.color[0] = ColorLuminance(themeColors.value3, adj_sec);
+        } else {
+            this.color[0] = ColorLuminance(themeColors.value1, adj_sec);
+        }
+
+        _t = getRandomInt() % 9;
+        if (_t < 4) {
+            this.color[1] = ColorLuminance(themeColors.value1, adj_sec);
+        } else if (_t < 4) {
+            this.color[1] = ColorLuminance(themeColors.value3, adj_sec);
+        } else {
+            this.color[1] = ColorLuminance(themeColors.value2, adj_main);
+        }
+
+        _t = getRandomInt() % 9;
+        if (_t < 4) {
+            this.color[2] = ColorLuminance(themeColors.value3, adj_sec);
+        } else if (_t < 4) {
+            this.color[2] = ColorLuminance(themeColors.value1, adj_sec);
+        } else {
+            this.color[2] = ColorLuminance(themeColors.value2, adj_main);
+        }
 
     }
     move = () => {
