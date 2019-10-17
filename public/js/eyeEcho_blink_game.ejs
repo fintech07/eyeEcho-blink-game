@@ -214,13 +214,17 @@ animate = ({
 
 // defind Shape class
 class Shape {
-    constructor(ctx, width, height) {
+    constructor(ctx, width, height, zIndex=0) {
 
         this.box = {
             width: width,
             height: height,
             area: width * height
         };
+
+        // z-index
+        this.z = zIndex;
+
         /** set the canvas context 2d */
         this.ctx = ctx;
 
@@ -377,7 +381,7 @@ class Shape {
         }
 
         this.direction = _a;
-        this.speed = r() * box.width / 200 + box.width / 200;
+        this.speed = r() * box.width / 200 + box.width / 300;
     }
 
     setGradient = () => {
@@ -403,30 +407,41 @@ class Shape {
             themeColors.value3,
         ];
 
-        let a = 0.8, b = 0.2;
-        if (eyeEcho_game_config.theme == 'red') {
-            a = 0.6;
-            b = 0.1;
+        let colorPrx = this.z % 2 == 0 ? f(this.z / 2 + 2) : -f(this.z / 2);
+        let color_step = 0.01;
+        const theme = eyeEcho_game_config.theme;
+        let color_offset = 0;
+        if (colorPrx > 0) {
+            if (theme == 'red') {
+                color_step = 0.01;
+                color_offset = 0.3;
+            }
+
+            if (theme == 'light-blue') {
+                color_step = 0.02;
+                color_offset = 0.2;
+            }
         }
+
         const colors = [
-            ColorLuminance(themeColors.value2, r() * a - b),
-            ColorLuminance(themeColors.value1, r() * a - b),
-            ColorLuminance(themeColors.value3, r() * a - b),
-            ColorLuminance(themeColors.value2, r() * a - b),
-            ColorLuminance(themeColors.value2, r() * a - b),
-            ColorLuminance(themeColors.value2, r() * a - b),
-            ColorLuminance(themeColors.value2, r() * a - b),
+            ColorLuminance(themeColors.value2, colorPrx * color_step + r() * color_step - color_offset),
+            ColorLuminance(themeColors.value1, colorPrx * color_step + r() * 0.8 - 0.1),
+            ColorLuminance(themeColors.value3, colorPrx * color_step + r() * 0.8 - 0.1),
+            ColorLuminance(themeColors.value2, colorPrx * color_step - color_offset),
+            ColorLuminance(themeColors.value2, colorPrx * color_step - color_offset),
+            ColorLuminance(themeColors.value2, colorPrx * color_step - color_offset),
+            ColorLuminance(themeColors.value2, colorPrx * color_step - color_offset),
         ];
 
         const _t = getRandomInt();
         const area = this.width * this.height;
         if (area > this.box.area / 8) {
-            this.color[0] = ColorLuminance(themeColors.value2, r() * a - b);
-            this.color[1] = ColorLuminance(themeColors.value2, r() * a + b);
+            this.color[0] = ColorLuminance(themeColors.value2, colorPrx * color_step - color_offset);
+            this.color[1] = ColorLuminance(themeColors.value2, colorPrx * color_step + r() * color_step - color_offset);
         } else {
             this.color[0] = colors[getRandomInt() % 7];
-            this.color[1] = colors[getRandomInt() % 6];
-            this.color[2] = colors[getRandomInt() % 5];
+            this.color[1] = colors[getRandomInt() % 5];
+            this.color[2] = colors[getRandomInt() % 4];
         }
 
         if (this.grd_type !== GRADIENT_TYPE.SOLID && area < this.box.area / 6) {
@@ -646,7 +661,7 @@ class GameBoard {
     }
 
     setActiveShape = () => {
-        this.activeShape = new Shape(this.ctx, this.width, this.height);
+        this.activeShape = new Shape(this.ctx, this.width, this.height, this.staticShapes.length);
     }
 
     readyToStart = () => {
