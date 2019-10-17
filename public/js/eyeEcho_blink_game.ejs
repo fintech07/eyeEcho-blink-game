@@ -379,9 +379,9 @@ class Shape {
     setGradient = () => {
         const _t = getRandomInt() % 7;
 
-        if (_t < 2) {
+        if (_t < 1) {
             this.grd_type = GRADIENT_TYPE.SOLID;
-        } else if (_t < 5) {
+        } else if (_t < 4) {
             this.grd_type = GRADIENT_TYPE.LINEAR;
         } else {
             this.grd_type = GRADIENT_TYPE.RADIAL;
@@ -401,22 +401,24 @@ class Shape {
 
         const colors = [
             ColorLuminance(themeColors.value2, r() * 0.3 + 0.2),
-            ColorLuminance(themeColors.value1, r() * 0.3 - 0.1),
-            ColorLuminance(themeColors.value3, r() * 0.3 - 0.1),
-            ColorLuminance(themeColors.value2, -r() * 0.1),
-            ColorLuminance(themeColors.value2, r() * 0.1),
+            ColorLuminance(themeColors.value1, r() * 0.4),
+            ColorLuminance(themeColors.value3, r() * 0.4),
             ColorLuminance(themeColors.value2, r() * 0.1 + 0.1),
+            ColorLuminance(themeColors.value2, r() * 0.1),
+            ColorLuminance(themeColors.value2, -r() * 0.1),
         ];
 
         const _t = getRandomInt();
         const area = this.width * this.height;
-        if (area > this.box.area / 8) {
+        if (area > this.box.area / 9) {
             this.color[0] = ColorLuminance(themeColors.value2, r() * 0.3 - 0.1);
+            this.color[1] = ColorLuminance(themeColors.value2, r() * 0.3);
+            this.color[2] = ColorLuminance(colors[getRandomInt() % 5], r() * 0.2);
         } else {
             this.color[0] = colors[getRandomInt() % 6];
+            this.color[1] = ColorLuminance(colors[getRandomInt() % 4], r() * 0.2);
+            this.color[2] = ColorLuminance(colors[getRandomInt() % 5], r() * 0.2);
         }
-        this.color[1] = colors[getRandomInt() % 5];
-        this.color[2] = colors[getRandomInt() % 4];
         if (this.grd_type !== GRADIENT_TYPE.SOLID) {
             this.color[1] = colors[getRandomInt() % 3];
             this.color[2] = colors[getRandomInt() % 2];
