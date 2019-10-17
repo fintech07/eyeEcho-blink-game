@@ -76,11 +76,11 @@ const SHAPE_TYPE = {
     LARGE_RECTANGLE: {
         name: 'LARGE_RECTANGLE',
         x: SHAPE_SIZE_MIN * 2,
-        y: SHAPE_SIZE_MIN / 2
+        y: SHAPE_SIZE_MIN / 3
     },
     TRIANGLE: {
         name: 'TRIANGLE',
-        r: SHAPE_SIZE_MIN / 2
+        r: SHAPE_SIZE_MIN / Math.SQRT2
     },
 }
 
@@ -240,23 +240,23 @@ class Shape {
     /** set the shape's type and width, height, radius */
     setType() {
         this.scale = r() * (this.box.width / SHAPE_SIZE_MIN - 2) + 1;
-        const _t = getRandomInt() % 10;
-        if (_t < 1) {
+        const _t = getRandomInt() % 14;
+        if (_t < 2) {
             this.type = SHAPE_TYPE.THIN_RECTANGLE;
             this.width = this.type.x * this.scale;
             this.height = this.type.y * this.scale;
             this.r = Math.sqrt(this.width * this.width + this.height * this.height) / 2;
-        } else if (_t < 4) {
+        } else if (_t < 6) {
             this.type = SHAPE_TYPE.LARGE_RECTANGLE;
             this.width = this.type.x * this.scale;
             this.height = this.type.y * this.scale;
             this.r = Math.sqrt(this.width * this.width + this.height * this.height) / 2;
-        } else if (_t < 6) {
+        } else if (_t < 9) {
             this.type = SHAPE_TYPE.CIRCLE;
             this.r = this.type.r * this.scale;
             this.width = this.r * 2;
             this.height = this.r * 2;
-        } else if (_t < 7) {
+        } else if (_t < 11) {
             this.type = SHAPE_TYPE.TRIANGLE;
             this.r = this.type.r * this.scale;
             this.width = this.r * 2;
@@ -296,6 +296,7 @@ class Shape {
                     const _t = this.height;
                     this.height = this.width;
                     this.width = _t;
+                    _start_p.x = this.width / 2;
                 }
                 break;
             case 1: // down
@@ -307,6 +308,7 @@ class Shape {
                     const _t = this.height;
                     this.height = this.width;
                     this.width = _t;
+                    _start_p.y = -this.height / 2;
                 }
                 break;
             case 2: // left
@@ -318,6 +320,7 @@ class Shape {
                     const _t = this.height;
                     this.height = this.width;
                     this.width = _t;
+                    _start_p.x = box.width + this.width / 2;
                 }
                 break;
             case 3: // up
@@ -329,6 +332,7 @@ class Shape {
                     const _t = this.height;
                     this.height = this.width;
                     this.width = _t;
+                    _start_p.y = box.height + this.height / 2;
                 }
                 break;
             default:
@@ -399,31 +403,36 @@ class Shape {
             themeColors.value3,
         ];
 
+        let a = 0.8, b = 0.2;
+        if (eyeEcho_game_config.theme == 'red') {
+            a = 0.6;
+            b = 0.1;
+        }
         const colors = [
-            ColorLuminance(themeColors.value2, r() * 0.3 + 0.2),
-            ColorLuminance(themeColors.value1, r() * 0.4),
-            ColorLuminance(themeColors.value3, r() * 0.4),
-            ColorLuminance(themeColors.value2, r() * 0.1 + 0.1),
-            ColorLuminance(themeColors.value2, r() * 0.1),
-            ColorLuminance(themeColors.value2, -r() * 0.1),
+            ColorLuminance(themeColors.value2, r() * a - b),
+            ColorLuminance(themeColors.value1, r() * a - b),
+            ColorLuminance(themeColors.value3, r() * a - b),
+            ColorLuminance(themeColors.value2, r() * a - b),
+            ColorLuminance(themeColors.value2, r() * a - b),
+            ColorLuminance(themeColors.value2, r() * a - b),
+            ColorLuminance(themeColors.value2, r() * a - b),
         ];
 
         const _t = getRandomInt();
         const area = this.width * this.height;
-        if (area > this.box.area / 9) {
-            this.color[0] = ColorLuminance(themeColors.value2, r() * 0.3 - 0.1);
-            this.color[1] = ColorLuminance(themeColors.value2, r() * 0.3);
-            this.color[2] = ColorLuminance(colors[getRandomInt() % 5], r() * 0.2);
+        if (area > this.box.area / 8) {
+            this.color[0] = ColorLuminance(themeColors.value2, r() * a - b);
+            this.color[1] = ColorLuminance(themeColors.value2, r() * a + b);
         } else {
-            this.color[0] = colors[getRandomInt() % 6];
-            this.color[1] = ColorLuminance(colors[getRandomInt() % 4], r() * 0.2);
-            this.color[2] = ColorLuminance(colors[getRandomInt() % 5], r() * 0.2);
-        }
-        if (this.grd_type !== GRADIENT_TYPE.SOLID) {
-            this.color[1] = colors[getRandomInt() % 3];
-            this.color[2] = colors[getRandomInt() % 2];
+            this.color[0] = colors[getRandomInt() % 7];
+            this.color[1] = colors[getRandomInt() % 6];
+            this.color[2] = colors[getRandomInt() % 5];
         }
 
+        if (this.grd_type !== GRADIENT_TYPE.SOLID && area < this.box.area / 6) {
+            this.color[1] = colors[getRandomInt() % 4];
+            this.color[2] = colors[getRandomInt() % 4];
+        }
     }
 
     move = () => {
@@ -487,8 +496,8 @@ class Shape {
 
                 grd = this.ctx.createRadialGradient(x, y, 0, x, y, grd_len);
 
-                grd.addColorStop(0, this.color[0]);
-                grd.addColorStop(1, this.color[1]);
+                grd.addColorStop(1, this.color[0]);
+                grd.addColorStop(0, this.color[1]);
                 break;
         }
 
@@ -507,6 +516,7 @@ class Shape {
             case GRADIENT_TYPE.SOLID:
                 grd = this.ctx.createLinearGradient(this.x - this.r, this.y - this.r, this.x + this.r, this.y + this.r);
                 grd.addColorStop(0, this.color[0]);
+                grd.addColorStop(1, this.color[1]);
                 break;
             case GRADIENT_TYPE.LINEAR:
                 grd = this.ctx.createLinearGradient(this.x - this.r, this.y - this.r, this.x + this.r, this.y + this.r);
@@ -893,7 +903,7 @@ class GameBoard {
             this.width / 2 + offset_x,
             this.height / 2 + offset_y);
         grd.addColorStop(0, this.bg_color.value1 + "99");
-        grd.addColorStop(0.5, this.bg_color.value2 + "aa");
+        grd.addColorStop(0.4, this.bg_color.value2);
         //grd.addColorStop(0.7, this.bg_color.value2);
         grd.addColorStop(1, this.bg_color.value3 + "99");
         this.ctx.fillStyle = grd;
