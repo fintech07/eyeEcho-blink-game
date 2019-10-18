@@ -1,0 +1,14 @@
+{
+  "name": "eye-echo-v1",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build-css": "node-sass ./stylesheets/style.scss ./stylesheets/style.min.css"
+  },
+  "repository": "git@git-funny:FunnyDeveloper100/eyeEcho-blink-game.git",
+  "author": "FunnyDeveloper100 <funnydeveloper100@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "node-sass": "^4.12.0"
+  }
+}
