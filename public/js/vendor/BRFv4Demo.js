@@ -19,7 +19,7 @@ var brfv4Example = {
 	stats: {}							// fps meter}
 }
 
-var brfv4BaseURL = "<%=FRONTEND_URL%>/js/vendor/libs/brf_wasm/";
+var brfv4BaseURL = "./js/vendor/libs/brf_wasm/";
 
 (function() {
 
@@ -43,7 +43,7 @@ var brfv4BaseURL = "<%=FRONTEND_URL%>/js/vendor/libs/brf_wasm/";
 		}
 	}
 
-	if (!support) { brfv4BaseURL = "<%=FRONTEND_URL%>/js/vendor/libs/brf_asmjs/"; }
+	if (!support) { brfv4BaseURL = "./js/vendor/libs/brf_asmjs/"; }
 
 	//console.log("Checking support of WebAssembly: " + support + " " + (support ? "loading WASM (not ASM)." : "loading ASM (not WASM)."));
 
@@ -59,50 +59,27 @@ var brfv4 = {locateFile: function(fileName) { return brfv4BaseURL + fileName; }}
 // Demo entry point: preloading js files.
 //
 
-brfv4Example.start = function() {
-
-
+brfv4Example.start = async function() {
 
 	brfv4Example.loader.preload([
 
 		brfv4BaseURL + "BRFv4_JS_TK210219_v4.2.0_trial.js",						// BRFv4 SDK
 
-		"https://webrtc.github.io/adapter/adapter-latest.js",	// webcam polyfill for older browsers
+		"./js/vendor/libs/createjs/easeljs.min.js",						// canvas drawing lib
 
-		// "js/libs/quicksettings/quicksettings.min.css",			// gui elements
-		// "js/libs/quicksettings/quicksettings.js",
+		"./js/vendor/utils/BRFv4DOMUtils.js",							// DOM handling
 
-		// "js/libs/highlight/highlight_tomorrow.css",				// code highlighter
-		// "js/libs/highlight/highlight.pack.js",
+		"./js/vendor/utils/BRFv4DrawingUtils_CreateJS.js",				// BRF result drawing
+		"./js/vendor/utils/BRFv4SetupWebcam.js",							// webcam handling
+		"./js/vendor/utils/BRFv4SetupExample.js",						// overall example setup
 
-		"<%=FRONTEND_URL%>/js/vendor/libs/createjs/easeljs.min.js",						// canvas drawing lib
-		"<%=FRONTEND_URL%>/js/vendor/libs/threejs/three.min.js",							// ThreeJS: a 3D engine
+		"./js/vendor/utils/BRFv4PointUtils.js",							// some calculation helpers
 
-		"<%=FRONTEND_URL%>/js/vendor/utils/BRFv4DOMUtils.js",							// DOM handling
-	//	"js/utils/BRFv4Stats.js",								// FPS meter
-
-		"<%=FRONTEND_URL%>/js/vendor/utils/BRFv4DrawingUtils_CreateJS.js",				// BRF result drawing
-		"<%=FRONTEND_URL%>/js/vendor/utils/BRFv4Drawing3DUtils_ThreeJS.js",				// ThreeJS 3d object placement.
-
-		"<%=FRONTEND_URL%>/js/vendor/utils/BRFv4SetupWebcam.js",							// webcam handling
-		"<%=FRONTEND_URL%>/js/vendor/utils/BRFv4SetupPicture.js",						// picture/image handling
-		"<%=FRONTEND_URL%>/js/vendor/utils/BRFv4SetupExample.js",						// overall example setup
-
-		"<%=FRONTEND_URL%>/js/vendor/utils/BRFv4PointUtils.js",							// some calculation helpers
-
-		// "js/utils/BRFv4SetupChooser.js",						// gui: choose either webcam or picture
-		// "js/utils/BRFv4ExampleChooser.js",						// gui: choose an example
-		// "js/utils/BRFv4DownloadChooser.js",						// gui: choose which package to download
-
-		// example to load on startup, others can be chosen via the example chooser GUI.
-
-	//	"js/examples/face_tracking/track_single_face.js"		// start with this example
-	"<%=FRONTEND_URL%>/js/vendor/blink_detection.js"
+		"./js/vendor/blink_detection.js"
 
 	], function() {
 		console.log("init webcam")
 		brfv4Example.init("webcam");
-
 	});
 };
 
@@ -132,7 +109,7 @@ brfv4Example.trace = function(msg, error) {
 	var loader = brfv4Example.loader;
 
 	loader.preload = function (filesToLoad, callback) {
-		console.log("preload: ", filesToLoad)
+		//console.log("preload: ", filesToLoad)
 
 		if (loader.queuePreloader !== null || !filesToLoad) {
 			return;

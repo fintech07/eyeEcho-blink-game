@@ -1,0 +1,101 @@
+
+let eyeEchoSessionTimeString = (new Date()).getTime();
+
+let eyeEchoCustomUID;
+eyeEchoCustomUID = Math.floor(Math.random() * 1000000000000000000) + eyeEchoSessionTimeString;
+
+
+
+let eyeEcho_getSpecs = () => {
+	let xhr = new XMLHttpRequest();
+	xhr.open("GET", "<%=FRONTEND_URL%>/getSpecs");
+	xhr.setRequestHeader('Content-Type', 'text/plain');
+	xhr.onreadystatechange = function () {
+
+		if (this.readyState == 4) {
+			let agentData = JSON.parse(this.responseText);
+			//logOnLocalHostFrontEnd("userAgent data: ",agentData);
+			eyeEchoBrowser = agentData.family + " " + agentData.major;
+			eyeEchoOS = agentData.os.family + " " + agentData.os.major;
+		}
+	}
+	xhr.send();
+}
+
+//eyeEcho_getSpecs();
+
+let devEnviromentCheck = () => {
+	if ("<%=FRONTEND_URL%>" == "http://localhost:5000" || "<%=FRONTEND_URL%>" == "http://192.168.0.201:5000") {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+
+let reportError = (messageObj) => {
+	var xhr = new XMLHttpRequest()
+
+	messageObj.value += "\nFrontend: <%=FRONTEND_URL%>";
+
+	xhr.open('POST', '<%=FRONTEND_URL%>' + "/report-error")
+	xhr.setRequestHeader('Content-Type', 'application/json')
+	xhr.onreadystatechange = function () {
+		if (this.readyState == 4) {
+			if (this.status != "200") {
+				console.log(this.status, this.responseText);
+			}
+		}
+	}
+	xhr.send(JSON.stringify(messageObj));
+
+}
+
+
+function eyeEchoSetCookie(cname, cvalue, exdays) {
+	var d = new Date();
+	d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+	var expires = "expires=" + d.toUTCString();
+	document.cookie = cname + "=" + cvalue + ";" + expires + ";";
+}
+
+function eyeEchoReadCookie(cname) {
+	var name = cname + "=";
+	var decodedCookie = decodeURIComponent(document.cookie);
+	var ca = decodedCookie.split(';');
+	for (var i = 0; i < ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0) == ' ') {
+			c = c.substring(1);
+		}
+		if (c.indexOf(name) == 0) {
+			return c.substring(name.length, c.length);
+		}
+	}
+	return "";
+}
+
+if (document.getElementById("eyeEcho_body").offsetWidth >= 768) {
+	document.getElementById("eyeEcho_body").classList.add("eyeEcho_768");
+}
+
+
+let eyeEchoPages = document.querySelectorAll(".eyeEcho_page");
+eyeEchoPages.forEach((page, index) => {
+	page.style.height = window.innerHeight + "px";
+})
+
+getTextForLanguage((languageData) => {
+	logOnLocalHostFrontEnd('LANGUAGE DATA: ', languageData);
+	languageToUserSettings(languageData, () => {
+		if (devEnviromentCheck() && !window.eyeEcho_isEmbed) {
+			//eyeEchoPage("eyeEcho_landing_page");
+			//eyeEchoPage("eyeEcho_onboarding_page");
+			//eyeEchoPage("eyeEcho_camera_page");
+			//eyeEchoPage("eyeEcho_results_page");
+			eyeEchoPage("eyeEcho_game_landing_page");
+		} else {
+			eyeEchoPage("eyeEcho_game_landing_page");
+		}
+	});
+});

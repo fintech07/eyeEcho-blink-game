@@ -1,3 +1,8 @@
+const startBrf4 = async () => {
+  console.log("start brf4: ", brfv4Example)
+  brfv4Example.start();
+}
+
 /*
 * global elements and variables, functions
 */
@@ -43,10 +48,7 @@ let eyeEchoPage = (page_id, tab_id = null, btn_id = null) => {
   }
 
   if (page_id == "eyeEcho_camera_page") {
-    setTimeout(() => {
-      console.log("start brf4: ", brfv4Example)
-      brfv4Example.start();
-    }, 1000)
+    startBrf4();
   }
 
   if (page_id == 'eyeEcho_game_page') {
@@ -56,10 +58,7 @@ let eyeEchoPage = (page_id, tab_id = null, btn_id = null) => {
 
   if (page_id == 'eyeEcho_theme_picker_page') {
     eyeEchoHandleColorPicker('grey');
-    setTimeout(() => {
-      console.log("start brf4: ", brfv4Example)
-      brfv4Example.start();
-    }, 1000)
+    startBrf4();
   }
 }
 
@@ -104,3 +103,5 @@ let eyeEchoHandleColorPicker = (color) => {
 
   eyeEcho_game_config.theme = color;
 }
+
+eyeEchoPage("eyeEcho_game_landing_page");

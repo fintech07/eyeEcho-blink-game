@@ -973,7 +973,7 @@ function eyeEcho_translate() {
 }
 
 createGameBoard = () => {
-
+    console.log('creating game board');
     eyeEcho_translate();
 
     gameboard = new GameBoard(eyeEcho_blink_game_canvas);
