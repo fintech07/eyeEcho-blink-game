@@ -45,7 +45,7 @@ function logOnLocalHostFrontEnd(inStringBefore,inVariable){
 
 window.eyeEchoGAsetup = false;
 
-function eyeEchoSendGA(eventName,eventValue){
+function eyeEchoSendGA(eventName, eventValue){
 	eventValue = (eventValue == undefined) ? "" : eventValue;
 	if (window.eyeEchoGAsetup){
 		if (window.ga) {
@@ -73,7 +73,7 @@ function eyeEchoSetupGA(){
 	window.eyeEchoGAsetup = true;
 }
 
-//eyeEchoSetupGA();
+eyeEchoSetupGA();
 
 // GA - END
 

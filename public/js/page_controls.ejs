@@ -55,6 +55,7 @@ let eyeEchoPage = (page_id, tab_id = null, btn_id = null) => {
   }
 
   if (page_id == 'eyeEcho_theme_picker_page') {
+    eyeEchoSendGA('selected-paint-eye');
     eyeEchoHandleColorPicker('grey');
     setTimeout(() => {
       console.log("start brf4: ", brfv4Example)
