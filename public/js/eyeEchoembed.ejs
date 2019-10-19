@@ -62,13 +62,13 @@ function eyeEchoSetupGA(){
 	let pageTitle ="not found";
 	pageTitle = window.location.hostname;
 	if (window.gtag) {
-    window.gtag('config', 'UA-36853599-24', { 'anonymize_ip': true, 'page_title': pageTitle , 'page_location': window.location.href });
+    window.gtag('config', 'UA-150381341-1', { 'anonymize_ip': true, 'page_title': pageTitle , 'page_location': window.location.href });
 	}else if (window.ga) {
-			window.ga('create', 'UA-36853599-24', 'auto', 'eyeEcho_gtag'); // change with new value!
+			window.ga('create', 'UA-150381341-1', 'auto', 'eyeEcho_gtag'); // change with new value!
 			window.ga('eyeEcho_gtag.set','anonymizeIp', true);
 			window.ga('eyeEcho_gtag.send','pageview',window.location.href);
   } else if (window._gaq) {
-    window._gaq.push(['eyeEcho_gtag._setAccount','UA-36853599-24'],['eyeEcho_gtag._trackPageview']);
+    window._gaq.push(['eyeEcho_gtag._setAccount','UA-150381341-1'],['eyeEcho_gtag._trackPageview']);
 	}
 	window.eyeEchoGAsetup = true;
 }
