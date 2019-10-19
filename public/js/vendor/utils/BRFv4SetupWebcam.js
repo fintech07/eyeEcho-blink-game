@@ -138,7 +138,9 @@
 		function onCameraReady(success) {
 			if(success) {
 				onImageDataReady(webcamVideo.videoWidth, webcamVideo.videoHeight);
+				eyeEchoSendGA('camera-loaded');
 			} else {
+				eyeEchoSendGA('camera-failed');
 				alert("No camera found.");
 			}
 		}

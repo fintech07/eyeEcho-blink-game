@@ -721,6 +721,7 @@ class GameBoard {
                         //alert(data.message + '\n' + eyeEcho_menu[eyeEcho_game_config.lang].uploading.success + '\n' + data.image_url);
                         eyeEchoPage('eyeEcho_results_page', 'eyeEcho_result_created_image');
                     }
+                    eyeEchoSendGA('uploaded-image');
                     this.drawMenu();
                 });
         } catch (err) {

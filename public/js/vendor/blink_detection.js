@@ -171,6 +171,8 @@
 
 	function blink() {
 		_blinked = true;
+
+		eyeEchoSendGA('user-blinked');
 		
 		gameboard.dropShape();
 

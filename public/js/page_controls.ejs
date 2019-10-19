@@ -1,8 +1,12 @@
 /*
-* global elements and variables, functions
-*/
+ * global elements and variables, functions
+ */
 
-let createGameBoard, chageWidthClass, gameboard = null, currentPageId = null, taps_on_landing_page = 0;
+let createGameBoard,
+  chageWidthClass,
+  gameboard = null,
+  currentPageId = null,
+  taps_on_landing_page = 0;
 
 const eyeEcho_theme_color_list = ['red', 'orange', 'yellow', 'green', 'light-blue', 'dark-blue', 'purple', 'pink'];
 
@@ -12,108 +16,129 @@ let eyeEcho_game_config = {
   countdown: 30,
   text: {},
   theme: 'grey',
-  eye_url: './img/jpg_png/eyeEcho-blink-icon.png',
-}
+  eye_url: './img/jpg_png/eyeEcho-blink-icon.png'
+};
 
 let eyeEcho_result_info = {
   count: 0,
-  period: 0,
-}
+  period: 0
+};
 
 let eyeEchoPage = (page_id, tab_id = null, btn_id = null) => {
-  let eyeEchoPages = document.querySelectorAll(".eyeEcho_page");
+  let eyeEchoPages = document.querySelectorAll('.eyeEcho_page');
   eyeEchoPages.forEach((page, index) => {
-    if (page.getAttribute("id") == page_id) {
-      page.style.display = "block";
-    } else if (page.getAttribute("id") == tab_id) {
-      page.style.display = "block";
+    if (page.getAttribute('id') == page_id) {
+      page.style.display = 'block';
+    } else if (page.getAttribute('id') == tab_id) {
+      page.style.display = 'block';
     } else {
-      page.style.display = "none";
+      page.style.display = 'none';
     }
-  })
+  });
 
   if (btn_id) {
-    let eyeEchoTabBtns = document.querySelectorAll(".eyeEcho-result-tab-button");
+    let eyeEchoTabBtns = document.querySelectorAll('.eyeEcho-result-tab-button');
     eyeEchoTabBtns.forEach((btn, index) => {
       btn.classList.remove('active');
-      if (btn.getAttribute("id") == btn_id) {
+      if (btn.getAttribute('id') == btn_id) {
         btn.classList.add('active');
       }
     });
   }
 
-  if (page_id == "eyeEcho_camera_page") {
-    setTimeout(() => {
-      console.log("start brf4: ", brfv4Example)
-      brfv4Example.start();
-    }, 1000)
-  }
-
-  if (page_id == 'eyeEcho_game_page') {
-    chageWidthClass();
-    gameboard.readyToStart();
-  }
-
-  if (page_id == 'eyeEcho_theme_picker_page') {
-    gtag('event', 'selected-paint-eye');
-    eyeEchoHandleColorPicker('grey');
-    setTimeout(() => {
-      console.log("start brf4: ", brfv4Example)
-      brfv4Example.start();
-    }, 1000)
+  switch (page_id) {
+    case 'eyeEcho_game_page':
+      eyeEchoSendGA('selected-start');
+      chageWidthClass();
+      gameboard.readyToStart();
+      break;
+    case 'eyeEcho_theme_picker_page':
+      eyeEchoSendGA('selected-paint-eye');
+      eyeEchoHandleColorPicker('grey');
+      setTimeout(() => {
+        console.log('start brf4: ', brfv4Example);
+        brfv4Example.start();
+      }, 1000);
+      break;
+    case 'eyeEcho_results_page':
+      switch (tab_id) {
+        case 'eyeEcho_info_page':
+          eyeEchoSendGA('selected-result-tab-1');
+          break;
+        case 'eyeEcho_result_created_image':
+          eyeEchoSendGA('selected-result-tab-2');
+          break;
+        case 'eyeEcho_shop_page':
+          eyeEchoSendGA('selected-result-tab-3');
+          break;
+      }
+      break;
   }
 
   currentPageId = page_id;
-}
+};
 
 let eyeEchoHandleColorPicker = (color) => {
+  if (color !== 'grey') {
+    eyeEchoSendGA('selected-color');
+    eyeEchoSendGA('selected-' + color);
+  }
+
   const eyeEchoColorNameEl = document.getElementById('eyeEcho-circle-container-color-name');
   const eyeEchoThemePickerHrEl = document.getElementById('eyeEcho_theme_picker_hr');
   const eyeEchoStartPaintingBtnEl = document.getElementById('eyeEcho-theme_picker-start-btn');
 
   eyeEchoColorNameEl.children[0].innerHTML = eyeEcho_game_config.text.theme[color].desc;
-  eyeEchoColorNameEl.children[0].setAttribute("class", "eyeEcho-color-" + color);
+  eyeEchoColorNameEl.children[0].setAttribute('class', 'eyeEcho-color-' + color);
 
-    const themePickerElems = document.querySelectorAll(".eyeEcho-theme-picker");
+  const themePickerElems = document.querySelectorAll('.eyeEcho-theme-picker');
 
-    themePickerElems.forEach(elem => {
-      if (color != 'grey') {
-        elem.disabled = false;
-        elem.classList.remove("disabled");
-      }
-      elem.classList.remove("eyeEcho-color-surprise");
-      elem.classList.remove("eyeEcho-color-" + eyeEcho_game_config.theme);
-      elem.classList.add("eyeEcho-color-" + color);
-    });
+  themePickerElems.forEach((elem) => {
+    if (color != 'grey') {
+      elem.disabled = false;
+      elem.classList.remove('disabled');
+    }
+    elem.classList.remove('eyeEcho-color-surprise');
+    elem.classList.remove('eyeEcho-color-' + eyeEcho_game_config.theme);
+    elem.classList.add('eyeEcho-color-' + color);
+  });
 
   if (color === 'surprise') {
     const idx = Math.floor(Math.random() * 100000) % 8;
     color = eyeEcho_theme_color_list[idx];
   }
-  
-  const themeElems = document.querySelectorAll(".eyeEcho-theme");
-  themeElems.forEach(elem => {
-    elem.classList.remove("eyeEcho-color-surprise");
-    elem.classList.remove("eyeEcho-color-" + eyeEcho_game_config.theme);
-    elem.classList.add("eyeEcho-color-" + color);
+
+  const themeElems = document.querySelectorAll('.eyeEcho-theme');
+  themeElems.forEach((elem) => {
+    elem.classList.remove('eyeEcho-color-surprise');
+    elem.classList.remove('eyeEcho-color-' + eyeEcho_game_config.theme);
+    elem.classList.add('eyeEcho-color-' + color);
   });
 
-  const themeBtnElems = document.querySelectorAll(".eyeEcho-theme-apply");
-  themeBtnElems.forEach(elem => {
-    elem.classList.remove("eyeEcho-color-surprise-apply");
-    elem.classList.remove("eyeEcho-color-" + eyeEcho_game_config.theme + '-apply');
-    elem.classList.add("eyeEcho-color-" + color  + '-apply');
+  const themeBtnElems = document.querySelectorAll('.eyeEcho-theme-apply');
+  themeBtnElems.forEach((elem) => {
+    elem.classList.remove('eyeEcho-color-surprise-apply');
+    elem.classList.remove('eyeEcho-color-' + eyeEcho_game_config.theme + '-apply');
+    elem.classList.add('eyeEcho-color-' + color + '-apply');
   });
 
   eyeEcho_game_config.theme = color;
+};
+
+const eyeEcho_save_to_camera_roll = () => {
+  eyeEchoSendGA('downloaded-image');
 }
 
-document.addEventListener('mousedown', function (event) {
-  if (currentPageId == 'eyeEcho_landing_page' ) {
-    if (taps_on_landing_page < 9) {
-      taps_on_landing_page++;
-    } else {
-      eyeEchoPage('eyeEcho_game_landing_page');
+document.addEventListener(
+  'mousedown',
+  function (event) {
+    if (currentPageId == 'eyeEcho_landing_page') {
+      if (taps_on_landing_page < 9) {
+        taps_on_landing_page++;
+      } else {
+        eyeEchoPage('eyeEcho_game_landing_page');
+      }
     }
-  }
-}, false);
+  },
+  false
+);

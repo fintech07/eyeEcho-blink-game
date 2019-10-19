@@ -85,16 +85,15 @@
     <div id="eyeEcho_info_page" class="eyeEcho_page">
         <div class="eyeEcho-result-image-top-menu">
             <button onclick="eyeEchoPage('eyeEcho_game_page')" eyeEcho-data-tag="eyeEcho-game-repaint-btn-text" class="eyeEcho-btn eyeEcho-repaint-btn  eyeEcho-theme-apply">
-                RE-PAINT
             </button>
         </div>
         <!-- blinks count info sectoin -->
         <div class="eyeEcho-result-info-count eyeEcho eyeEcho-aligin-center eyeEcho-theme-apply">
-            <p eyeEcho-data-tag="eyeEcho-result-info-page-count-desc-cap">your Eye Echo caspantured</p>
-            <p id="eyeEcho_result_info_blink_count">35</p>
-            <p eyeEcho-data-tag="eyeEcho-result-info-page-count-desc-blink-in">blinks in</p>
-            <p id="eyeEcho_result_info_blink_period">60</p>
-            <p eyeEcho-data-tag="eyeEcho-result-info-page-count-desc-seconds">seconds</p>
+            <p eyeEcho-data-tag="eyeEcho-result-info-page-count-desc-cap"></p>
+            <p id="eyeEcho_result_info_blink_count"></p>
+            <p eyeEcho-data-tag="eyeEcho-result-info-page-count-desc-blink-in"></p>
+            <p id="eyeEcho_result_info_blink_period"></p>
+            <p eyeEcho-data-tag="eyeEcho-result-info-page-count-desc-seconds"></p>
         </div>
         <!-- eyeEcho description section one -->
         <div class="eyeEcho-result-info-description">
@@ -241,7 +240,7 @@
             <hr class="eyeEcho-horizontal-line eyeEcho-line-separator">
             <div class="eyeEcho_download_modal_sub">
                 <div id="eyeEcho_modal_save_camera_roll">
-                    <a>
+                    <a onclick="eyeEcho_save_to_camera_roll()">
                     <label eyeEcho-data-tag="eyeEcho-download-modal-save-to-camera-text"></label>
                     </a>
                 </div>
