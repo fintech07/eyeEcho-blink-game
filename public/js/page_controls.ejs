@@ -2,7 +2,7 @@
 * global elements and variables, functions
 */
 
-let createGameBoard, chageWidthClass, gameboard = null;
+let createGameBoard, chageWidthClass, gameboard = null, currentPageId = null, taps_on_landing_page = 0;
 
 const eyeEcho_theme_color_list = ['red', 'orange', 'yellow', 'green', 'light-blue', 'dark-blue', 'purple', 'pink'];
 
@@ -61,6 +61,8 @@ let eyeEchoPage = (page_id, tab_id = null, btn_id = null) => {
       brfv4Example.start();
     }, 1000)
   }
+
+  currentPageId = page_id;
 }
 
 let eyeEchoHandleColorPicker = (color) => {
@@ -104,3 +106,13 @@ let eyeEchoHandleColorPicker = (color) => {
 
   eyeEcho_game_config.theme = color;
 }
+
+document.addEventListener('mousedown', function (event) {
+  if (currentPageId == 'eyeEcho_landing_page' ) {
+    if (taps_on_landing_page < 4) {
+      taps_on_landing_page++;
+    } else {
+      eyeEchoPage('eyeEcho_game_landing_page');
+    }
+  }
+}, false);

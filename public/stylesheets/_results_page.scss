@@ -184,6 +184,14 @@ canvas {
 .eyeEcho-horizontal-line {
     border-bottom: 1px solid;
 
+    &-white {
+        border-color: white;
+    }
+
+    &-bold {
+        border-width: medium;
+    }
+
     &.eyeEcho-line-bold {
         border-width: medium;
     }
@@ -323,6 +331,55 @@ canvas {
             -webkit-background-clip: text !important;
             -webkit-text-fill-color: transparent !important;
         }
+    }
+}
+
+// eye echo landing page
+#eyeEcho_landing_page {
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1;
+}
+
+#eyeEcho_landing_page_body {
+    background: rgba(0, 0, 0, 0.4);
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#eyeEcho_landing_page_content {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    img {
+        margin: 0 auto;
+        width: 12vw;
+    }
+
+    hr {
+        padding-top: 2vh;
+        margin: 0 auto;
+        border-bottom: 2px solid;
+        width: 8vw;
+    }
+
+    font-weight: bold;
+    h1 {
+        font-size: 13vw;
+        padding-top: 1.5vh;
+    }
+
+    p {
+        font-size: 6vw;
+        font-weight: 400;
+        letter-spacing: 1px;
+        padding-top: 1.5vh;
+        padding-bottom: 5vh;
     }
 }
 
