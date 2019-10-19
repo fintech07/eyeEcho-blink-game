@@ -47,12 +47,16 @@ window.eyeEchoGAsetup = false;
 
 function eyeEchoSendGA(eventName, eventValue){
 	eventValue = (eventValue == undefined) ? "" : eventValue;
+	
 	if (window.eyeEchoGAsetup){
 		if (window.ga) {
 			window.ga('eyeEcho_gtag.send', 'event', eventName, eventValue);
-		}else	if (window.gtag) {
+			console.log("ga event: ", eventName);
+		} else if (window.gtag) {
+			console.log("gtag event: ", eventName);
 			window.gtag('event', eventName, {value: eventValue});
 		} else if (window._gaq) {
+			console.log("gaq: ", eventName);
 			window._gaq.push(['eyeEcho_gtag._trackEvent',eventName,eventValue]);
 		}
 	}
