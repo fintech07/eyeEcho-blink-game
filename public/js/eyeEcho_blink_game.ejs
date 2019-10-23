@@ -213,36 +213,21 @@ animate = ({
 
 
 // defind Shape class
-class Shape {
-    constructor(ctx, width, height, zIndex=0) {
+const Shape = function(ctx, width, height, zIndex=0) {
+    this.box = {
+        width: width,
+        height: height,
+        area: width * height
+    };
 
-        this.box = {
-            width: width,
-            height: height,
-            area: width * height
-        };
+    // z-index
+    this.z = zIndex;
 
-        // z-index
-        this.z = zIndex;
-
-        /** set the canvas context 2d */
-        this.ctx = ctx;
-
-        /** set the shape type randomly */
-        this.setType();
-
-        /** set shape's velocity */
-        this.setVelociy();
-
-        /** set gradient property */
-        this.setGradient();
-
-        /** set color */
-        this.setColor();
-    }
+    /** set the canvas context 2d */
+    this.ctx = ctx;
 
     /** set the shape's type and width, height, radius */
-    setType() {
+    setType = () => {
         this.scale = r() * (this.box.width / SHAPE_SIZE_MIN - 2) + 1;
         const _t = getRandomInt() % 14;
         if (_t < 2) {
@@ -273,7 +258,7 @@ class Shape {
     }
 
     /** set shape's velocity with speed and direction */
-    setVelociy() {
+    setVelocity = () => {
         let _start_p = {
                 x: 0,
                 y: 0
@@ -450,7 +435,7 @@ class Shape {
         }
     }
 
-    move = () => {
+    this.move = () => {
         if (this.direction.x == 0) {
             this.y += this.direction.y > 0 ? this.speed : -this.speed;
         } else if (this.direction.y == 0) {
@@ -463,7 +448,7 @@ class Shape {
     }
 
     // define draw functions
-    let drawRect = (time) => {
+    drawRect = () => {
         const grd_len = this.r ? this.r * 2 : this.width * 2;
         this.ctx.save();
         let x = this.x;
@@ -601,36 +586,46 @@ class Shape {
     draw = () => {
         switch (this.type) {
             case SHAPE_TYPE.SQUARE:
-                this.drawRect();
+                drawRect();
                 break;
             case SHAPE_TYPE.THIN_RECTANGLE:
-                this.drawRect();
+                drawRect();
                 break;
             case SHAPE_TYPE.LARGE_RECTANGLE:
-                this.drawRect();
+                drawRect();
                 break;
             case SHAPE_TYPE.CIRCLE:
-                this.drawCircle();
+                drawCircle();
                 break;
             case SHAPE_TYPE.TRIANGLE:
-                this.drawTriangle();
+                drawTriangle();
                 break;
         }
     }
+
+    /** set the shape type randomly */
+    setType();
+
+    /** set shape's velocity */
+    setVelocity();
+
+    /** set gradient property */
+    setGradient();
+
+    /** set color */
+    setColor();
 };
 
 
-class GameBoard {
-    constructor(canvas) {
-        this.setCanvas(canvas);
-    }
+const GameBoard = function(canvas) {
 
-    setCanvas = (canvas) => {
-        this.canvas = canvas;
-        this.ctx = canvas.getContext("2d");
-        this.theme = eyeEcho_game_config.theme;
-        this.bg_color = eyeEcho_game_config.text.theme[this.theme];
-        this.init();
+    this.canvas = canvas;
+    this.ctx = canvas.getContext("2d");
+    this.theme = eyeEcho_game_config.theme;
+    this.bg_color = eyeEcho_game_config.text.theme[this.theme];
+
+    setActiveShape = () => {
+        this.activeShape = new Shape(this.ctx, this.width, this.height, this.staticShapes.length);
     }
 
     init = (countdown = eyeEcho_game_config.countdown) => {
@@ -647,49 +642,24 @@ class GameBoard {
         this.isReady = 4;
         this.countdownTimer = null;
         this.backgroundTimer = null;
-        this.moveTimer = null;
-        this.setActiveShape();
+        moveTimer = null;
         this.isEnableEye = false;
         this.blinkIcon = new Image();
         this.blinkIcon.setAttribute("crossOrigin", "Anonymous");
         this.blinkIcon.src = eyeEcho_game_config.eye_url;
-        this.drawMenu();
+        setActiveShape();
 
         //init global info values
         eyeEcho_result_info.count = 0;
         eyeEcho_result_info.period = 0;
     }
 
-    setActiveShape = () => {
-        this.activeShape = new Shape(this.ctx, this.width, this.height, this.staticShapes.length);
-    }
-
-    readyToStart = () => {
-        this.drawReadyToStart();
-        setIntervalX(() => {
-            this.isReady--;
-            this.drawReadyToStart();
-        }, 1000, 4);
-    }
-
-    startGame = () => {
-        if (this.isStarted || this.isUploading)
-            return;
-
-        this.init();
-
-        this.isStarted = true;
-
-        this.countdownTimer = setInterval(() => {
-            this.countdown--;
-            eyeEcho_result_info.period++;
-        }, 1000);
-
-        this.moveTimer = setInterval(() => {
-            this.moveShape();
-        }, 1);
-
-        this.draw();
+    this.setCanvas = (canvas) => {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext("2d");
+        this.theme = eyeEcho_game_config.theme;
+        this.bg_color = eyeEcho_game_config.text.theme[this.theme];
+        init();
     }
 
     uploadImage = () => {
@@ -699,7 +669,7 @@ class GameBoard {
             const pngUrl = this.canvas.toDataURL("image/png", 1);
             setResultImageSrc(pngUrl);
             setResultBlinkCount();
-            this.drawMenu();
+            drawMenu();
 
             const url = 'https://imb-staging.herokuapp.com/eye-echo/upload';
             fetch(url, {
@@ -722,12 +692,12 @@ class GameBoard {
                         eyeEchoPage('eyeEcho_results_page', 'eyeEcho_result_created_image');
                     }
                     eyeEchoSendGA('uploaded-image');
-                    this.drawMenu();
+                    drawMenu();
                 });
         } catch (err) {
             console.log(err);
             this.isUploading = false;
-            this.drawMenu();
+            drawMenu();
         }
     }
 
@@ -736,7 +706,7 @@ class GameBoard {
         clearInterval(this.countdownTimer);
         clearInterval(this.moveTimer);
         this.isStarted = false;
-        this.uploadImage();
+        uploadImage();
     }
 
     addStaticShape = () => {
@@ -752,7 +722,7 @@ class GameBoard {
         const r = Math.sqrt(width * width + height * height) / 2;
 
         if (x + r < 0 || x - r > this.width || y + r < 0 || y - r> this.height) {
-            this.setActiveShape();
+            setActiveShape();
         }
     }
 
@@ -778,11 +748,11 @@ class GameBoard {
     // move shape left or right
     moveShape = () => {
         this.activeShape.move();
-        this.checkShape();
+        checkShape();
     }
 
     // define draw functions
-    let erase = (time) => {
+    erase = () => {
         this.ctx.restore();
         this.ctx.save();
         this.ctx.clearRect(0, 0, this.width, this.height);
@@ -800,11 +770,11 @@ class GameBoard {
                     }
                     if (progress < 0) return;
                     const _r = 1000 * progress + this.width / 5;
-                    this.erase();
+                    erase();
                     this.ctx.beginPath();
                     this.ctx.arc(this.width / 2, this.height / 2, Math.abs(_r), 0, Math.PI * 2);
                     this.ctx.clip();
-                    this.drawBackground(_r, _r);
+                    drawBackground(_r, _r);
                     this.ctx.fillStyle = "rgba(255, 255, 255, " + (0.6 - progress > 0 ? 0.6 - progress : 0.0) + ")";
                     this.ctx.font = 'bold ' + (20 + 20 * progress) + 'vw Arial';
                     this.ctx.textAlign = 'center';
@@ -821,13 +791,13 @@ class GameBoard {
                 duration: 1000,
                 draw: (progress) => {
                     if (progress < 0) return;
-                    this.erase();
+                    erase();
                     this.ctx.beginPath();
                     this.ctx.arc(this.width / 2, this.height / 2, this.width / 5, 0, Math.PI * 2);
                     this.ctx.closePath();
                     this.ctx.clip();
                     this.ctx.globalAlpha = progress;
-                    this.drawBackground(this.width / 5, this.width / 5);
+                    drawBackground(this.width / 5, this.width / 5);
                     this.ctx.fillStyle = "rgba(255, 255, 255, " + progress + ")";
                     this.ctx.font = 'bold 20vw Arial';
                     this.ctx.textAlign = 'center';
@@ -840,11 +810,11 @@ class GameBoard {
                 }
             });
         } else {
-            this.erase();
+            erase();
             this.ctx.beginPath();
             this.ctx.arc(this.width / 2, this.height / 2, this.width / 5, 0, Math.PI * 2);
             this.ctx.clip();
-            this.drawBackground(this.width / 5, this.width / 5);
+            drawBackground(this.width / 5, this.width / 5);
             this.ctx.fillStyle = '#FFFFFF';
             this.ctx.font = 'bold 20vw Arial';
             this.ctx.textAlign = 'center';
@@ -927,18 +897,46 @@ class GameBoard {
     }
 
     // draw by time
-    draw = (time) => {
-        this.erase();
-        this.drawBackground(this.width / 2, this.height / 2);
-        this.drawShapes();
-        if (this.checkEndCondition()) {
-            this.endGame();
+    draw = () => {
+        console.log("drawing....")
+        erase();
+        drawBackground(this.width / 2, this.height / 2);
+        drawShapes();
+        if (checkEndCondition()) {
+            endGame();
         } else {
             this.activeShape.draw();
-            this.drawCountdown();
-            this.drawBlinkIcon();
-            window.requestAnimationFrame(this.draw);
+            drawCountdown();
+            drawBlinkIcon();
+            console.log("painting...")
+            window.requestAnimationFrame(draw);
         }
+    }
+
+    this.readyToStart = () => {
+        drawReadyToStart();
+        setIntervalX(() => {
+            this.isReady--;
+            drawReadyToStart();
+        }, 1000, 4);
+    }
+
+    this.startGame = () => {
+        if (this.isStarted || this.isUploading)
+            return;
+
+        init();
+
+        this.isStarted = true;
+        this.countdownTimer = setInterval(() => {
+            this.countdown--;
+            eyeEcho_result_info.period++;
+        }, 1000);
+
+        this.moveTimer = setInterval(() => {
+            moveShape();
+        }, 1);
+        this.draw();
     }
 };
 
@@ -962,7 +960,7 @@ chageWidthClass = () => {
     gameboard.setCanvas(eyeEcho_blink_game_canvas);
 }
 
-function eyeEcho_translate() {
+eyeEcho_translate = () => {
     const allDom = document.getElementsByTagName("*");
     for (let i = 0; i < allDom.length; i++) {
         const elem = allDom[i];

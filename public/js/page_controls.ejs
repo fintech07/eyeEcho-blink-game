@@ -50,7 +50,9 @@ let eyeEchoPage = (page_id, tab_id = null, btn_id = null) => {
     case 'eyeEcho_game_page':
       eyeEchoSendGA('selected-start');
       chageWidthClass();
-      gameboard.readyToStart();
+      if (gameboard !== null && gameboard !== undefined) {
+        gameboard.readyToStart();
+      }
       break;
     case 'eyeEcho_theme_picker_page':
       eyeEchoSendGA('selected-paint-eye');
