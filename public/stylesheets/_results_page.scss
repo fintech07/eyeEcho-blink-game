@@ -340,11 +340,11 @@ canvas {
     font-weight: bold;
     text-align: center;
     line-height: 1;
-    background-repeat: repeat;
 }
 
 #eyeEcho_landing_page_body {
     background: rgba(0, 0, 0, 0.3);
+    background-repeat: repeat;
     height: 100vh;
     display: flex;
     flex-direction: row;
