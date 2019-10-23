@@ -141,7 +141,7 @@
 				eyeEchoSendGA('camera-loaded');
 			} else {
 				eyeEchoSendGA('camera-failed');
-				alert("No camera found.");
+				//alert("No camera found.");
 			}
 		}
 

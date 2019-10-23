@@ -213,407 +213,421 @@ animate = ({
 
 
 // defind Shape class
-const Shape = function(ctx, width, height, zIndex=0) {
-    this.box = {
-        width: width,
-        height: height,
-        area: width * height
-    };
+let Shape = function(ctx, width, height, zIndex=0) {
+    let self = {};
 
-    // z-index
-    this.z = zIndex;
-
-    /** set the canvas context 2d */
-    this.ctx = ctx;
-
-    /** set the shape's type and width, height, radius */
-    setType = () => {
-        this.scale = r() * (this.box.width / SHAPE_SIZE_MIN - 2) + 1;
-        const _t = getRandomInt() % 14;
-        if (_t < 2) {
-            this.type = SHAPE_TYPE.THIN_RECTANGLE;
-            this.width = this.type.x * this.scale;
-            this.height = this.type.y * this.scale;
-            this.r = Math.sqrt(this.width * this.width + this.height * this.height) / 2;
-        } else if (_t < 6) {
-            this.type = SHAPE_TYPE.LARGE_RECTANGLE;
-            this.width = this.type.x * this.scale;
-            this.height = this.type.y * this.scale;
-            this.r = Math.sqrt(this.width * this.width + this.height * this.height) / 2;
-        } else if (_t < 9) {
-            this.type = SHAPE_TYPE.CIRCLE;
-            this.r = this.type.r * this.scale;
-            this.width = this.r * 2;
-            this.height = this.r * 2;
-        } else if (_t < 11) {
-            this.type = SHAPE_TYPE.TRIANGLE;
-            this.r = this.type.r * this.scale;
-            this.width = this.r * 2;
-            this.height = this.r * 2;
-        } else {
-            this.type = SHAPE_TYPE.SQUARE;
-            this.width = this.type.x * this.scale;
-            this.height = this.type.y * this.scale;
+        self.box = {
+            width: width,
+            height: height,
+            area: width * height
+        };
+    
+        // z-index
+        self.z = zIndex;
+    
+        /** set the canvas context 2d */
+        self.ctx = ctx;
+    
+        /** set the shape's type and width, height, radius */
+        self.setType = () => {
+            self.scale = r() * (self.box.width / SHAPE_SIZE_MIN - 2) + 1;
+            const _t = getRandomInt() % 14;
+            if (_t < 2) {
+                self.type = SHAPE_TYPE.THIN_RECTANGLE;
+                self.width = self.type.x * self.scale;
+                self.height = self.type.y * self.scale;
+                self.r = Math.sqrt(self.width * self.width + self.height * self.height) / 2;
+            } else if (_t < 6) {
+                self.type = SHAPE_TYPE.LARGE_RECTANGLE;
+                self.width = self.type.x * self.scale;
+                self.height = self.type.y * self.scale;
+                self.r = Math.sqrt(self.width * self.width + self.height * self.height) / 2;
+            } else if (_t < 9) {
+                self.type = SHAPE_TYPE.CIRCLE;
+                self.r = self.type.r * self.scale;
+                self.width = self.r * 2;
+                self.height = self.r * 2;
+            } else if (_t < 11) {
+                self.type = SHAPE_TYPE.TRIANGLE;
+                self.r = self.type.r * self.scale;
+                self.width = self.r * 2;
+                self.height = self.r * 2;
+            } else {
+                self.type = SHAPE_TYPE.SQUARE;
+                self.width = self.type.x * self.scale;
+                self.height = self.type.y * self.scale;
+                self.r = Math.sqrt(self.width * self.width + self.height * self.height) / 2;
+            }
         }
-    }
-
-    /** set shape's velocity with speed and direction */
-    setVelocity = () => {
-        let _start_p = {
-                x: 0,
-                y: 0
-            },
-            _end_p = {
-                x: 0,
-                y: 0
+    
+        /** set shape's velocity with speed and direction */
+        self.setVelocity = () => {
+            let _start_p = {
+                    x: 0,
+                    y: 0
+                },
+                _end_p = {
+                    x: 0,
+                    y: 0
+                };
+            const _o = [self.width / 2, self.height / 2];
+            const box = {
+                width: self.box.width,
+                height: self.box.height,
             };
-        const _o = [this.width / 2, this.height / 2];
-        const box = {
-            width: this.box.width,
-            height: this.box.height,
-        };
-
-        let direction = getRandomInt() % 4;
-
-        switch (direction) {
-            case 0: // right
-                _start_p.x = -_o[0] / 2;
-                _start_p.y = r() * box.height;
-                _end_p.x = box.width + _o[0] / 2;
-                _end_p.y = r() * box.height;
-                if (this.width < this.height) {
-                    const _t = this.height;
-                    this.height = this.width;
-                    this.width = _t;
-                    _start_p.x = this.width / 2;
+    
+            let direction = getRandomInt() % 4;
+    
+            switch (direction) {
+                case 0: // right
+                    _start_p.x = -_o[0] / 2;
+                    _start_p.y = r() * box.height;
+                    _end_p.x = box.width + _o[0] / 2;
+                    _end_p.y = r() * box.height;
+                    if (self.width < self.height) {
+                        const _t = self.height;
+                        self.height = self.width;
+                        self.width = _t;
+                        _start_p.x = self.width / 2;
+                    }
+                    break;
+                case 1: // down
+                    _start_p.x = r() * box.width;
+                    _start_p.y = -_o[1] / 2;
+                    _end_p.x = r() * box.width;
+                    _end_p.y = box.height + _o[1];
+                    if (self.width > self.height) {
+                        const _t = self.height;
+                        self.height = self.width;
+                        self.width = _t;
+                        _start_p.y = -self.height / 2;
+                    }
+                    break;
+                case 2: // left
+                    _start_p.x = box.width + _o[0] / 2;
+                    _start_p.y = r() * box.height;
+                    _end_p.x = -_o[0];
+                    _end_p.y = r() * box.height;
+                    if (self.width < self.height) {
+                        const _t = self.height;
+                        self.height = self.width;
+                        self.width = _t;
+                        _start_p.x = box.width + self.width / 2;
+                    }
+                    break;
+                case 3: // up
+                    _start_p.x = r() * box.width;
+                    _start_p.y = box.height + _o[1] / 2;
+                    _end_p.x = r() * box.width;
+                    _end_p.y = -_o[1];
+                    if (self.width > self.height) {
+                        const _t = self.height;
+                        self.height = self.width;
+                        self.width = _t;
+                        _start_p.y = box.height + self.height / 2;
+                    }
+                    break;
+                default:
+                    _end_p.x = -_o[0];
+                    _end_p.y = r() * box.height;
+                    _start_p.x = box.width + _o[0] / 2;
+                    _start_p.y = r() * box.height;
+                    break;
+            }
+    
+            self.start_p = _start_p;
+            self.end_p = _end_p;
+    
+            self.x = self.start_p.x;
+            self.y = self.start_p.y;
+    
+            let _a = {
+                x: _end_p.x - _start_p.x,
+                y: _end_p.y - _start_p.y
+            };
+    
+            if (self.width > self.height) {
+                if (getRandomInt() % 3 == 0) {
+                    _a.y = _a.y < 0 ? -Math.abs(_a.x) : Math.abs(_a.x);
+                } else {
+                    _a.y = 0;
                 }
-                break;
-            case 1: // down
-                _start_p.x = r() * box.width;
-                _start_p.y = -_o[1] / 2;
-                _end_p.x = r() * box.width;
-                _end_p.y = box.height + _o[1];
-                if (this.width > this.height) {
-                    const _t = this.height;
-                    this.height = this.width;
-                    this.width = _t;
-                    _start_p.y = -this.height / 2;
+            }
+    
+            if (self.width < self.height) {
+                if (getRandomInt() % 4 == 0) {
+                    _a.x = _a.x < 0 ? -Math.abs(_a.y) : Math.abs(_a.y);
+                } else {
+                    _a.x = 0;
                 }
-                break;
-            case 2: // left
-                _start_p.x = box.width + _o[0] / 2;
-                _start_p.y = r() * box.height;
-                _end_p.x = -_o[0];
-                _end_p.y = r() * box.height;
-                if (this.width < this.height) {
-                    const _t = this.height;
-                    this.height = this.width;
-                    this.width = _t;
-                    _start_p.x = box.width + this.width / 2;
-                }
-                break;
-            case 3: // up
-                _start_p.x = r() * box.width;
-                _start_p.y = box.height + _o[1] / 2;
-                _end_p.x = r() * box.width;
-                _end_p.y = -_o[1];
-                if (this.width > this.height) {
-                    const _t = this.height;
-                    this.height = this.width;
-                    this.width = _t;
-                    _start_p.y = box.height + this.height / 2;
-                }
-                break;
-            default:
-                _end_p.x = -_o[0];
-                _end_p.y = r() * box.height;
-                _start_p.x = box.width + _o[0] / 2;
-                _start_p.y = r() * box.height;
-                break;
-        }
-
-        this.start_p = _start_p;
-        this.end_p = _end_p;
-
-        this.x = this.start_p.x;
-        this.y = this.start_p.y;
-
-        let _a = {
-            x: _end_p.x - _start_p.x,
-            y: _end_p.y - _start_p.y
-        };
-
-        if (this.width > this.height) {
-            if (getRandomInt() % 3 == 0) {
-                _a.y = _a.y < 0 ? -Math.abs(_a.x) : Math.abs(_a.x);
+            }
+    
+            if (_a.x == 0) {
+                self.start_angle = Math.PI / 2;
             } else {
-                _a.y = 0;
+                self.start_angle = Math.atan2(_a.y, _a.x);
             }
+    
+            self.direction = _a;
+            self.speed = r() * box.width / 200 + box.width / 300;
         }
-
-        if (this.width < this.height) {
-            if (getRandomInt() % 4 == 0) {
-                _a.x = _a.x < 0 ? -Math.abs(_a.y) : Math.abs(_a.y);
+    
+        self.setGradient = () => {
+            const _t = getRandomInt() % 7;
+    
+            if (_t < 1) {
+                self.grd_type = GRADIENT_TYPE.SOLID;
+            } else if (_t < 4) {
+                self.grd_type = GRADIENT_TYPE.LINEAR;
             } else {
-                _a.x = 0;
+                self.grd_type = GRADIENT_TYPE.RADIAL;
             }
+    
+            self.grd_center = getRandomInt() % 5;
+    
         }
-
-        if (_a.x == 0) {
-            this.start_angle = Math.PI / 2;
-        } else {
-            this.start_angle = Math.atan2(_a.y, _a.x);
-        }
-
-        this.direction = _a;
-        this.speed = r() * box.width / 200 + box.width / 300;
-    }
-
-    setGradient = () => {
-        const _t = getRandomInt() % 7;
-
-        if (_t < 1) {
-            this.grd_type = GRADIENT_TYPE.SOLID;
-        } else if (_t < 4) {
-            this.grd_type = GRADIENT_TYPE.LINEAR;
-        } else {
-            this.grd_type = GRADIENT_TYPE.RADIAL;
-        }
-
-        this.grd_center = getRandomInt() % 5;
-
-    }
-
-    setColor = () => {
-        const themeColors = getThemeColors();
-        this.color = [
-            themeColors.value1,
-            themeColors.value2,
-            themeColors.value3,
-        ];
-
-        let colorPrx = this.z % 2 == 0 ? f(this.z / 2 + 2) : -f(this.z / 2);
-        let color_step = 0.01;
-        const theme = eyeEcho_game_config.theme;
-        let color_offset = 0;
-        if (colorPrx > 0) {
-            if (theme == 'red') {
-                color_step = 0.01;
-                color_offset = 0.3;
-            }
-
-            if (theme == 'light-blue') {
-                color_step = 0.02;
-                color_offset = 0.2;
-            }
-        }
-
-        const colors = [
-            ColorLuminance(themeColors.value2, colorPrx * color_step + r() * color_step - color_offset),
-            ColorLuminance(themeColors.value1, colorPrx * color_step + r() * 0.8 - 0.1),
-            ColorLuminance(themeColors.value3, colorPrx * color_step + r() * 0.8 - 0.1),
-            ColorLuminance(themeColors.value2, colorPrx * color_step - color_offset),
-            ColorLuminance(themeColors.value2, colorPrx * color_step - color_offset),
-            ColorLuminance(themeColors.value2, colorPrx * color_step - color_offset),
-            ColorLuminance(themeColors.value2, colorPrx * color_step - color_offset),
-        ];
-
-        const _t = getRandomInt();
-        const area = this.width * this.height;
-        if (area > this.box.area / 8) {
-            this.color[0] = ColorLuminance(themeColors.value2, colorPrx * color_step - color_offset);
-            this.color[1] = ColorLuminance(themeColors.value2, colorPrx * color_step + r() * color_step - color_offset);
-        } else {
-            this.color[0] = colors[getRandomInt() % 7];
-            this.color[1] = colors[getRandomInt() % 5];
-            this.color[2] = colors[getRandomInt() % 4];
-        }
-
-        if (this.grd_type !== GRADIENT_TYPE.SOLID && area < this.box.area / 6) {
-            this.color[1] = colors[getRandomInt() % 4];
-            this.color[2] = colors[getRandomInt() % 4];
-        }
-    }
-
-    this.move = () => {
-        if (this.direction.x == 0) {
-            this.y += this.direction.y > 0 ? this.speed : -this.speed;
-        } else if (this.direction.y == 0) {
-            this.x += this.direction.x > 0 ? this.speed : -this.speed;
-        } else {
-            const direction = unifyVector(this.direction);
-            this.x += this.speed * direction.x;
-            this.y += this.speed * direction.y;
-        }
-    }
-
-    // define draw functions
-    drawRect = () => {
-        const grd_len = this.r ? this.r * 2 : this.width * 2;
-        this.ctx.save();
-        let x = this.x;
-        let y = this.y;
-
-        if (this.width !== this.height && this.start_angle != Math.PI / 2) {
-            this.ctx.translate(this.x, this.y);
-            this.ctx.rotate(this.start_angle);
-            x = 0;
-            y = 0;
-        }
-
-        this.ctx.beginPath();
-        this.ctx.rect(x - this.width / 2, y - this.height / 2, this.width, this.height);
-        let grd;
-        switch(this.grd_type) {
-            case GRADIENT_TYPE.SOLID:
-                grd = this.ctx.createLinearGradient(x - this.width / 2, y - this.height / 2, x + this.width / 2, y + this.height / 2);
-                grd.addColorStop(0, this.color[0]);
-                break;
-            case GRADIENT_TYPE.LINEAR:
-                grd = this.ctx.createLinearGradient(x - this.width / 2, y - this.height / 2, x + this.width / 2, y + this.height / 2);
-                grd.addColorStop(0, this.color[0]);
-                grd.addColorStop(1, this.color[1]);
-                break;
-            case GRADIENT_TYPE.RADIAL:
-                switch(this.grd_center) {
-                    case 0:
-                        x = x + this.width / 2;
-                        y = y + this.height / 2;
-                        break;
-                    case 1:
-                        x = x - this.width / 2;
-                        y = y + this.height / 2;
-                        break;
-                    case 2:
-                        x = x + this.width / 2;
-                        y = y - this.height / 2;
-                        break;
-                    case 3:
-                        x = x - this.width / 2;
-                        y = y - this.height / 2;
-                        break;
+    
+        self.setColor = () => {
+            const themeColors = getThemeColors();
+            self.color = [
+                themeColors.value1,
+                themeColors.value2,
+                themeColors.value3,
+            ];
+    
+            let colorPrx = self.z % 2 == 0 ? f(self.z / 2 + 2) : -f(self.z / 2);
+            let color_step = 0.01;
+            const theme = eyeEcho_game_config.theme;
+            let color_offset = 0;
+            if (colorPrx > 0) {
+                if (theme == 'red') {
+                    color_step = 0.01;
+                    color_offset = 0.3;
                 }
-
-                grd = this.ctx.createRadialGradient(x, y, 0, x, y, grd_len);
-
-                grd.addColorStop(1, this.color[0]);
-                grd.addColorStop(0, this.color[1]);
-                break;
-        }
-
-        this.ctx.fillStyle = grd;
-        this.ctx.fill();
-        this.ctx.closePath();
-        this.ctx.restore();
-    }
-
-    drawCircle = () => {
-        this.ctx.beginPath();
-        this.ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-
-        let grd;
-        switch(this.grd_type) {
-            case GRADIENT_TYPE.SOLID:
-                grd = this.ctx.createLinearGradient(this.x - this.r, this.y - this.r, this.x + this.r, this.y + this.r);
-                grd.addColorStop(0, this.color[0]);
-                grd.addColorStop(1, this.color[1]);
-                break;
-            case GRADIENT_TYPE.LINEAR:
-                grd = this.ctx.createLinearGradient(this.x - this.r, this.y - this.r, this.x + this.r, this.y + this.r);
-                grd.addColorStop(0, this.color[0]);
-                grd.addColorStop(1, this.color[1]);
-                break;
-            case GRADIENT_TYPE.RADIAL:
-                grd = this.ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r * 2);
-                grd.addColorStop(0, this.color[0]);
-                grd.addColorStop(1, this.color[1]);
-                break;
-        }
-
-        this.ctx.fillStyle = grd;
-        this.ctx.fill();
-        this.ctx.closePath();
-    }
-
-    drawTriangle = () => {
-        const ang_step = 120 / 180 * Math.PI;
-        const p1 = [this.x + this.r * Math.cos(this.start_angle), this.y + this.r * Math.sin(this.start_angle)];
-        const p2 = [this.x + this.r * Math.cos(this.start_angle + ang_step), this.y + this.r * Math.sin(this.start_angle + ang_step)];
-        const p3 = [this.x + this.r * Math.cos(this.start_angle + 2 * ang_step), this.y + this.r * Math.sin(this.start_angle + 2 * ang_step)];
-
-        this.ctx.beginPath();
-        this.ctx.moveTo(p1[0], p1[1]);
-        this.ctx.lineTo(p2[0], p2[1]);
-        this.ctx.lineTo(p3[0], p3[1]);
-
-        let grd;
-        switch(this.grd_type) {
-            case GRADIENT_TYPE.SOLID:
-                grd = this.ctx.createLinearGradient(this.x - this.r, this.y - this.r, this.x + this.r, this.y + this.r);
-                grd.addColorStop(0, this.color[0]);
-                break;
-            case GRADIENT_TYPE.LINEAR:
-                grd = this.ctx.createLinearGradient(this.x - this.r, this.y - this.r, this.x + this.r, this.y + this.r * 2);
-                grd.addColorStop(0, this.color[0]);
-                grd.addColorStop(1, this.color[1]);
-                break;
-            case GRADIENT_TYPE.RADIAL:
-                switch(this.grd_center) {
-                    case 0:
-                        grd = this.ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r * 2);
-                        break;
-                    case 1:
-                        grd = this.ctx.createRadialGradient(p1[0], p1[1], 0, p1[0], p1[1], this.r * 2);
-                        break;
-                    case 1:
-                        grd = this.ctx.createRadialGradient(p2[0], p2[1], 0, p2[0], p2[1], this.r * 2);
-                        break;
-                    default:
-                        grd = this.ctx.createRadialGradient(p3[0], p3[1], 0, p3[0], p3[1], this.r * 2);
-                        break;
-
+    
+                if (theme == 'light-blue') {
+                    color_step = 0.02;
+                    color_offset = 0.2;
                 }
-                grd.addColorStop(0, this.color[0]);
-                grd.addColorStop(1, this.color[1]);
-                break;
+            }
+    
+            const colors = [
+                ColorLuminance(themeColors.value2, colorPrx * color_step + r() * color_step - color_offset),
+                ColorLuminance(themeColors.value1, colorPrx * color_step + r() * 0.8 - 0.1),
+                ColorLuminance(themeColors.value3, colorPrx * color_step + r() * 0.8 - 0.1),
+                ColorLuminance(themeColors.value2, colorPrx * color_step - color_offset),
+                ColorLuminance(themeColors.value2, colorPrx * color_step - color_offset),
+                ColorLuminance(themeColors.value2, colorPrx * color_step - color_offset),
+                ColorLuminance(themeColors.value2, colorPrx * color_step - color_offset),
+            ];
+    
+            const _t = getRandomInt();
+            const area = self.width * self.height;
+            if (area > self.box.area / 8) {
+                self.color[0] = ColorLuminance(themeColors.value2, colorPrx * color_step - color_offset);
+                self.color[1] = ColorLuminance(themeColors.value2, colorPrx * color_step + r() * color_step - color_offset);
+            } else {
+                self.color[0] = colors[getRandomInt() % 7];
+                self.color[1] = colors[getRandomInt() % 5];
+                self.color[2] = colors[getRandomInt() % 4];
+            }
+    
+            if (self.grd_type !== GRADIENT_TYPE.SOLID && area < self.box.area / 6) {
+                self.color[1] = colors[getRandomInt() % 4];
+                self.color[2] = colors[getRandomInt() % 4];
+            }
+        }
+    
+        self.move = () => {
+            if (self.direction.x == 0) {
+                self.y += self.direction.y > 0 ? self.speed : -self.speed;
+            } else if (self.direction.y == 0) {
+                self.x += self.direction.x > 0 ? self.speed : -self.speed;
+            } else {
+                const direction = unifyVector(self.direction);
+                self.x += self.speed * direction.x;
+                self.y += self.speed * direction.y;
+            }
+        }
+    
+        // define draw functions
+        self.drawRect = () => {
+            const grd_len = self.r ? self.r * 2 : self.width * 2;
+            self.ctx.save();
+            let x = self.x;
+            let y = self.y;
+    
+            if (self.width !== self.height && self.start_angle != Math.PI / 2) {
+                self.ctx.translate(self.x, self.y);
+                self.ctx.rotate(self.start_angle);
+                x = 0;
+                y = 0;
+            }
+    
+            self.ctx.beginPath();
+            self.ctx.rect(x - self.width / 2, y - self.height / 2, self.width, self.height);
+            let grd;
+            switch(self.grd_type) {
+                case GRADIENT_TYPE.SOLID:
+                    grd = self.ctx.createLinearGradient(x - self.width / 2, y - self.height / 2, x + self.width / 2, y + self.height / 2);
+                    grd.addColorStop(0, self.color[0]);
+                    break;
+                case GRADIENT_TYPE.LINEAR:
+                    grd = self.ctx.createLinearGradient(x - self.width / 2, y - self.height / 2, x + self.width / 2, y + self.height / 2);
+                    grd.addColorStop(0, self.color[0]);
+                    grd.addColorStop(1, self.color[1]);
+                    break;
+                case GRADIENT_TYPE.RADIAL:
+                    switch(self.grd_center) {
+                        case 0:
+                            x = x + self.width / 2;
+                            y = y + self.height / 2;
+                            break;
+                        case 1:
+                            x = x - self.width / 2;
+                            y = y + self.height / 2;
+                            break;
+                        case 2:
+                            x = x + self.width / 2;
+                            y = y - self.height / 2;
+                            break;
+                        case 3:
+                            x = x - self.width / 2;
+                            y = y - self.height / 2;
+                            break;
+                    }
+    
+                    grd = self.ctx.createRadialGradient(x, y, 0, x, y, grd_len);
+    
+                    grd.addColorStop(1, self.color[0]);
+                    grd.addColorStop(0, self.color[1]);
+                    break;
+            }
+    
+            self.ctx.fillStyle = grd;
+            self.ctx.fill();
+            self.ctx.closePath();
+            self.ctx.restore();
+        }
+    
+        self.drawCircle = () => {
+            self.ctx.beginPath();
+            self.ctx.arc(self.x, self.y, self.r, 0, Math.PI * 2);
+            let grd;
+            switch(self.grd_type) {
+                case GRADIENT_TYPE.SOLID:
+                    grd = self.ctx.createLinearGradient(self.x - self.r, self.y - self.r, self.x + self.r, self.y + self.r);
+                    grd.addColorStop(0, self.color[0]);
+                    grd.addColorStop(1, self.color[1]);
+                    break;
+                case GRADIENT_TYPE.LINEAR:
+                    grd = self.ctx.createLinearGradient(self.x - self.r, self.y - self.r, self.x + self.r, self.y + self.r);
+                    grd.addColorStop(0, self.color[0]);
+                    grd.addColorStop(1, self.color[1]);
+                    break;
+                case GRADIENT_TYPE.RADIAL:
+                    grd = self.ctx.createRadialGradient(self.x, self.y, 0, self.x, self.y, self.r * 2);
+                    grd.addColorStop(0, self.color[0]);
+                    grd.addColorStop(1, self.color[1]);
+                    break;
+            }
+    
+            self.ctx.fillStyle = grd;
+            self.ctx.fill();
+            self.ctx.closePath();
+        }
+    
+        self.drawTriangle = () => {
+            const ang_step = 120 / 180 * Math.PI;
+            const p1 = [self.x + self.r * Math.cos(self.start_angle), self.y + self.r * Math.sin(self.start_angle)];
+            const p2 = [self.x + self.r * Math.cos(self.start_angle + ang_step), self.y + self.r * Math.sin(self.start_angle + ang_step)];
+            const p3 = [self.x + self.r * Math.cos(self.start_angle + 2 * ang_step), self.y + self.r * Math.sin(self.start_angle + 2 * ang_step)];
+    
+            self.ctx.beginPath();
+            self.ctx.moveTo(p1[0], p1[1]);
+            self.ctx.lineTo(p2[0], p2[1]);
+            self.ctx.lineTo(p3[0], p3[1]);
+    
+            let grd;
+            switch(self.grd_type) {
+                case GRADIENT_TYPE.SOLID:
+                    grd = self.ctx.createLinearGradient(self.x - self.r, self.y - self.r, self.x + self.r, self.y + self.r);
+                    grd.addColorStop(0, self.color[0]);
+                    break;
+                case GRADIENT_TYPE.LINEAR:
+                    grd = self.ctx.createLinearGradient(self.x - self.r, self.y - self.r, self.x + self.r, self.y + self.r * 2);
+                    grd.addColorStop(0, self.color[0]);
+                    grd.addColorStop(1, self.color[1]);
+                    break;
+                case GRADIENT_TYPE.RADIAL:
+                    switch(self.grd_center) {
+                        case 0:
+                            grd = self.ctx.createRadialGradient(self.x, self.y, 0, self.x, self.y, self.r * 2);
+                            break;
+                        case 1:
+                            grd = self.ctx.createRadialGradient(p1[0], p1[1], 0, p1[0], p1[1], self.r * 2);
+                            break;
+                        case 1:
+                            grd = self.ctx.createRadialGradient(p2[0], p2[1], 0, p2[0], p2[1], self.r * 2);
+                            break;
+                        default:
+                            grd = self.ctx.createRadialGradient(p3[0], p3[1], 0, p3[0], p3[1], self.r * 2);
+                            break;
+    
+                    }
+                    grd.addColorStop(0, self.color[0]);
+                    grd.addColorStop(1, self.color[1]);
+                    break;
+            }
+    
+            self.ctx.fillStyle = grd;
+            self.ctx.fill();
+            self.ctx.closePath();
+        }
+    
+        self.draw = () => {
+            switch (self.type) {
+                case SHAPE_TYPE.SQUARE:
+                    self.drawRect();
+                    break;
+                case SHAPE_TYPE.THIN_RECTANGLE:
+                    self.drawRect();
+                    break;
+                case SHAPE_TYPE.LARGE_RECTANGLE:
+                    self.drawRect();
+                    break;
+                case SHAPE_TYPE.CIRCLE:
+                    self.drawCircle();
+                    break;
+                case SHAPE_TYPE.TRIANGLE:
+                    self.drawTriangle();
+                    break;
+            }
+        }
+    
+        self.init = () => {
+            /** set the shape type randomly */
+            self.setType();
+    
+            /** set shape's velocity */
+            self.setVelocity();
+    
+            /** set gradient property */
+            self.setGradient();
+    
+            /** set color */
+            self.setColor();
         }
 
-        this.ctx.fillStyle = grd;
-        this.ctx.fill();
-        this.ctx.closePath();
-    }
+        self.getX = () => self.x;
+        self.getY = () => self.y;
+        self.getWidth = () => self.width;
+        self.getHeight = () => self.height;
+        self.getR = () => self.r;
 
-    draw = () => {
-        switch (this.type) {
-            case SHAPE_TYPE.SQUARE:
-                drawRect();
-                break;
-            case SHAPE_TYPE.THIN_RECTANGLE:
-                drawRect();
-                break;
-            case SHAPE_TYPE.LARGE_RECTANGLE:
-                drawRect();
-                break;
-            case SHAPE_TYPE.CIRCLE:
-                drawCircle();
-                break;
-            case SHAPE_TYPE.TRIANGLE:
-                drawTriangle();
-                break;
-        }
-    }
+    self.init();
 
-    /** set the shape type randomly */
-    setType();
-
-    /** set shape's velocity */
-    setVelocity();
-
-    /** set gradient property */
-    setGradient();
-
-    /** set color */
-    setColor();
+    return self;
 };
 
 
@@ -624,11 +638,12 @@ const GameBoard = function(canvas) {
     this.theme = eyeEcho_game_config.theme;
     this.bg_color = eyeEcho_game_config.text.theme[this.theme];
 
-    setActiveShape = () => {
-        this.activeShape = new Shape(this.ctx, this.width, this.height, this.staticShapes.length);
+    const setActiveShape = () => {
+        let newShape = Shape(this.ctx, this.width, this.height, this.staticShapes.length);
+        this.activeShape = newShape;
     }
 
-    init = (countdown = eyeEcho_game_config.countdown) => {
+    const init = (countdown = eyeEcho_game_config.countdown) => {
         this.width = this.canvas.width;
         this.height = this.canvas.height;
         this.lr_p = 0;
@@ -642,7 +657,7 @@ const GameBoard = function(canvas) {
         this.isReady = 4;
         this.countdownTimer = null;
         this.backgroundTimer = null;
-        moveTimer = null;
+        this.moveTimer = null;
         this.isEnableEye = false;
         this.blinkIcon = new Image();
         this.blinkIcon.setAttribute("crossOrigin", "Anonymous");
@@ -654,7 +669,7 @@ const GameBoard = function(canvas) {
         eyeEcho_result_info.period = 0;
     }
 
-    this.setCanvas = (canvas) => {
+    const setCanvas = (canvas) => {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
         this.theme = eyeEcho_game_config.theme;
@@ -662,7 +677,7 @@ const GameBoard = function(canvas) {
         init();
     }
 
-    uploadImage = () => {
+    const uploadImage = () => {
         try {
             this.isUploading = true;
             this.isEnableEye = false;
@@ -701,7 +716,7 @@ const GameBoard = function(canvas) {
         }
     }
 
-    endGame = () => {
+    const endGame = () => {
         if (!this.isStarted) return;
         clearInterval(this.countdownTimer);
         clearInterval(this.moveTimer);
@@ -709,30 +724,33 @@ const GameBoard = function(canvas) {
         uploadImage();
     }
 
-    addStaticShape = () => {
-        this.staticShapes.push(this.activeShape);
+    const addStaticShape = () => {
+        const oldShape = this.activeShape;
+        console.log(this.activeShape)
+        this.staticShapes.push(oldShape);
     }
 
     // check the active shape is out of board and set top height
-    checkShape = () => {
-        const x = this.activeShape.x;
-        const y = this.activeShape.y;
-        const width = this.activeShape.width;
-        const height = this.activeShape.height;
+    const checkShape = () => {
+        const x = this.activeShape.getX();
+        const y = this.activeShape.getY();
+        const width = this.activeShape.getWidth();
+        const height = this.activeShape.getHeight();
         const r = Math.sqrt(width * width + height * height) / 2;
 
-        if (x + r < 0 || x - r > this.width || y + r < 0 || y - r> this.height) {
+        if ((x + r) < 0 || (x - r) > this.width || (y + r) < 0 || (y - r) > this.height) {
+            console.log("outed shape..")
             setActiveShape();
         }
     }
 
     // check if end condition
-    checkEndCondition = () => {
+    const checkEndCondition = () => {
         return this.countdown < 1;
     }
 
     // drop shape
-    dropShape = () => {
+    const dropShape = () => {
         eyeEcho_result_info.count++;
         if (!this.isStarted) return;
         this.isEnableEye = true;
@@ -741,31 +759,31 @@ const GameBoard = function(canvas) {
             this.isEnableEye = false;
         }, 300);
 
-        this.addStaticShape();
-        this.setActiveShape();
+        addStaticShape();
+        setActiveShape();
     }
 
     // move shape left or right
-    moveShape = () => {
-        this.activeShape.move();
+    const moveShape = () => {
         checkShape();
+        this.activeShape.move();
     }
 
     // define draw functions
-    erase = () => {
+    const erase = () => {
         this.ctx.restore();
         this.ctx.save();
         this.ctx.clearRect(0, 0, this.width, this.height);
     }
 
     // draw ready to start
-    drawReadyToStart = () => {
+    const drawReadyToStart = () => {
         if (this.isReady < 1) {
             animate({
                 duration: 1000,
                 draw: (progress) => {
                     if (progress >= 1) {
-                        this.startGame();
+                        startGame();
                         return;
                     }
                     if (progress < 0) return;
@@ -825,7 +843,7 @@ const GameBoard = function(canvas) {
     }
 
     // draw menu to show how to play game
-    drawMenu = () => {
+    const drawMenu = () => {
         if (this.isUploading) {
             this.ctx.fillStyle = '#000000';
             this.ctx.font = '6vw Arial';
@@ -838,7 +856,7 @@ const GameBoard = function(canvas) {
     }
 
     // draw time remaining
-    drawCountdown = () => {
+    const drawCountdown = () => {
         if (this.countdown < 1) return;
 
         this.ctx.fillStyle = '#FFF';
@@ -863,21 +881,21 @@ const GameBoard = function(canvas) {
     }
 
     // draw shapes
-    drawShapes = () => {
+    const drawShapes = () => {
         this.staticShapes.forEach(function (shape) {
             shape.draw();
         })
     }
 
     // draw blink icon when the shape start to drop
-    drawBlinkIcon = () => {
+    const drawBlinkIcon = () => {
         if (this.isEnableEye && !this.isUploading) {
             this.ctx.drawImage(this.blinkIcon, this.width / 2 - this.width / 10, this.height / 2 - this.width / 10, this.width / 5, this.width / 5);
         }
     }
 
     // draw gradient background.
-    drawBackground = (offset_x = this.width / 2, offset_y = this.height / 2) => {
+    const drawBackground = (offset_x = this.width / 2, offset_y = this.height / 2) => {
 
         if (offset_x == 0 || offset_x > this.width / 2) {
             offset_x = this.width / 2, offset_y = this.height / 2;
@@ -897,8 +915,7 @@ const GameBoard = function(canvas) {
     }
 
     // draw by time
-    draw = () => {
-        console.log("drawing....")
+    const draw = (time) => {
         erase();
         drawBackground(this.width / 2, this.height / 2);
         drawShapes();
@@ -908,12 +925,11 @@ const GameBoard = function(canvas) {
             this.activeShape.draw();
             drawCountdown();
             drawBlinkIcon();
-            console.log("painting...")
             window.requestAnimationFrame(draw);
         }
     }
 
-    this.readyToStart = () => {
+    const readyToStart = () => {
         drawReadyToStart();
         setIntervalX(() => {
             this.isReady--;
@@ -921,13 +937,14 @@ const GameBoard = function(canvas) {
         }, 1000, 4);
     }
 
-    this.startGame = () => {
+    const startGame = () => {
         if (this.isStarted || this.isUploading)
             return;
 
         init();
 
         this.isStarted = true;
+
         this.countdownTimer = setInterval(() => {
             this.countdown--;
             eyeEcho_result_info.period++;
@@ -936,8 +953,11 @@ const GameBoard = function(canvas) {
         this.moveTimer = setInterval(() => {
             moveShape();
         }, 1);
-        this.draw();
+
+        draw();
     }
+
+    return {startGame, readyToStart, setCanvas, dropShape, endGame}
 };
 
 /**
