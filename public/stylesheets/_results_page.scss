@@ -381,6 +381,39 @@ canvas {
         padding-top: 1.5vh;
         padding-bottom: 5vh;
     }
+
+    .eyeEcho-desktop-only-visible {
+        display: none;
+    }
+
+    @media screen and (min-width: 1280px){
+        img {
+           width: 50px;
+        }
+
+        hr {
+            width: 35px;
+        }
+
+        h1 {
+            font-size: 3em;
+        }
+
+        span {
+            width: 400px;
+            line-height: 2;
+            font-weight: 300;
+            letter-spacing: 1.2px;
+        }
+
+        .eyeEcho-desktop-only-visible {
+            display: block;
+        }
+
+        .eyeEcho-mobile-only-visible {
+            display: none;
+        }
+    }
 }
 
 // eyeEcho landing game page styles
@@ -440,7 +473,7 @@ canvas {
         font-weight: bold;
     }
 
-    @media screen and (min-width: 1280px) and (min-height: 1366px) {
+    @media screen and (min-width: 1280px) {
         font-size: 6rem;
         img {
             width: 7rem;
