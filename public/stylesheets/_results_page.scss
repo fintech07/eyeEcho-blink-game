@@ -386,9 +386,9 @@ canvas {
         display: none;
     }
 
-    @media screen and (min-width: 1280px){
+    @media screen and (min-width: 1080px){
         img {
-           width: 50px;
+           width: 40px;
         }
 
         hr {
@@ -396,7 +396,8 @@ canvas {
         }
 
         h1 {
-            font-size: 3em;
+            font-size: 3.5em;
+            letter-spacing: 2px;
         }
 
         span {
