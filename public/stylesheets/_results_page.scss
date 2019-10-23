@@ -14,6 +14,9 @@ canvas {
     color: white;
 }
 
+.eyeEcho_page {
+    overflow: visible;
+}
 .eyeEcho-aligin-center {
     text-align: center;
     vertical-align: middle;
@@ -521,7 +524,7 @@ canvas {
     background: white;
 
     height: 8vh;
-    width: -webkit-fill-available;
+    width: 100%;
 
     display: flex;
     justify-content: space-between;

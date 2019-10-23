@@ -144,3 +144,17 @@ document.addEventListener(
   },
   false
 );
+
+document.addEventListener(
+  'mousedown',
+  function (event) {
+    if (currentPageId == 'eyeEcho_landing_page') {
+      if (taps_on_landing_page < 9) {
+        taps_on_landing_page++;
+      } else {
+        eyeEchoPage('eyeEcho_game_landing_page');
+      }
+    }
+  },
+  false
+);

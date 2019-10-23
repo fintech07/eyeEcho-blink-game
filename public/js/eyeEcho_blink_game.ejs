@@ -726,7 +726,6 @@ const GameBoard = function(canvas) {
 
     const addStaticShape = () => {
         const oldShape = this.activeShape;
-        console.log(this.activeShape)
         this.staticShapes.push(oldShape);
     }
 
@@ -739,7 +738,6 @@ const GameBoard = function(canvas) {
         const r = Math.sqrt(width * width + height * height) / 2;
 
         if ((x + r) < 0 || (x - r) > this.width || (y + r) < 0 || (y - r) > this.height) {
-            console.log("outed shape..")
             setActiveShape();
         }
     }
