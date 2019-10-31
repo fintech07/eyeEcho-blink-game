@@ -48,11 +48,6 @@ export const handleTrackingResults = (brfv5Manager, brfv5Config, canvas) => {
     const face = faces[i];
 
     if(face.state === brfv5.BRFv5State.FACE_TRACKING) {
-
-      drawCircles(ctx, face.landmarks, colorPrimary, 2.0);
-
-      // Select the eye landmarks, then detect blinks for left and right individually:
-
       const lm                = face.landmarks;
       const leftEyeLandmarks  = [lm[36], lm[39], lm[37], lm[38], lm[41], lm[40]];
       const rightEyeLandmarks = [lm[45], lm[42], lm[44], lm[43], lm[46], lm[47]];
@@ -65,6 +60,9 @@ export const handleTrackingResults = (brfv5Manager, brfv5Config, canvas) => {
       if (_leftEyeBlinked || _rightEyeBlinked) {
         console.log('eye blinked -------------<>--------------');
         eyeEchoSendGA('user-blinked');
+        if (gameboard) {
+          gameboard.dropShape();
+        }
       }
 
     } else {

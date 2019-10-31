@@ -1006,7 +1006,7 @@ createGameBoard = () => {
     }, false);
 
     document.addEventListener('keydown', function (e) {
-        if (lastDownTarget == eyeEcho_blink_game_canvas) {
+        if (lastDownTarget && lastDownTarget == eyeEcho_blink_game_canvas) {
             e.preventDefault();
             if (e.keyCode === 40) {
                 gameboard.dropShape();
