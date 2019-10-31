@@ -1,16 +1,3 @@
-/**
- * BRFv5 - Simple Blink Detection
- *
- * A simple approach with quite a lot false positives. Fast movement isn't handled
- * properly. Though this code is quite good when it comes to staring contest apps.
- *
- * For the last 13 frames (0.433 seconds at 30 FPS) it records the distance between
- * upper and lower lid. It looks at the first 3, the middle 3 and the last 3 frames
- * and compares the distances. If the middle segment is smaller than the other two,
- * it's a blink. This lags 0.25 seconds behind, but is instant enough in most cases.
- *
- * Only a 68 landmarks model is able to detect blinks.
- */
 
 import { setupExample }                     from './setup__example.js'
 import { trackCamera, trackImage }          from './setup__example.js'
@@ -20,8 +7,8 @@ import { drawFaceDetectionResults }         from '../utils/utils__draw_tracking_
 import { detectBlink }                      from '../utils/utils__blink_detection.js'
 
 import { brfv5 }                            from '../brfv5/brfv5__init.js'
-import { colorPrimary, colorSecondary }     from '../utils/utils__colors.js'
 
+const restTime = 150;
 let _leftEyeBlinked         = false;
 let _rightEyeBlinked        = false;
 
@@ -96,7 +83,7 @@ const detectBlinkLeft = (lm, distances) => {
 
     if(_leftEyeTimeOut > -1) { clearTimeout(_leftEyeTimeOut); }
 
-    _leftEyeTimeOut = setTimeout(() => { _leftEyeBlinked = false; }, 150);
+    _leftEyeTimeOut = setTimeout(() => { _leftEyeBlinked = false; }, restTime);
   }
 }
 
@@ -112,7 +99,7 @@ const detectBlinkRight = (lm, distances) => {
 
     if(_rightEyeTimeOut > -1) { clearTimeout(_rightEyeTimeOut); }
 
-    _rightEyeTimeOut = setTimeout(() => { _rightEyeBlinked = false; }, 150);
+    _rightEyeTimeOut = setTimeout(() => { _rightEyeBlinked = false; }, restTime);
   }
 }
 
